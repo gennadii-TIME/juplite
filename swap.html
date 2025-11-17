@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juplite — Swap</title>
+<meta name="description" content="Swap tokens on Solana via Jupiter aggregator with deep links and RU/EN localization.">
+<meta property="og:title" content="Juplite — Swap">
+<meta property="og:description" content="Swap tokens on Solana via Jupiter aggregator with deep links and your referral.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://juplite.com/swap.html">
+<meta property="og:image" content="https://juplite.com/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="fb:app_id" content="1234567890">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Juplite — Swap">
+<meta name="twitter:description" content="Swap tokens on Solana via Jupiter aggregator with deep links and your referral.">
+<meta name="twitter:image" content="https://juplite.com/assets/og.jpg">
+
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="stylesheet" href="/assets/styles.css">
+<script defer src="/assets/script.js"></script>
+</head>
+<body>
+  <div class="container">
+    
+    <header class="header">
+      <a class="brand" href="/">
+        <img src="/assets/ui-logo-64.png" alt="Juplite logo">
+        <div>
+          <div style="font-weight:600;font-size:15px;">Juplite</div>
+          <div style="font-size:11px;color:#9ca3af;">Solana Swap Router</div>
+        </div>
+        <span class="badge">Solana</span>
+      </a>
+      <nav class="nav">
+        <a class="btn" data-i18n="nav_home" href="/">Home</a>
+        
+        <a class="btn" id="ray-btn" target="_blank" rel="noopener" data-i18n="nav_raydium" href="#">Raydium</a>
+        <a class="btn" target="_blank" rel="noopener" data-i18n="nav_jupiter" href="https://jup.ag/swap?ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Jupiter</a>
+        <div class="lang">
+          <button data-lang="en">EN</button>
+          <button data-lang="ru">RU</button>
+        </div>
+      </nav>
+    </header>
+    <div id="promo-banner" class="banner" style="display:none">
+      <div class="badge-dot"></div>
+      <span class="txt">Zero-Fee Day — platform fee set to 0 bps for 24 hours.</span>
+    </div>
+    
+    <div class="card">
+      <div class="card-inner">
+        <h1 data-i18n="swap_title">Swap</h1>
+        <p class="lead" data-i18n="swap_sub">Use quick-pair buttons or add ?pair=SOL-USDC to the URL. The widget will open that pair with your ref.</p>
+        <div class="cta">
+          <a class="btn" href="/swap.html?pair=SOL-USDC">SOL ↔ USDC</a>
+          <a class="btn" href="/swap.html?pair=JUP-USDC">JUP ↔ USDC</a>
+          <a class="btn" href="/swap.html?pair=TIME-SOL">TIME ↔ SOL</a>
+          <a class="btn" href="/swap.html?pair=USDT-SOL">USDT ↔ SOL</a>
+          <a class="btn" href="/swap.html?pair=BONK-SOL">BONK ↔ SOL</a>
+          <a class="btn" href="/swap.html?pair=WIF-SOL">WIF ↔ SOL</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-inner">
+        <div class="iframe-wrap">
+          <iframe id="jup-frame" title="Jupiter Swap" style="width:100%;height:100%;border:0;"></iframe>
+        </div>
+        
+      </div>
+    </div>
+
+    <footer>
+      <p data-i18n="footer">© 2025-11-15 Juplite. Not financial advice. DeFi is risky; always do your own research.</p>
+    </footer>
+  </div>
+</body>
+</html>
