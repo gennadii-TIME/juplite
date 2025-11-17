@@ -132,7 +132,6 @@ footer{color:var(--muted);padding:26px 0 6px;font-size:12px}
 
 
 
-
 /* --- Mobile menu (burger) --- */
 .menu-toggle{
   display:none;
@@ -149,7 +148,7 @@ footer{color:var(--muted);padding:26px 0 6px;font-size:12px}
   cursor:pointer;
 }
 .menu-toggle:focus-visible{
-  outline:2px solid var(--accent);
+  outline:2px solid var(--accent, #38bdf8);
   outline-offset:2px;
 }
 
@@ -196,7 +195,7 @@ footer{color:var(--muted);padding:26px 0 6px;font-size:12px}
   }
 }
 
-/* Brighten section titles & text for mobile/desktop */
+/* Brighter text for feature cards */
 .section-title{
   color:#ffffff;
   font-weight:700;
@@ -205,4 +204,43 @@ footer{color:var(--muted);padding:26px 0 6px;font-size:12px}
 .card-inner p,
 .card-inner .small{
   color:#e5e7eb;
+}
+
+/* --- App-view (mobile.html fullscreen) --- */
+body.app-view{
+  background:
+    radial-gradient(800px 500px at 10% 0%,rgba(56,189,248,.28),transparent 55%),
+    radial-gradient(900px 600px at 100% 0%,rgba(129,140,248,.28),transparent 60%),
+    radial-gradient(700px 420px at 50% 120%,rgba(45,212,191,.18),transparent 60%),
+    #020617;
+  min-height:100vh;
+}
+body.app-view .container{
+  max-width:520px;
+  margin:0 auto;
+  padding:0 0 1rem;
+}
+body.app-view .card{
+  background:transparent;
+  box-shadow:none;
+  border:none;
+  margin:0.5rem 0 0;
+}
+body.app-view .card-inner{
+  padding:0.5rem;
+  background:transparent;
+  border:none;
+}
+body.app-view .iframe-wrap{
+  border-radius:1.25rem;
+  overflow:hidden;
+  background:#020617;
+  border:1px solid rgba(30,64,175,.8);
+  height:calc(100vh - 5.5rem - 1.5rem); /* header + padding */
+}
+body.app-view footer{
+  text-align:center;
+  opacity:.55;
+  font-size:11px;
+  margin-top:0.35rem;
 }

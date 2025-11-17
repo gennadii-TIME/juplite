@@ -47,27 +47,27 @@
     if(ray) ray.href='https://raydium.io/swap/?referrer='+RAY_REF;
   }
   
-
-  function initMobileMenu(){
-    var header=document.querySelector('.header');
-    var nav=document.querySelector('.nav');
-    var toggle=document.getElementById('menu-toggle');
-    if(!header || !nav || !toggle) return;
-    toggle.addEventListener('click',function(){
-      var isOpen=header.classList.toggle('menu-open');
-      toggle.setAttribute('aria-expanded',isOpen?'true':'false');
+function initMobileMenu(){
+  var header=document.querySelector('.header');
+  var nav=document.querySelector('.nav');
+  var toggle=document.getElementById('menu-toggle');
+  if(!header || !nav || !toggle) return;
+  toggle.addEventListener('click',function(){
+    var isOpen=header.classList.toggle('menu-open');
+    toggle.setAttribute('aria-expanded',isOpen?'true':'false');
+  });
+  nav.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('click',function(){
+      if(window.innerWidth<=768){
+        header.classList.remove('menu-open');
+        toggle.setAttribute('aria-expanded','false');
+      }
     });
-    nav.querySelectorAll('a,button').forEach(function(el){
-      el.addEventListener('click',function(){
-        if(window.innerWidth<=768){
-          header.classList.remove('menu-open');
-          toggle.setAttribute('aria-expanded','false');
-        }
-      });
-    });
-  }
+  });
+}
 
-  function wireLangButtons(){
+
+function wireLangButtons(){
     document.querySelectorAll('[data-lang]').forEach(function(btn){
       btn.addEventListener('click',function(){
         var l=btn.getAttribute('data-lang');
@@ -103,3 +103,14 @@
     });
   });
 })();
+
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => {
+      console.error('SW registration failed:', err);
+    });
+  });
+}
+

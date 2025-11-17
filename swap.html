@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- PWA / icons -->
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/app-icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Juplite — Swap</title>
@@ -17,9 +26,6 @@
 <meta name="twitter:title" content="Juplite — Swap">
 <meta name="twitter:description" content="Swap tokens on Solana via Jupiter aggregator with deep links and your referral.">
 <meta name="twitter:image" content="https://juplite.com/assets/og.jpg">
-
-<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/assets/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="stylesheet" href="/assets/styles.css">
 <script defer src="/assets/script.js"></script>
 </head>
@@ -45,6 +51,7 @@
           <button data-lang="ru">RU</button>
         </div>
       </nav>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </header>
     <div id="promo-banner" class="banner" style="display:none">
       <div class="badge-dot"></div>
@@ -71,7 +78,7 @@
         <div class="iframe-wrap">
           <iframe id="jup-frame" title="Jupiter Swap" style="width:100%;height:100%;border:0;"></iframe>
         </div>
-        
+        <p class="small">If the pair doesn’t load, your wallet can still select tokens manually inside the widget.</p>
       </div>
     </div>
 
