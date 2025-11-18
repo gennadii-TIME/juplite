@@ -5,18 +5,16 @@
   <title>Juplite — Mobile Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Mobile-optimized Juplite swap view: full-screen Solana swaps via the official Jupiter Plugin with referral support." />
+        content="Mobile-optimized Juplite swap view: full-screen Solana swaps via Jupiter with referral support." />
 
   <!-- 🔥 AUTO CACHE BUSTER -->
   <script>
     const version = Date.now();
     function addCacheBuster() {
-      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
-      // обновляем только скрипты с data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -24,6 +22,11 @@
     }
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
+
+  <!-- PERFORMANCE -->
+  <link rel="preconnect" href="https://terminal.jup.ag">
+  <link rel="dns-prefetch" href="https://terminal.jup.ag">
+  <link rel="preload" href="/styles.css" as="style" />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
@@ -35,17 +38,22 @@
   <meta property="og:url" content="https://juplite.com/mobile" />
   <meta property="og:title" content="Juplite — Mobile Swap" />
   <meta property="og:description"
-        content="Full-screen mobile swap interface powered by Jupiter Plugin on Solana with referral support." />
+        content="Full-screen mobile swap interface powered by Jupiter on Solana with referral support." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juplite — Mobile Swap" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter Plugin in a clean mobile view." />
+        content="Fast, non-custodial swaps on Solana via Jupiter in a clean mobile view." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <!-- PWA / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Jupiter Terminal v3 -->
+  <link rel="preload" href="https://terminal.jup.ag/main-v3.js" as="script" />
+  <script src="https://terminal.jup.ag/main-v3.js" data-preload defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
@@ -130,14 +138,8 @@
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .mobile-actions {
@@ -192,7 +194,7 @@
   <div class="mobile-shell">
 
     <header class="mobile-header">
-      <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-header-logo" />
+      <img src="ui-logo-64.png" alt="Juplite Solana router logo" class="mobile-header-logo" loading="lazy" />
       <div class="mobile-header-title">
         <span>Juplite</span>
         <span>Solana swaps via Jupiter</span>
@@ -201,18 +203,19 @@
     </header>
 
     <main class="mobile-widget">
+      <!-- Контейнер под Terminal -->
       <div id="jupiter-plugin" class="jupiter-container"></div>
     </main>
 
     <footer class="mobile-footer">
-      Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet. Referral enabled.
+      Swaps are executed via Jupiter. Funds stay in your wallet. Referral enabled where applicable.
     </footer>
 
-    <!-- ACTION BUTTONS -->
+    <!-- ACTION BUTTONS / подсказка для Safari -->
     <div class="mobile-actions" id="mobile-actions">
       <div class="mobile-info">
-        Wallets are not detected in Safari.<br />
-        Open Juplite inside Phantom or Solflare to connect your wallet and sign swaps.
+        If wallets are not detected in Safari,<br />
+        open Juplite inside Phantom or Solflare to connect your wallet and sign swaps.
       </div>
 
       <a class="mobile-btn btn-phantom"
@@ -228,7 +231,6 @@
 
   </div>
 
-  <!-- ⭐ СКРИПТ ИНИЦИАЛИЗАЦИИ PLUGIN + АВТОДЕТЕКТОР (с кэш-бастером) ⭐ -->
   <script data-cache>
     // Pair from URL
     (function () {
@@ -240,18 +242,26 @@
       }
     })();
 
-    // Jupiter init with referral
+    // Jupiter Terminal v3 init with referral
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
+
+      const PLATFORM_FEE_AND_ACCOUNTS = {
+        referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
+        feeBps: 50
+      };
 
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+        endpoint: "https://api.mainnet-beta.solana.com",
+        platformFeeAndAccounts: PLATFORM_FEE_AND_ACCOUNTS,
+        strictTokenList: true,
+        containerStyles: { maxHeight: "90vh" }
       });
     });
 
-    // Авто-детектор Phantom / Solflare
+    // Авто-детектор: если внутри Phantom / Solflare – прячем кнопки
     (function () {
       const actions = document.getElementById('mobile-actions');
       if (!actions) return;
