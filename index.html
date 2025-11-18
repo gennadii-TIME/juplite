@@ -1,146 +1,134 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- PWA / icons -->
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/app-icon-180.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-<meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="utf-8" />
+  <title>Juplite — Solana Swap Router</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="Juplite routes every swap through Jupiter Plugin for the best route and price on Solana, with your referral attached." />
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Juplite — Solana Swap via Jupiter</title>
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
 
-  <!-- Main description -->
-  <meta name="description" content="Juplite routes every swap through Jupiter for the best route and price on Solana with your referral.">
+  <!-- OG / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://juplite.com/" />
+  <meta property="og:title" content="Juplite — Solana Swap Router" />
+  <meta property="og:description"
+        content="Best Solana price in 2 clicks with embedded Jupiter swap and your referral." />
+  <meta property="og:image" content="https://juplite.com/og.jpg" />
 
-  <!-- Favicon -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Juplite — Solana Swap Router" />
+  <meta name="twitter:description"
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral." />
+  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Juplite — Solana Swap via Jupiter">
-  <meta property="og:description" content="Juplite routes every swap through Jupiter for the best route and price on Solana with your referral.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://juplite.com/">
-  <meta property="og:image" content="https://juplite.com/assets/og.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 
-  <!-- Facebook -->
-  <meta property="fb:app_id" content="1234567890">
-
-  <!-- Twitter Cards -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Juplite — Solana Swap via Jupiter">
-  <meta name="twitter:description" content="Juplite routes every swap through Jupiter for the best route and price on Solana with your referral.">
-  <meta name="twitter:image" content="https://juplite.com/assets/og.jpg">
-
-  <!-- Styles & main script -->
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script defer src="/assets/script.js"></script>
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
+  <div class="page">
     <header class="header">
-      <a class="brand" href="/">
-        <img src="/assets/ui-logo-64.png" alt="Juplite logo">
-        <div>
-          <div style="font-weight:600;font-size:15px;">Juplite</div>
-          <div style="font-size:11px;color:#9ca3af;">Solana Swap Router</div>
+      <div class="logo-wrap">
+        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
+        <div class="brand">
+          <span class="brand-name">Juplite</span>
+          <span class="brand-tagline">Solana Swap Router</span>
         </div>
-        <span class="badge">Solana</span>
-      </a>
+      </div>
+
       <nav class="nav">
-        <a class="btn" data-i18n="nav_home" href="/">Home</a>
-        <a class="btn" data-i18n="nav_swap" href="/swap.html?ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap</a>
-        <a class="btn" id="ray-btn" href="https://raydium.io/swap/?referrer=FpJWQNTP71qeWgrV2Pq1Ugyx8bMh5YQYaXqEegKM7Ewg">Raydium</a>
-        <a class="btn" data-i18n="nav_jupiter" target="_blank" rel="noopener" href="https://jup.ag">Jupiter</a>
-        <div class="lang">
-          <button data-lang="en">EN</button>
-          <button data-lang="ru">RU</button>
-        </div>
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#swap" class="nav-link">Swap</a>
+        <a href="#raydium" class="nav-link">Raydium</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
       </nav>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+
+      <div class="lang-switch">
+        <button class="lang-btn active">EN</button>
+        <button class="lang-btn">RU</button>
+      </div>
     </header>
 
-    <div id="promo-banner" class="banner" style="display:none">
-      <div class="badge-dot"></div>
-      <span class="txt">Zero-Fee Day — platform fee set to 0 bps for 24 hours.</span>
-    </div>
-
-    <section class="hero">
-      <div class="card">
-        <div class="card-inner">
-          <h1 data-i18n="hero_title">Best Solana price in 2 clicks</h1>
-          <p class="lead" data-i18n="hero_sub">
+    <main class="main" id="home">
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Best Solana price in 2 clicks</h1>
+          <p class="hero-sub">
             Juplite routes every swap through Jupiter for the best route and price.
+            Referral enabled. Non-custodial. Phantom / Backpack / Solflare.
           </p>
 
-          <div class="cta">
-            <a class="btn primary" data-i18n="cta_open" href="/swap.html?ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Open Swap</a>
-            <a class="btn" data-i18n="cta_sol_usdc" href="/swap.html?pair=SOL-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">SOL ↔ USDC</a>
-            <a class="btn" data-i18n="cta_jup_usdc" href="/swap.html?pair=JUP-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">JUP ↔ USDC</a>
-            <a class="btn" data-i18n="cta_bonk_sol" href="/swap.html?pair=BONK-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">BONK ↔ SOL</a>
-            <a class="btn" data-i18n="cta_wif_sol" href="/swap.html?pair=WIF-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">WIF ↔ SOL</a>
+          <div class="hero-actions">
+            <a href="#swap" class="btn-primary">Open Swap</a>
+            <a href="#deep-links" class="btn-ghost">Quick links</a>
           </div>
 
-          <p class="small" data-i18n="trust_line">
-            Referral enabled · Non-custodial · Phantom / Backpack / Solflare.
-          </p>
-
-          <div class="section-title">Quick links</div>
-          <div class="quick-links">
-            <a href="/swap.html?pair=SOL-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap SOL ↔ USDC with ref</a>
-            <a href="/swap.html?pair=JUP-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap JUP ↔ USDC with ref</a>
-            <a href="/swap.html?pair=BONK-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap BONK ↔ SOL with ref</a>
-            <a href="/swap.html?pair=WIF-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap WIF ↔ SOL with ref</a>
-            <a href="/swap.html?pair=USDT-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Swap USDT ↔ SOL with ref</a>
+          <div class="hero-list">
+            <h3>Popular pairs</h3>
+            <div class="tags">
+              <a href="/swap?pair=SOL-USDC" class="tag">SOL ⇄ USDC</a>
+              <a href="/swap?pair=JUP-USDC" class="tag">JUP ⇄ USDC</a>
+              <a href="/swap?pair=BONK-SOL" class="tag">BONK ⇄ SOL</a>
+              <a href="/swap?pair=WIF-SOL" class="tag">WIF ⇄ SOL</a>
+            </div>
           </div>
+        </div>
 
-          <div class="section-title">Popular pairs</div>
-          <div class="cta">
-            <a class="btn" href="/swap.html?pair=SOL-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">SOL ↔ USDC</a>
-            <a class="btn" href="/swap.html?pair=JUP-USDC&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">JUP ↔ USDC</a>
-            <a class="btn" href="/swap.html?pair=TIME-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">TIME ↔ SOL</a>
-            <a class="btn" href="/swap.html?pair=USDT-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">USDT ↔ SOL</a>
-            <a class="btn" href="/swap.html?pair=BONK-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">BONK ↔ SOL</a>
-            <a class="btn" href="/swap.html?pair=WIF-SOL&ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">WIF ↔ SOL</a>
-          </div>
-
-          <div class="section-title" data-i18n="features_deeplinks">Deep Links</div>
-          <p class="small" data-i18n="features_deeplinks_txt">
-            Share links like /swap.html?pair=SOL-USDC to open the exact pair with ref.
-          </p>
-
-          <div class="section-title" data-i18n="features_raydium">Raydium Ready</div>
-          <p class="small" data-i18n="features_raydium_txt">
-            Fallback button opens Raydium swap with your referrer preserved.
-          </p>
-
-          <div class="section-title" data-i18n="features_seo">SEO &amp; Social</div>
-          <p class="small" data-i18n="features_seo_txt">
-            Static, fast, RU/EN ready, OpenGraph & Twitter cards for token landings.
+        <div class="hero-widget" id="swap">
+          <div class="widget-title">Swap via Jupiter</div>
+          <div id="jupiter-plugin" class="jupiter-container"></div>
+          <p class="widget-caption">
+            Swaps are executed by Jupiter Ultra. Your referral is attached automatically.
           </p>
         </div>
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="card-inner">
-          <div class="iframe-wrap">
-            <iframe id="jup-frame" title="Jupiter Swap" style="width:100%;height:100%;border:0;"></iframe>
+      <section class="section" id="deep-links">
+        <h2>Deep links & quick routes</h2>
+        <p class="section-sub">
+          Share links like <code>/swap?pair=SOL-USDC</code> to open the exact pair with your referral.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <h3>Quick links</h3>
+            <ul>
+              <li><a href="/swap?pair=SOL-USDC">Swap SOL ⇄ USDC</a></li>
+              <li><a href="/swap?pair=JUP-USDC">Swap JUP ⇄ USDC</a></li>
+              <li><a href="/swap?pair=BONK-SOL">Swap BONK ⇄ SOL</a></li>
+              <li><a href="/swap?pair=WIF-SOL">Swap WIF ⇄ SOL</a></li>
+            </ul>
           </div>
-          <p class="small" data-i18n="embed_hint">
-            Embedded Jupiter widget with your ref. Change pairs on the Swap page.
-          </p>
+          <div class="card" id="raydium">
+            <h3>Raydium ready</h3>
+            <p>
+              Fallback button opens Raydium swap with your referrer preserved for supported pools.
+            </p>
+          </div>
+          <div class="card">
+            <h3>SEO & Social</h3>
+            <p>
+              Static, fast, EN/RU ready, OpenGraph &amp; Twitter cards for token landings.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <footer>
-      <p data-i18n="footer">© 2025-11-15 Juplite. Not financial advice. DeFi is risky; always do your own research.</p>
+    <footer class="footer">
+      <span>© <span id="year"></span> Juplite. Powered by Jupiter Plugin on Solana.</span>
+      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">
+        Powered by Jupiter
+      </a>
     </footer>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
