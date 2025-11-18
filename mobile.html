@@ -11,10 +11,12 @@
   <script>
     const version = Date.now();
     function addCacheBuster() {
+      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
+      // обновляем только скрипты с data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -22,11 +24,6 @@
     }
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
-
-  <!-- PERFORMANCE -->
-  <link rel="preconnect" href="https://plugin.jup.ag">
-  <link rel="dns-prefetch" href="https://plugin.jup.ag">
-  <link rel="preload" href="/styles.css" as="style" />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
@@ -47,12 +44,7 @@
         content="Fast, non-custodial swaps on Solana via Jupiter Plugin in a clean mobile view." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
-  <!-- PWA / iOS -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
   <!-- Jupiter Plugin -->
-  <link rel="preload" href="https://plugin.jup.ag/plugin-v1.js" as="script">
   <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 
   <!-- Styles -->
@@ -138,8 +130,14 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .mobile-actions {
@@ -194,7 +192,7 @@
   <div class="mobile-shell">
 
     <header class="mobile-header">
-      <img src="ui-logo-64.png" alt="Juplite Solana router logo" class="mobile-header-logo" loading="lazy" />
+      <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-header-logo" />
       <div class="mobile-header-title">
         <span>Juplite</span>
         <span>Solana swaps via Jupiter</span>
@@ -210,6 +208,7 @@
       Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet. Referral enabled.
     </footer>
 
+    <!-- ACTION BUTTONS -->
     <div class="mobile-actions" id="mobile-actions">
       <div class="mobile-info">
         Wallets are not detected in Safari.<br />
@@ -229,7 +228,9 @@
 
   </div>
 
+  <!-- ⭐ СКРИПТ ИНИЦИАЛИЗАЦИИ PLUGIN + АВТОДЕТЕКТОР (с кэш-бастером) ⭐ -->
   <script data-cache>
+    // Pair from URL
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pair = params.get('pair');
@@ -239,8 +240,10 @@
       }
     })();
 
+    // Jupiter init with referral
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
+
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
@@ -248,6 +251,7 @@
       });
     });
 
+    // Авто-детектор Phantom / Solflare
     (function () {
       const actions = document.getElementById('mobile-actions');
       if (!actions) return;

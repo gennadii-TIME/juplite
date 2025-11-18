@@ -1,4 +1,4 @@
-/* Juplite basic styles (dark, clean, Lighthouse-friendly) */
+/* Juplite basic styles (dark, clean) */
 
 :root {
   --bg: #020617;
@@ -36,16 +36,13 @@ a {
   text-decoration: none;
 }
 
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.85em;
-}
-
 .page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 16px 12px 32px;
 }
+
+/* HEADER */
 
 .header {
   display: flex;
@@ -94,6 +91,8 @@ code {
   color: var(--text-muted);
 }
 
+/* NAV */
+
 .nav {
   display: flex;
   gap: 8px;
@@ -121,6 +120,8 @@ code {
   border-color: rgba(56, 189, 248, 0.9);
 }
 
+/* LANG SWITCH */
+
 .lang-switch {
   display: flex;
   gap: 4px;
@@ -144,6 +145,8 @@ code {
   background: var(--accent-soft);
   color: #e0f2fe;
 }
+
+/* MAIN / HERO */
 
 .main {
   padding-top: 18px;
@@ -219,6 +222,8 @@ code {
   background: rgba(15, 23, 42, 0.85);
 }
 
+/* WIDGET */
+
 .hero-widget {
   background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.96));
   border-radius: 22px;
@@ -252,6 +257,8 @@ code {
   font-size: 11px;
   color: var(--text-muted);
 }
+
+/* SECTION */
 
 .section {
   margin-top: 32px;
@@ -297,6 +304,8 @@ code {
   padding-left: 16px;
 }
 
+/* FOOTER */
+
 .footer {
   margin-top: 30px;
   padding-top: 10px;
@@ -314,6 +323,8 @@ code {
   font-size: 11px;
   text-decoration: underline;
 }
+
+/* MOBILE */
 
 @media (max-width: 768px) {
   .header {
