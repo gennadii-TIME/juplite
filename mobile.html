@@ -5,47 +5,40 @@
   <title>Juplite — Mobile Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/app-icon-180.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/app-icon-192.png" />
-  <link rel="apple-touch-icon" sizes="512x512" href="/app-icon-512.png" />
-  <link rel="manifest" href="/manifest.json" />
-
-  <!-- Jupiter Terminal -->
+  <link rel="stylesheet" href="styles.css" />
   <script src="https://terminal.jup.ag/main-v3.js" defer></script>
 
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { margin:0; background:#020617; }
+    #terminal { height: 100vh; }
+    .mobile-note {
+      text-align:center; padding:8px; font-size:12px; opacity:0.7;
+    }
+  </style>
 </head>
 
-<body class="mobile">
-  <header class="mobile-header">
-    <img src="ui-logo-64.png" class="mobile-logo" alt="logo" />
-    <span class="mobile-title">Juplite</span>
-  </header>
+<body>
+  <div class="mobile-note" id="note">
+    Connecting wallet… If Safari does not detect your wallet, open inside Phantom or Solflare.
+  </div>
 
-  <main class="mobile-main">
-    <div id="jupiter-terminal" class="jupiter-container"></div>
-  </main>
+  <div id="terminal"></div>
 
-<script>
-window.addEventListener("load", function () {
-  if (!window.Jupiter) return;
+  <script>
+    const ua = (navigator.userAgent || "").toLowerCase();
+    const isInjected = window.solana || window.phantom || window.solflare;
 
-  window.Jupiter.init({
-    displayMode: "integrated",
-    integratedTargetId: "jupiter-terminal",
-
-    connection: {
-      endpoint: "https://api.mainnet-beta.solana.com"
-    },
-
-    platformFeeAndAccounts: {
-      referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-      feeBps: 30
+    if (isInjected || ua.includes("phantom") || ua.includes("solflare")) {
+      document.getElementById("note").style.display = "none";
     }
-  });
-});
-</script>
 
+    window.addEventListener("load", () => {
+      window.Jupiter.init({
+        displayMode: "terminal",
+        integratedTargetId: "terminal",
+        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+      });
+    });
+  </script>
 </body>
 </html>
