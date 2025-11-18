@@ -5,7 +5,7 @@
   <title>Juplite — Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite swap page: fast non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
+        content="Juplite swap page: fast non-custodial swaps on Solana via Jupiter with referral support." />
 
   <!-- 🔥 AUTO CACHE BUSTER -->
   <script>
@@ -23,27 +23,33 @@
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
 
+  <!-- PERFORMANCE -->
+  <link rel="preconnect" href="https://terminal.jup.ag">
+  <link rel="dns-prefetch" href="https://terminal.jup.ag">
+  <link rel="preload" href="/styles.css" as="style" />
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
 
-  <!-- OG / Social (можно упростить или скопировать как у index.html) -->
+  <!-- OG / Social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://juplite.com/swap" />
   <meta property="og:title" content="Juplite — Swap" />
   <meta property="og:description"
-        content="Direct swap page powered by Jupiter Plugin on Solana with referral support." />
+        content="Direct swap page powered by Jupiter on Solana with referral support." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juplite — Swap" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+        content="Fast, non-custodial swaps on Solana via Jupiter with referral support." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <!-- Jupiter Terminal v3 -->
+  <link rel="preload" href="https://terminal.jup.ag/main-v3.js" as="script" />
+  <script src="https://terminal.jup.ag/main-v3.js" data-preload defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
@@ -52,7 +58,7 @@
   <div class="page">
     <header class="header">
       <div class="logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
+        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" loading="lazy" />
         <div class="brand">
           <span class="brand-name">Juplite</span>
           <span class="brand-tagline">Solana Swap Router</span>
@@ -75,22 +81,22 @@
             Swap via Jupiter
             <span id="pair-label" class="pair-label"></span>
           </div>
+          <!-- тот же контейнер под Terminal -->
           <div id="jupiter-plugin" class="jupiter-container"></div>
           <p class="widget-caption">
-            Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
-            Referral support is embedded where applicable.
+            Swaps are executed inside Jupiter. Your funds always stay in your wallet.
+            Referral fee is enabled where applicable.
           </p>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
+      <span>© <span id="year"></span> Juplite. Independent interface using Jupiter.</span>
       <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
     </footer>
   </div>
 
-  <!-- ⭐ ВСЕ СКРИПТЫ НИЖЕ — С КЭШ-БАСТЕРОМ ⭐ -->
   <script data-cache>
     // Год в футере
     (function () {
@@ -101,21 +107,29 @@
     // Чтение ?pair=SOL-USDC из URL и показ в заголовке
     (function () {
       const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair'); // формат ожидаем: SOL-USDC, JUP-USDC, BONK-SOL и т.д.
+      const pair = params.get('pair'); // SOL-USDC, JUP-USDC, BONK-SOL и т.д.
       const label = document.getElementById('pair-label');
       if (pair && label) {
         label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
       }
     })();
 
-    // Инициализация Jupiter Plugin с твоей рефкой
+    // Инициализация Jupiter Terminal v3 с твоей рефкой
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
+
+      const PLATFORM_FEE_AND_ACCOUNTS = {
+        referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
+        feeBps: 50
+      };
 
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+        endpoint: "https://api.mainnet-beta.solana.com",
+        platformFeeAndAccounts: PLATFORM_FEE_AND_ACCOUNTS,
+        strictTokenList: true,
+        containerStyles: { maxHeight: "640px" }
       });
     });
   </script>
