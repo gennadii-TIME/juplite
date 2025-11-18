@@ -348,11 +348,3 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .page {
-    padding: 10px;
-  }
-}
-/* Временно скрываем переключатель языка */
-.lang-switch {
-  display: none;
-}
