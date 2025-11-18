@@ -1,90 +1,108 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- PWA / icons -->
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/app-icon-180.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-<meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="utf-8" />
+  <title>Juplite — Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="Juplite swap page: fast non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Juplite — Swap</title>
-<meta name="description" content="Swap tokens on Solana via Jupiter aggregator with deep links and RU/EN localization.">
-<meta property="og:title" content="Juplite — Swap">
-<meta property="og:description" content="Swap tokens on Solana via Jupiter aggregator with deep links and your referral.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://juplite.com/swap.html">
-<meta property="og:image" content="https://juplite.com/assets/og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="fb:app_id" content="1234567890">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Juplite — Swap">
-<meta name="twitter:description" content="Swap tokens on Solana via Jupiter aggregator with deep links and your referral.">
-<meta name="twitter:image" content="https://juplite.com/assets/og.jpg">
-<link rel="stylesheet" href="/assets/styles.css">
-<script defer src="/assets/script.js"></script>
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+  <!-- OG / Social (можно упростить или скопировать как у index.html) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://juplite.com/swap" />
+  <meta property="og:title" content="Juplite — Swap" />
+  <meta property="og:description"
+        content="Direct swap page powered by Jupiter Plugin on Solana with referral support." />
+  <meta property="og:image" content="https://juplite.com/og.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Juplite — Swap" />
+  <meta name="twitter:description"
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
+
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    
+  <div class="page">
     <header class="header">
-      <a class="brand" href="/">
-        <img src="/assets/ui-logo-64.png" alt="Juplite logo">
-        <div>
-          <div style="font-weight:600;font-size:15px;">Juplite</div>
-          <div style="font-size:11px;color:#9ca3af;">Solana Swap Router</div>
+      <div class="logo-wrap">
+        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
+        <div class="brand">
+          <span class="brand-name">Juplite</span>
+          <span class="brand-tagline">Solana Swap Router</span>
         </div>
-        <span class="badge">Solana</span>
-      </a>
+      </div>
+
       <nav class="nav">
-        <a class="btn" data-i18n="nav_home" href="/">Home</a>
-        
-        <a class="btn" id="ray-btn" target="_blank" rel="noopener" data-i18n="nav_raydium" href="#">Raydium</a>
-        <a class="btn" target="_blank" rel="noopener" data-i18n="nav_jupiter" href="https://jup.ag/swap?ref=5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz">Jupiter</a>
-        <div class="lang">
-          <button data-lang="en">EN</button>
-          <button data-lang="ru">RU</button>
-        </div>
+        <a href="/" class="nav-link">Home</a>
+        <a href="/swap" class="nav-link active">Swap</a>
+        <a href="/#deep-links" class="nav-link">Links</a>
+        <a href="/#about" class="nav-link">About</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
       </nav>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </header>
-    <div id="promo-banner" class="banner" style="display:none">
-      <div class="badge-dot"></div>
-      <span class="txt">Zero-Fee Day — platform fee set to 0 bps for 24 hours.</span>
-    </div>
-    
-    <div class="card">
-      <div class="card-inner">
-        <h1 data-i18n="swap_title">Swap</h1>
-        <p class="lead" data-i18n="swap_sub">Use quick-pair buttons or add ?pair=SOL-USDC to the URL. The widget will open that pair with your ref.</p>
-        <div class="cta">
-          <a class="btn" href="/swap.html?pair=SOL-USDC">SOL ↔ USDC</a>
-          <a class="btn" href="/swap.html?pair=JUP-USDC">JUP ↔ USDC</a>
-          <a class="btn" href="/swap.html?pair=TIME-SOL">TIME ↔ SOL</a>
-          <a class="btn" href="/swap.html?pair=USDT-SOL">USDT ↔ SOL</a>
-          <a class="btn" href="/swap.html?pair=BONK-SOL">BONK ↔ SOL</a>
-          <a class="btn" href="/swap.html?pair=WIF-SOL">WIF ↔ SOL</a>
-        </div>
-      </div>
-    </div>
 
-    <div class="card" style="margin-top:14px">
-      <div class="card-inner">
-        <div class="iframe-wrap">
-          <iframe id="jup-frame" title="Jupiter Swap" style="width:100%;height:100%;border:0;"></iframe>
+    <main class="main">
+      <section class="section">
+        <div class="hero-widget">
+          <div class="widget-title">
+            Swap via Jupiter
+            <span id="pair-label" class="pair-label"></span>
+          </div>
+          <div id="jupiter-plugin" class="jupiter-container"></div>
+          <p class="widget-caption">
+            Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
+            Referral support is embedded where applicable.
+          </p>
         </div>
-        <p class="small">If the pair doesn’t load, your wallet can still select tokens manually inside the widget.</p>
-      </div>
-    </div>
+      </section>
+    </main>
 
-    <footer>
-      <p data-i18n="footer">© 2025-11-15 Juplite. Not financial advice. DeFi is risky; always do your own research.</p>
+    <footer class="footer">
+      <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
+      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
     </footer>
   </div>
+
+  <script>
+    // Год в футере
+    (function () {
+      var yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+
+    // Чтение ?pair=SOL-USDC из URL и показ в заголовке
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const pair = params.get('pair'); // формат ожидаем: SOL-USDC, JUP-USDC, BONK-SOL и т.д.
+      const label = document.getElementById('pair-label');
+      if (pair && label) {
+        label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
+      }
+    })();
+
+    // Инициализация Jupiter Plugin с твоей рефкой
+    window.addEventListener("load", function () {
+      if (!window.Jupiter) return;
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-plugin",
+        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+        // При желании можно позже добавить defaultInputMint/defaultOutputMint
+        // на основе параметра pair, когда будешь готов задать точные mint-адреса.
+      });
+    });
+  </script>
 </body>
 </html>
