@@ -32,7 +32,6 @@
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Небольшие доп. стили под мобильный full-screen */
     body.mobile-body {
       margin: 0;
       padding: 0;
@@ -111,15 +110,75 @@
       color: inherit;
       text-decoration: underline;
     }
+
+    /* Анимация и блок действий */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-actions {
+      margin-top: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 12px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease-out 0.15s forwards;
+    }
+
+    .mobile-btn {
+      display: block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      color: #e5e7eb;
+      border: 1px solid rgba(148,163,184,0.5);
+      transform: translateY(4px);
+      animation: fadeUp 0.4s ease-out forwards;
+    }
+
+    .btn-phantom {
+      background: rgba(129, 140, 248, 0.25);
+      animation-delay: 0.2s;
+    }
+
+    .btn-solflare {
+      background: rgba(250, 204, 21, 0.1);
+      color: #fcd34d;
+      animation-delay: 0.3s;
+    }
+
+    .mobile-btn:active {
+      transform: translateY(4px) scale(0.97);
+    }
+
+    .mobile-info {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
   </style>
 </head>
+
 <body class="mobile-body">
   <div class="mobile-shell">
+
     <header class="mobile-header">
       <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-header-logo" />
       <div class="mobile-header-title">
         <span>Juplite</span>
-        <span id="mobile-subtitle">Solana swaps via Jupiter</span>
+        <span>Solana swaps via Jupiter</span>
         <span id="mobile-pair" class="mobile-pair-label"></span>
       </div>
     </header>
@@ -129,24 +188,41 @@
     </main>
 
     <footer class="mobile-footer">
-      Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet.
-      Referral support: enabled. <a href="https://jup.ag" target="_blank" rel="noreferrer">Powered by Jupiter</a>
+      Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet. Referral enabled.
     </footer>
+
+    <!-- ACTION BUTTONS -->
+    <div class="mobile-actions" id="mobile-actions">
+      <div class="mobile-info">
+        Wallets are not detected in Safari.<br />
+        Open Juplite inside Phantom or Solflare to connect your wallet and sign swaps.
+      </div>
+
+      <a class="mobile-btn btn-phantom"
+         href="phantom://browse/https://juplite.com/mobile">
+        Open in Phantom
+      </a>
+
+      <a class="mobile-btn btn-solflare"
+         href="solflare://browse/https://juplite.com/mobile">
+        Open in Solflare
+      </a>
+    </div>
+
   </div>
 
   <script>
-    // Читаем pair из URL и показываем в подписи
+    // Pair from URL
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pair = params.get('pair');
-      const label = document.getElementById('mobile-pair');
-
-      if (pair && label) {
-        label.textContent = 'Pair: ' + pair.replace('-', ' ⇄ ');
+      if (pair) {
+        document.getElementById('mobile-pair').textContent =
+          'Pair: ' + pair.replace('-', ' ⇄ ');
       }
     })();
 
-    // Инициализация Jupiter Plugin c рефкой
+    // Jupiter init with referral
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
 
@@ -156,6 +232,26 @@
         referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
       });
     });
+
+    // Авто-детектор: если внутри Phantom / Solflare – прячем кнопки
+    (function () {
+      const actions = document.getElementById('mobile-actions');
+      if (!actions) return;
+
+      const ua = (navigator.userAgent || '').toLowerCase();
+      const isPhantomUA = ua.includes('phantom');
+      const isSolflareUA = ua.includes('solflare');
+
+      const isWalletInjected =
+        (window.solana && (window.solana.isPhantom || window.solana.isSolflare)) ||
+        window.phantom || window.solflare;
+
+      if (isPhantomUA || isSolflareUA || isWalletInjected) {
+        // В dApp-браузере кошелька – кнопки не нужны
+        actions.style.display = 'none';
+      }
+    })();
   </script>
+
 </body>
 </html>
