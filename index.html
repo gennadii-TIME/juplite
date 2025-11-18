@@ -256,7 +256,7 @@
           document.documentElement.lang = 'en';
         } else {
           ruBtn.classList.add('active');
-          enBtn.classList.remove('active');
+          enBtn.classList.remove('active';
 
           heroSubEn.style.display = 'none';
           heroSubRu.style.display = '';
@@ -276,34 +276,29 @@
   </script>
 
   <!-- ⭐⭐⭐ Jupiter Plugin + Ultra Referral ⭐⭐⭐ -->
-<script>
-  window.addEventListener("load", function () {
-    if (!window.Jupiter || !window.Jupiter.init) {
-      console.warn("Jupiter Plugin not available");
-      return;
-    }
-
-    window.Jupiter.init({
-      displayMode: "integrated",
-      integratedTargetId: "jupiter-plugin",
-
-      // 🔥 ТВОИ Ultra Fees
-      formProps: {
-        // правильный Ultra referralAccount (из Ultra Dashboard)
-        referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-
-        // комиссия в bps: 50–255
-        // 100 = 1%
-        referralFee: 100
-      },
-
-      branding: {
-        name: "Juplite",
-        logoUri: "https://juplite.com/ui-logo-64.png"
+  <script>
+    window.addEventListener("load", function () {
+      if (!window.Jupiter || !window.Jupiter.init) {
+        console.warn("Jupiter Plugin not available");
+        return;
       }
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-plugin",
+
+        formProps: {
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 100
+        },
+
+        branding: {
+          name: "Juplite",
+          logoUri: "https://juplite.com/ui-logo-64.png"
+        }
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
 </html>
