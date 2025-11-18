@@ -3,104 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <title>Juplite — Solana Swap Router</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description"
-        content="Fast non-custodial swaps on Solana via Juplite powered by Jupiter Terminal." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function cb() {
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(x => x.href = x.href.split('?')[0] + '?v=' + version);
-      document.querySelectorAll('script[data-cache]').forEach(x => x.src = x.src.split('?')[0] + '?v=' + version);
+  <link rel="stylesheet" href="styles.css?v=3" />
+
+  <!-- Jupiter Terminal v3 — правильное подключение -->
+  <script type="module"
+          src="https://terminal.jup.ag/main-v3.js"></script>
+
+  <style>
+    #terminal {
+      height: 560px;
+      border-radius: 18px;
+      overflow: hidden;
     }
-    document.addEventListener("DOMContentLoaded", cb);
-  </script>
+  </style>
 
-  <!-- PERFORMANCE -->
-  <link rel="preconnect" href="https://terminal.jup.ag">
-  <link rel="dns-prefetch" href="https://terminal.jup.ag">
-
-  <meta name="theme-color" content="#020617" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-
-  <!-- OG -->
-  <meta property="og:title" content="Juplite — Solana Swap Router" />
-  <meta property="og:image" content="https://juplite.com/og.jpg" />
-
-  <!-- Jupiter Terminal v3 -->
-  <script src="https://terminal.jup.ag/main-v3.js" defer></script>
-
-  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <div class="page">
-    <header class="header">
-      <div class="logo-wrap">
-        <img src="ui-logo-64.png" class="logo" />
-        <div class="brand">
-          <span class="brand-name">Juplite</span>
-          <span class="brand-tagline">Solana Swap Router</span>
-        </div>
-      </div>
 
-      <nav class="nav">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#swap" class="nav-link">Swap</a>
-        <a href="#deep-links" class="nav-link">Links</a>
-        <a href="#about" class="nav-link">About</a>
-      </nav>
-    </header>
+    <div class="hero-widget">
+      <div class="widget-title">Swap via Jupiter</div>
+      <div id="terminal"></div>
+    </div>
 
-    <main class="main" id="home">
-      <section class="hero">
-        <div class="hero-text">
-          <h1>Best Solana price in 2 clicks</h1>
-          <p class="hero-sub">
-            Juplite routes every swap through Jupiter Terminal.  
-            Supports Phantom, Solflare, Backpack, Coinbase, Trust Wallet and more.
-          </p>
-
-          <div class="hero-actions">
-            <a href="#swap" class="btn-primary">Open Swap</a>
-            <a href="#deep-links" class="btn-ghost">Quick links</a>
-          </div>
-        </div>
-
-        <!-- WIDGET -->
-        <div class="hero-widget" id="swap">
-          <div class="widget-title">Swap via Jupiter</div>
-
-          <div id="terminal" class="jupiter-container" style="height:560px;"></div>
-
-          <p class="widget-caption">
-            Uses Jupiter Terminal. All swaps are routed through the best aggregator on Solana.
-          </p>
-        </div>
-      </section>
-
-      <!-- SECTIONS... (оставил твои без изменений) -->
-
-    </main>
-
-    <footer class="footer">
-      <span>© <span id="year"></span> Juplite</span>
-    </footer>
   </div>
 
-  <script data-cache>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    window.addEventListener("load", () => {
-      window.Jupiter.init({
-        displayMode: "terminal",
-        integratedTargetId: "terminal",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-      });
+  <script type="module">
+    window.Jupiter.init({
+      displayMode: "terminal",
+      integratedTargetId: "terminal",
+      referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
     });
   </script>
+
 </body>
 </html>
