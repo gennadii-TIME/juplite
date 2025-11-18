@@ -11,12 +11,10 @@
   <script>
     const version = Date.now();
     function addCacheBuster() {
-      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
-      // обновляем только те скрипты, у которых есть data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -66,7 +64,7 @@
         <a href="#swap" class="nav-link">Swap</a>
         <a href="#deep-links" class="nav-link">Links</a>
         <a href="#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
+        <a href="https://jup.ag" target="_blank" rel="noopener noreferrer" class="nav-link">Jupiter</a>
       </nav>
 
       <div class="lang-switch">
@@ -203,15 +201,14 @@
 
     <footer class="footer">
       <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
-      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
+      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer" class="footer-link">Powered by Jupiter</a>
     </footer>
   </div>
-
 
   <!-- Your scripts (с кэш-бастером) -->
   <script src="script.js" data-cache></script>
 
-  <!-- LANGUAGE SWITCHER -->
+  <!-- YEAR & LANGUAGE SWITCHER -->
   <script>
     (function () {
       const enBtn = document.querySelector('.lang-btn[data-lang="en"]');
@@ -222,6 +219,11 @@
 
       const aboutEn = document.getElementById('about-en');
       const aboutRu = document.getElementById('about-ru');
+
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      if (!enBtn || !ruBtn || !heroSubEn || !heroSubRu || !aboutEn || !aboutRu) return;
 
       function setLang(lang) {
         if (lang === 'en') {
@@ -256,9 +258,13 @@
     })();
   </script>
 
-  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT (ВАЖНО!!!) ⭐⭐⭐ -->
+  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT ⭐⭐⭐ -->
   <script>
     window.addEventListener("load", function () {
+      if (!window.Jupiter || !window.Jupiter.init) {
+        console.warn("Jupiter Plugin not available");
+        return;
+      }
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
