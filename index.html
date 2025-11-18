@@ -11,12 +11,10 @@
   <script>
     const version = Date.now();
     function addCacheBuster() {
-      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
-      // обновляем только те скрипты, у которых есть data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -25,10 +23,18 @@
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
 
+  <!-- PERFORMANCE: preconnect + preload -->
+  <link rel="preconnect" href="https://plugin.jup.ag">
+  <link rel="dns-prefetch" href="https://plugin.jup.ag">
+  <link rel="preload" href="/styles.css" as="style" />
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+  <!-- SEO -->
+  <link rel="canonical" href="https://juplite.com/" />
 
   <!-- OG / Social -->
   <meta property="og:type" content="website" />
@@ -44,7 +50,23 @@
         content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
+  <!-- PWA / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Juplite",
+    "url": "https://juplite.com/",
+    "description": "Fast Solana swaps via the official Jupiter Plugin with referral support."
+  }
+  </script>
+
   <!-- Jupiter Plugin -->
+  <link rel="preload" href="https://plugin.jup.ag/plugin-v1.js" as="script">
   <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 
   <!-- Styles -->
@@ -54,7 +76,7 @@
   <div class="page">
     <header class="header">
       <div class="logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
+        <img src="ui-logo-64.png" alt="Juplite Solana router logo" class="logo" loading="lazy" />
         <div class="brand">
           <span class="brand-name">Juplite</span>
           <span class="brand-tagline">Solana Swap Router</span>
@@ -66,7 +88,7 @@
         <a href="#swap" class="nav-link">Swap</a>
         <a href="#deep-links" class="nav-link">Links</a>
         <a href="#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link" rel="noreferrer">Jupiter</a>
       </nav>
 
       <div class="lang-switch">
@@ -148,7 +170,6 @@
         </div>
       </section>
 
-      <!-- ABOUT EN/RU -->
       <section class="section" id="about">
         <h2>About Juplite</h2>
 
@@ -207,7 +228,6 @@
     </footer>
   </div>
 
-
   <!-- Your scripts (с кэш-бастером) -->
   <script src="script.js" data-cache></script>
 
@@ -256,9 +276,10 @@
     })();
   </script>
 
-  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT (ВАЖНО!!!) ⭐⭐⭐ -->
+  <!-- Jupiter REFERRAL INIT -->
   <script>
     window.addEventListener("load", function () {
+      if (!window.Jupiter) return;
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",

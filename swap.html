@@ -11,12 +11,10 @@
   <script>
     const version = Date.now();
     function addCacheBuster() {
-      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
-      // обновляем скрипты с data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -25,10 +23,18 @@
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
 
+  <!-- PERFORMANCE -->
+  <link rel="preconnect" href="https://plugin.jup.ag">
+  <link rel="dns-prefetch" href="https://plugin.jup.ag">
+  <link rel="preload" href="/styles.css" as="style" />
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+  <!-- SEO -->
+  <link rel="canonical" href="https://juplite.com/swap" />
 
   <!-- OG / Social -->
   <meta property="og:type" content="website" />
@@ -45,17 +51,17 @@
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
   <!-- Jupiter Plugin -->
+  <link rel="preload" href="https://plugin.jup.ag/plugin-v1.js" as="script">
   <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
   <div class="page">
     <header class="header">
       <div class="logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
+        <img src="ui-logo-64.png" alt="Juplite Solana router logo" class="logo" loading="lazy" />
         <div class="brand">
           <span class="brand-name">Juplite</span>
           <span class="brand-tagline">Solana Swap Router</span>
@@ -67,7 +73,7 @@
         <a href="/swap" class="nav-link active">Swap</a>
         <a href="/#deep-links" class="nav-link">Links</a>
         <a href="/#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link" rel="noreferrer">Jupiter</a>
       </nav>
     </header>
 
@@ -78,9 +84,7 @@
             Swap via Jupiter
             <span id="pair-label" class="pair-label"></span>
           </div>
-
           <div id="jupiter-plugin" class="jupiter-container"></div>
-
           <p class="widget-caption">
             Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
             Referral support is embedded where applicable.
@@ -95,29 +99,23 @@
     </footer>
   </div>
 
-  <!-- ⭐ ВСЕ СКРИПТЫ НИЖЕ — С КЭШ-БАСТЕРОМ ⭐ -->
   <script data-cache>
-    // Год в футере
     (function () {
       var yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
     })();
 
-    // Чтение ?pair=SOL-USDC из URL
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pair = params.get('pair');
       const label = document.getElementById('pair-label');
-
       if (pair && label) {
         label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
       }
     })();
 
-    // Инициализация Jupiter Plugin с рефкой
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
-
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
