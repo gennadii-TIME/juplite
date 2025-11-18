@@ -17,23 +17,26 @@
   <meta property="og:url" content="https://juplite.com/" />
   <meta property="og:title" content="Juplite — Solana Swap Router" />
   <meta property="og:description"
-        content="Best Solana price in 2 clicks with embedded Jupiter swap and your referral." />
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juplite — Solana Swap Router" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral." />
+        content="Best Solana price in 2 clicks with embedded Jupiter swap and referral." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
   <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <script defer src="https://terminal.jup.ag/main-v2.js"></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="page">
+
+    <!-- Header -->
     <header class="header">
       <div class="logo-wrap">
         <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
@@ -44,19 +47,17 @@
       </div>
 
       <nav class="nav">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#swap" class="nav-link">Swap</a>
-        <a href="#raydium" class="nav-link">Raydium</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
+        <a href="#home" class="nav-link nav-link-pill active">Home</a>
+        <a href="#swap" class="nav-link nav-link-pill">Swap</a>
+        <a href="#raydium" class="nav-link nav-link-pill nav-link-raydium">Raydium</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link nav-link-minor">Jupiter</a>
       </nav>
-
-      <div class="lang-switch">
-        <button class="lang-btn active">EN</button>
-        <button class="lang-btn">RU</button>
-      </div>
     </header>
 
+    <!-- Main -->
     <main class="main" id="home">
+
+      <!-- HERO -->
       <section class="hero">
         <div class="hero-text">
           <h1>Best Solana price in 2 clicks</h1>
@@ -81,6 +82,7 @@
           </div>
         </div>
 
+        <!-- Jupiter Widget -->
         <div class="hero-widget" id="swap">
           <div class="widget-title">Swap via Jupiter</div>
           <div id="jupiter-plugin" class="jupiter-container"></div>
@@ -90,12 +92,15 @@
         </div>
       </section>
 
+      <!-- Deep Links / Raydium -->
       <section class="section" id="deep-links">
         <h2>Deep links & quick routes</h2>
         <p class="section-sub">
-          Share links like <code>/swap?pair=SOL-USDC</code> to open the exact pair with your referral.
+          Share links like <code>/swap?pair=SOL-USDC</code> — it will open the exact pair with your referral.
         </p>
+
         <div class="cards">
+
           <div class="card">
             <h3>Quick links</h3>
             <ul>
@@ -105,28 +110,46 @@
               <li><a href="/swap?pair=WIF-SOL">Swap WIF ⇄ SOL</a></li>
             </ul>
           </div>
-          <div class="card" id="raydium">
-            <h3>Raydium ready</h3>
+
+          <!-- RAYDIUM CARD WITH REF -->
+          <div class="card card-raydium" id="raydium">
+            <h3>Raydium bonus route</h3>
             <p>
-              Fallback button opens Raydium swap with your referrer preserved for supported pools.
+              Prefer Raydium UI? Open with your Juplite referral attached and use the classic
+              Raydium interface.
+            </p>
+            <a
+              class="btn-raydium"
+              href="https://raydium.io/swap/?referrer=FpJWQNTP71qeWgrV2Pq1Ugyx8bMh5YQYaXqEegKM7Ewg"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open Raydium with ref
+            </a>
+            <p class="card-note">
+              Your Raydium referral is included automatically.
             </p>
           </div>
+
           <div class="card">
             <h3>SEO & Social</h3>
             <p>
-              Static, fast, EN/RU ready, OpenGraph &amp; Twitter cards for token landings.
+              Static, fast, EN-ready, OpenGraph & Twitter cards for token landings.
             </p>
           </div>
+
         </div>
       </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
       <span>© <span id="year"></span> Juplite. Powered by Jupiter Plugin on Solana.</span>
       <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">
         Powered by Jupiter
       </a>
     </footer>
+
   </div>
 
   <script src="script.js"></script>
