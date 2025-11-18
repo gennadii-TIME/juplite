@@ -7,12 +7,30 @@
   <meta name="description"
         content="Juplite swap page: fast non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
 
+  <!-- 🔥 AUTO CACHE BUSTER -->
+  <script>
+    const version = Date.now();
+    function addCacheBuster() {
+      // обновляем все CSS
+      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        if (!link.href) return;
+        link.href = link.href.split('?')[0] + '?v=' + version;
+      });
+      // обновляем скрипты с data-cache
+      document.querySelectorAll('script[data-cache]').forEach(sc => {
+        if (!sc.src) return;
+        sc.src = sc.src.split('?')[0] + '?v=' + version;
+      });
+    }
+    document.addEventListener("DOMContentLoaded", addCacheBuster);
+  </script>
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
 
-  <!-- OG / Social (можно упростить или скопировать как у index.html) -->
+  <!-- OG / Social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://juplite.com/swap" />
   <meta property="og:title" content="Juplite — Swap" />
@@ -32,6 +50,7 @@
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="page">
     <header class="header">
@@ -59,7 +78,9 @@
             Swap via Jupiter
             <span id="pair-label" class="pair-label"></span>
           </div>
+
           <div id="jupiter-plugin" class="jupiter-container"></div>
+
           <p class="widget-caption">
             Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
             Referral support is embedded where applicable.
@@ -74,24 +95,26 @@
     </footer>
   </div>
 
-  <script>
+  <!-- ⭐ ВСЕ СКРИПТЫ НИЖЕ — С КЭШ-БАСТЕРОМ ⭐ -->
+  <script data-cache>
     // Год в футере
     (function () {
       var yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
     })();
 
-    // Чтение ?pair=SOL-USDC из URL и показ в заголовке
+    // Чтение ?pair=SOL-USDC из URL
     (function () {
       const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair'); // формат ожидаем: SOL-USDC, JUP-USDC, BONK-SOL и т.д.
+      const pair = params.get('pair');
       const label = document.getElementById('pair-label');
+
       if (pair && label) {
         label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
       }
     })();
 
-    // Инициализация Jupiter Plugin с твоей рефкой
+    // Инициализация Jupiter Plugin с рефкой
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
 
@@ -99,8 +122,6 @@
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
         referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
-        // При желании можно позже добавить defaultInputMint/defaultOutputMint
-        // на основе параметра pair, когда будешь готов задать точные mint-адреса.
       });
     });
   </script>
