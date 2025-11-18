@@ -1,11 +1,161 @@
-<!DOCTYPE html><html><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Juplite Mobile AppView</title>
-<style>
-body{margin:0;background:#0A0F3C;color:white;font-family:sans-serif;}
-iframe{border:0;width:100vw;height:100vh;}
-</style>
-</head><body>
-<iframe src="https://jup.ag/swap/USDC-SOL"></iframe>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Juplite — Mobile Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="Mobile-optimized Juplite swap view: full-screen Solana swaps via the official Jupiter Plugin with referral support." />
+
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+  <!-- OG / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://juplite.com/mobile" />
+  <meta property="og:title" content="Juplite — Mobile Swap" />
+  <meta property="og:description"
+        content="Full-screen mobile swap interface powered by Jupiter Plugin on Solana with referral support." />
+  <meta property="og:image" content="https://juplite.com/og.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Juplite — Mobile Swap" />
+  <meta name="twitter:description"
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin in a clean mobile view." />
+  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
+
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Небольшие доп. стили под мобильный full-screen */
+    body.mobile-body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #020617;
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 16px;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mobile-header-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+    }
+
+    .mobile-header-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .mobile-header-title span:first-child {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .mobile-header-title span:last-child {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .mobile-pair-label {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    .mobile-widget {
+      flex: 1;
+      min-height: 360px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .mobile-footer {
+      margin-top: 8px;
+      font-size: 10px;
+      text-align: center;
+      opacity: 0.6;
+    }
+
+    .mobile-footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="mobile-body">
+  <div class="mobile-shell">
+    <header class="mobile-header">
+      <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-header-logo" />
+      <div class="mobile-header-title">
+        <span>Juplite</span>
+        <span id="mobile-subtitle">Solana swaps via Jupiter</span>
+        <span id="mobile-pair" class="mobile-pair-label"></span>
+      </div>
+    </header>
+
+    <main class="mobile-widget">
+      <div id="jupiter-plugin" class="jupiter-container"></div>
+    </main>
+
+    <footer class="mobile-footer">
+      Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet.
+      Referral support: enabled. <a href="https://jup.ag" target="_blank" rel="noreferrer">Powered by Jupiter</a>
+    </footer>
+  </div>
+
+  <script>
+    // Читаем pair из URL и показываем в подписи
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const pair = params.get('pair');
+      const label = document.getElementById('mobile-pair');
+
+      if (pair && label) {
+        label.textContent = 'Pair: ' + pair.replace('-', ' ⇄ ');
+      }
+    })();
+
+    // Инициализация Jupiter Plugin c рефкой
+    window.addEventListener("load", function () {
+      if (!window.Jupiter) return;
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-plugin",
+        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+      });
+    });
+  </script>
+</body>
+</html>
