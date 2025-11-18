@@ -116,11 +116,14 @@
 
     // Инициализация Jupiter Terminal v3 с твоей рефкой
     window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
+  if (!window.Jupiter) return;
+  window.Jupiter.init({
+    displayMode: "integrated",
+    integratedTargetId: "jupiter-plugin"
+    // referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz" // временно отключили
+  });
+});
 
-      const PLATFORM_FEE_AND_ACCOUNTS = {
-        referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-        feeBps: 50
       };
 
       window.Jupiter.init({
