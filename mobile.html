@@ -239,23 +239,15 @@
           'Pair: ' + pair.replace('-', ' ⇄ ');
       }
     })();
-    // Jupiter init with Ultra referral
+
+    // Jupiter init with referral
     window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) return;
+      if (!window.Jupiter) return;
 
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-
-        formProps: {
-          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-          referralFee: 100 // 1% (можно 50–255)
-        },
-
-        branding: {
-          name: "Juplite",
-          logoUri: "https://juplite.com/ui-logo-64.png"
-        }
+        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
       });
     });
 

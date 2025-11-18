@@ -3,34 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <title>Juplite — Solana Swap Router</title>
-
-  <!-- Viewport / mobile / PWA -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-
-  <!-- Main description -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
         content="Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin for the best route and price, with referral support." />
-
-  <!-- Canonical & robots -->
-  <link rel="canonical" href="https://juplite.com/">
-  <meta name="robots" content="index, follow">
-
-  <!-- Referrer (безопасный, не ломает Jupiter) -->
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-
-  <!-- Language / hreflang (EN / RU) -->
-  <meta property="og:locale" content="en_US">
-  <link rel="alternate" href="https://juplite.com/" hreflang="en">
-  <link rel="alternate" href="https://juplite.com/?lang=ru" hreflang="ru">
 
   <!-- 🔥 AUTO CACHE BUSTER -->
   <script>
     const version = Date.now();
     function addCacheBuster() {
+      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
+      // обновляем только те скрипты, у которых есть data-cache
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -39,7 +25,6 @@
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
 
-  <!-- PWA / theme -->
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
@@ -81,7 +66,7 @@
         <a href="#swap" class="nav-link">Swap</a>
         <a href="#deep-links" class="nav-link">Links</a>
         <a href="#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" rel="noopener noreferrer" class="nav-link">Jupiter</a>
+        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
       </nav>
 
       <div class="lang-switch">
@@ -218,14 +203,15 @@
 
     <footer class="footer">
       <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
-      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer" class="footer-link">Powered by Jupiter</a>
+      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
     </footer>
   </div>
+
 
   <!-- Your scripts (с кэш-бастером) -->
   <script src="script.js" data-cache></script>
 
-  <!-- YEAR & LANGUAGE SWITCHER -->
+  <!-- LANGUAGE SWITCHER -->
   <script>
     (function () {
       const enBtn = document.querySelector('.lang-btn[data-lang="en"]');
@@ -236,11 +222,6 @@
 
       const aboutEn = document.getElementById('about-en');
       const aboutRu = document.getElementById('about-ru');
-
-      const yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      if (!enBtn || !ruBtn || !heroSubEn || !heroSubRu || !aboutEn || !aboutRu) return;
 
       function setLang(lang) {
         if (lang === 'en') {
@@ -255,18 +236,17 @@
 
           document.documentElement.lang = 'en';
         } else {
-  ruBtn.classList.add('active');
-  enBtn.classList.remove('active');
+          ruBtn.classList.add('active');
+          enBtn.classList.remove('active');
 
-  heroSubEn.style.display = 'none';
-  heroSubRu.style.display = '';
+          heroSubEn.style.display = 'none';
+          heroSubRu.style.display = '';
 
-  aboutEn.style.display = 'none';
-  aboutRu.style.display = '';
+          aboutEn.style.display = 'none';
+          aboutRu.style.display = '';
 
-  document.documentElement.lang = 'ru';
-}
-        
+          document.documentElement.lang = 'ru';
+        }
       }
 
       enBtn.addEventListener('click', () => setLang('en'));
@@ -276,27 +256,13 @@
     })();
   </script>
 
-  <!-- ⭐⭐⭐ Jupiter Plugin + Ultra Referral ⭐⭐⭐ -->
+  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT (ВАЖНО!!!) ⭐⭐⭐ -->
   <script>
     window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) {
-        console.warn("Jupiter Plugin not available");
-        return;
-      }
-
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-
-        formProps: {
-          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-          referralFee: 100
-        },
-
-        branding: {
-          name: "Juplite",
-          logoUri: "https://juplite.com/ui-logo-64.png"
-        }
+        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
       });
     });
   </script>
