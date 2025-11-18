@@ -7,6 +7,24 @@
   <meta name="description"
         content="Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin for the best route and price, with referral support." />
 
+  <!-- 🔥 AUTO CACHE BUSTER -->
+  <script>
+    const version = Date.now();
+    function addCacheBuster() {
+      // обновляем все CSS
+      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        if (!link.href) return;
+        link.href = link.href.split('?')[0] + '?v=' + version;
+      });
+      // обновляем только те скрипты, у которых есть data-cache
+      document.querySelectorAll('script[data-cache]').forEach(sc => {
+        if (!sc.src) return;
+        sc.src = sc.src.split('?')[0] + '?v=' + version;
+      });
+    }
+    document.addEventListener("DOMContentLoaded", addCacheBuster);
+  </script>
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
@@ -190,8 +208,8 @@
   </div>
 
 
-  <!-- Your scripts -->
-  <script src="script.js"></script>
+  <!-- Your scripts (с кэш-бастером) -->
+  <script src="script.js" data-cache></script>
 
   <!-- LANGUAGE SWITCHER -->
   <script>
@@ -244,8 +262,6 @@
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-
-        // 👉 ТВОЯ РЕФКА ВСТАВЛЕНА ТУТ НАВСЕГДА
         referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
       });
     });
