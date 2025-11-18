@@ -3,9 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <title>Juplite — Solana Swap Router</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- Viewport / mobile / PWA -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+
+  <!-- Main description -->
   <meta name="description"
         content="Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin for the best route and price, with referral support." />
+
+  <!-- Canonical & robots -->
+  <link rel="canonical" href="https://juplite.com/">
+  <meta name="robots" content="index, follow">
+
+  <!-- Referrer (безопасный, не ломает Jupiter) -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Language / hreflang (EN / RU) -->
+  <meta property="og:locale" content="en_US">
+  <link rel="alternate" href="https://juplite.com/" hreflang="en">
+  <link rel="alternate" href="https://juplite.com/?lang=ru" hreflang="ru">
 
   <!-- 🔥 AUTO CACHE BUSTER -->
   <script>
@@ -23,6 +39,7 @@
     document.addEventListener("DOMContentLoaded", addCacheBuster);
   </script>
 
+  <!-- PWA / theme -->
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
