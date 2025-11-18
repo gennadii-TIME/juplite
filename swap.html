@@ -4,137 +4,55 @@
   <meta charset="utf-8" />
   <title>Juplite — Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description"
-        content="Juplite swap page: fast non-custodial swaps on Solana via Jupiter with referral support." />
 
-  <!-- 🔥 AUTO CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function addCacheBuster() {
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        if (!link.href) return;
-        link.href = link.href.split('?')[0] + '?v=' + version;
-      });
-      document.querySelectorAll('script[data-cache]').forEach(sc => {
-        if (!sc.src) return;
-        sc.src = sc.src.split('?')[0] + '?v=' + version;
-      });
-    }
-    document.addEventListener("DOMContentLoaded", addCacheBuster);
-  </script>
-
-  <!-- PERFORMANCE -->
-  <link rel="preconnect" href="https://terminal.jup.ag">
-  <link rel="dns-prefetch" href="https://terminal.jup.ag">
-  <link rel="preload" href="/styles.css" as="style" />
-
-  <meta name="theme-color" content="#020617" />
-  <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/app-icon-180.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/app-icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="/app-icon-512.png" />
+  <link rel="manifest" href="/manifest.json" />
 
-  <!-- OG / Social -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://juplite.com/swap" />
-  <meta property="og:title" content="Juplite — Swap" />
-  <meta property="og:description"
-        content="Direct swap page powered by Jupiter on Solana with referral support." />
-  <meta property="og:image" content="https://juplite.com/og.jpg" />
+  <!-- Jupiter Terminal -->
+  <script src="https://terminal.jup.ag/main-v3.js" defer></script>
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Juplite — Swap" />
-  <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter with referral support." />
-  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
-
-  <!-- Jupiter Terminal v3 -->
-  <link rel="preload" href="https://terminal.jup.ag/main-v3.js" as="script" />
-  <script src="https://terminal.jup.ag/main-v3.js" data-preload defer></script>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="page">
-    <header class="header">
-      <div class="logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" loading="lazy" />
-        <div class="brand">
-          <span class="brand-name">Juplite</span>
-          <span class="brand-tagline">Solana Swap Router</span>
-        </div>
+  <header class="header">
+    <div class="logo-wrap">
+      <img src="ui-logo-64.png" class="logo" alt="logo" />
+      <div class="brand">
+        <span class="brand-name">Juplite</span>
+        <span class="brand-tagline">Solana Swap Router</span>
       </div>
+    </div>
+  </header>
 
-      <nav class="nav">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/swap" class="nav-link active">Swap</a>
-        <a href="/#deep-links" class="nav-link">Links</a>
-        <a href="/#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
-      </nav>
-    </header>
+  <main class="main">
+    <div class="hero-widget">
+      <div id="jupiter-terminal" class="jupiter-container"></div>
+    </div>
+  </main>
 
-    <main class="main">
-      <section class="section">
-        <div class="hero-widget">
-          <div class="widget-title">
-            Swap via Jupiter
-            <span id="pair-label" class="pair-label"></span>
-          </div>
-          <!-- тот же контейнер под Terminal -->
-          <div id="jupiter-plugin" class="jupiter-container"></div>
-          <p class="widget-caption">
-            Swaps are executed inside Jupiter. Your funds always stay in your wallet.
-            Referral fee is enabled where applicable.
-          </p>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <span>© <span id="year"></span> Juplite. Independent interface using Jupiter.</span>
-      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
-    </footer>
-  </div>
-
-  <script data-cache>
-    // Год в футере
-    (function () {
-      var yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-    })();
-
-    // Чтение ?pair=SOL-USDC из URL и показ в заголовке
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair'); // SOL-USDC, JUP-USDC, BONK-SOL и т.д.
-      const label = document.getElementById('pair-label');
-      if (pair && label) {
-        label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
-      }
-    })();
-
-    // Инициализация Jupiter Terminal v3 с твоей рефкой
-    window.addEventListener("load", function () {
+<script>
+window.addEventListener("load", function () {
   if (!window.Jupiter) return;
+
   window.Jupiter.init({
-  displayMode: "integrated",
-  integratedTargetId: "jupiter-plugin"
-});
+    displayMode: "integrated",
+    integratedTargetId: "jupiter-terminal",
+
+    connection: {
+      endpoint: "https://api.mainnet-beta.solana.com"
+    },
+
+    platformFeeAndAccounts: {
+      referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
+      feeBps: 30
+    }
   });
 });
+</script>
 
-      };
-
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        endpoint: "https://api.mainnet-beta.solana.com",
-        platformFeeAndAccounts: PLATFORM_FEE_AND_ACCOUNTS,
-        strictTokenList: true,
-        containerStyles: { maxHeight: "640px" }
-      });
-    });
-  </script>
 </body>
 </html>
