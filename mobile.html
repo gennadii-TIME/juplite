@@ -7,6 +7,24 @@
   <meta name="description"
         content="Mobile-optimized Juplite swap view: full-screen Solana swaps via the official Jupiter Plugin with referral support." />
 
+  <!-- 🔥 AUTO CACHE BUSTER -->
+  <script>
+    const version = Date.now();
+    function addCacheBuster() {
+      // обновляем все CSS
+      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        if (!link.href) return;
+        link.href = link.href.split('?')[0] + '?v=' + version;
+      });
+      // обновляем только скрипты с data-cache
+      document.querySelectorAll('script[data-cache]').forEach(sc => {
+        if (!sc.src) return;
+        sc.src = sc.src.split('?')[0] + '?v=' + version;
+      });
+    }
+    document.addEventListener("DOMContentLoaded", addCacheBuster);
+  </script>
+
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
@@ -113,14 +131,8 @@
 
     /* Анимация и блок действий */
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .mobile-actions {
@@ -211,7 +223,8 @@
 
   </div>
 
-  <script>
+  <!-- ⭐ СКРИПТ ИНИЦИАЛИЗАЦИИ PLUGIN + АВТОДЕТЕКТОР (с кэш-бастером) ⭐ -->
+  <script data-cache>
     // Pair from URL
     (function () {
       const params = new URLSearchParams(window.location.search);
@@ -233,7 +246,7 @@
       });
     });
 
-    // Авто-детектор: если внутри Phantom / Solflare – прячем кнопки
+    // Авто-детектор Phantom / Solflare
     (function () {
       const actions = document.getElementById('mobile-actions');
       if (!actions) return;
@@ -247,7 +260,6 @@
         window.phantom || window.solflare;
 
       if (isPhantomUA || isSolflareUA || isWalletInjected) {
-        // В dApp-браузере кошелька – кнопки не нужны
         actions.style.display = 'none';
       }
     })();
