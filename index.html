@@ -255,17 +255,18 @@
 
           document.documentElement.lang = 'en';
         } else {
-          ruBtn.classList.add('active');
-          enBtn.classList.remove('active';
+  ruBtn.classList.add('active');
+  enBtn.classList.remove('active');
 
-          heroSubEn.style.display = 'none';
-          heroSubRu.style.display = '';
+  heroSubEn.style.display = 'none';
+  heroSubRu.style.display = '';
 
-          aboutEn.style.display = 'none';
-          aboutRu.style.display = '';
+  aboutEn.style.display = 'none';
+  aboutRu.style.display = '';
 
-          document.documentElement.lang = 'ru';
-        }
+  document.documentElement.lang = 'ru';
+}
+        
       }
 
       enBtn.addEventListener('click', () => setLang('en'));
