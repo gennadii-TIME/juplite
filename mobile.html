@@ -244,11 +244,13 @@
 
     // Jupiter Terminal v3 init with referral
     window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
-
-      const PLATFORM_FEE_AND_ACCOUNTS = {
-        referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-        feeBps: 50
+  if (!window.Jupiter) return;
+  window.Jupiter.init({
+    displayMode: "integrated",
+    integratedTargetId: "jupiter-plugin"
+    // referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz" // временно отключили
+  });
+});
       };
 
       window.Jupiter.init({
