@@ -282,10 +282,21 @@
         console.warn("Jupiter Plugin not available");
         return;
       }
+
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jupiter-plugin",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+
+        // 🔹 ВАЖНО: Ultra integrator fees
+        formProps: {
+          referralAccount: "5AnFdipAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
+          referralFee: 100 // 100 bps = 1%. Можно 50–255
+        },
+
+        branding: {
+          name: "Juplite",
+          logoUri: "https://juplite.com/ui-logo-64.png"
+        }
       });
     });
   </script>
