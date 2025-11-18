@@ -352,3 +352,7 @@ body {
     padding: 10px;
   }
 }
+/* Временно скрываем переключатель языка */
+.lang-switch {
+  display: none;
+}
