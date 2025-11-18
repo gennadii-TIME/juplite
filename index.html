@@ -280,14 +280,13 @@
   <!-- Jupiter Terminal v3 INIT + твоя рефка через platformFeeAndAccounts -->
   <script>
     window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
-
-      const PLATFORM_FEE_AND_ACCOUNTS = {
-        // твой Jupiter referral key
-        referralAccount: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-        // 50 bps = 0.5% платформенная комиссия (можешь потом поменять)
-        feeBps: 50
-      };
+  if (!window.Jupiter) return;
+  window.Jupiter.init({
+    displayMode: "integrated",
+    integratedTargetId: "jupiter-plugin"
+    // referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz" // временно отключили
+  });
+});
 
       window.Jupiter.init({
         displayMode: "integrated",
