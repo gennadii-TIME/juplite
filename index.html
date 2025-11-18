@@ -232,7 +232,7 @@
   <!-- Your scripts (с кэш-бастером) -->
   <script src="script.js" data-cache></script>
 
-  <!-- LANGUAGE SWITCHER -->
+    <!-- LANGUAGE SWITCHER -->
   <script>
     (function () {
       const enBtn = document.querySelector('.lang-btn[data-lang="en"]');
@@ -277,24 +277,15 @@
     })();
   </script>
 
-  <!-- Jupiter Terminal v3 INIT + твоя рефка через platformFeeAndAccounts -->
+  <!-- Jupiter init (без referral пока) -->
   <script>
     window.addEventListener("load", function () {
-  if (!window.Jupiter) return;
-  window.Jupiter.init({
-    displayMode: "integrated",
-    integratedTargetId: "jupiter-plugin"
-    // referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz" // временно отключили
-  });
-});
+      if (!window.Jupiter) return;
 
       window.Jupiter.init({
         displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        endpoint: "https://api.mainnet-beta.solana.com",
-        platformFeeAndAccounts: PLATFORM_FEE_AND_ACCOUNTS,
-        strictTokenList: true,
-        containerStyles: { maxHeight: "640px" }
+        integratedTargetId: "jupiter-plugin"
+        // referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz" // временно убрали
       });
     });
   </script>
