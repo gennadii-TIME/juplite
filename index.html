@@ -8,6 +8,7 @@
   <meta name="description"
         content="Juplite routes every swap through Jupiter Plugin for the best available price, with your referral enabled." />
 
+  <!-- PWA / icons -->
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -38,45 +39,50 @@
     #jupiter-terminal {
       width: 94%;
       max-width: 420px;
+      /* можно добавить min-height, если хочешь: */
+      /* min-height: 560px; */
     }
   </style>
+
+  <!-- ⚡️ СТАБИЛЬНЫЙ СКРИПТ JUPITER TERMINAL -->
+  <script src="https://terminal.jup.ag/main-v1.js" data-preload></script>
 </head>
 
 <body>
+  <!-- Контейнер для интегрированного терминала -->
   <div id="jupiter-terminal"></div>
 
-  <!-- Jupiter Plugin -->
-  <script src="https://terminal.jup.ag/main-v2.js"></script>
   <script>
     window.addEventListener("load", function () {
       console.log("✅ window load fired");
-      console.log("✅ jupiter-terminal div:", document.getElementById("jupiter-terminal"));
-      console.log("✅ window.Jupiter:", window.Jupiter);
+
+      const div = document.getElementById("jupiter-terminal");
+      console.log("✅ jupiter-terminal div:", div);
 
       if (!window.Jupiter) {
-        console.error("❌ Jupiter SDK not loaded (script blocked или не загрузился)");
+        console.error("❌ window.Jupiter not found");
         return;
       }
 
-      try {
-        window.Jupiter.init({
-          displayMode: "integrated",
-          integratedTargetId: "jupiter-terminal",
+      console.log("✅ window.Jupiter:", window.Jupiter);
 
-          referral: {
-            address: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-            feeBps: 50
-          },
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-terminal",
 
-          branding: {
-            name: "Juplite",
-            logoUri: "https://juplite.com/ui_logo_64.png"
-          }
-        });
-        console.log("🚀 Jupiter.init вызван");
-      } catch (e) {
-        console.error("🔥 Ошибка внутри Jupiter.init:", e);
-      }
+        // 🔥 твоя рефка
+        referral: {
+          address: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          feeBps: 50
+        },
+
+        branding: {
+          name: "Juplite",
+          logoUri: "https://juplite.com/ui-logo-64.png"
+        }
+      });
+
+      console.log("🚀 Jupiter.init вызван");
     });
   </script>
 </body>
