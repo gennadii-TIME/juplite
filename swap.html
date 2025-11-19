@@ -119,32 +119,5 @@
       });
     });
   </script>
-
-<script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
-
-<script>
-  window.addEventListener("load", function () {
-    if (!window.Jupiter || !window.Jupiter.init) {
-      console.warn("Jupiter Plugin not loaded");
-      return;
-    }
-
-    window.Jupiter.init({
-      displayMode: "integrated",
-      integratedTargetId: "jupiter-plugin",
-
-      formProps: {
-        referralAccount: "5AnFdipAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",
-        referralFee: 100
-      },
-
-      branding: {
-        name: "Juplite",
-        logoUri: "https://juplite.com/ui-logo-64.png"
-      }
-    });
-  });
-</script>
-
 </body>
 </html>
