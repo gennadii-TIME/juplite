@@ -5,117 +5,207 @@
   <title>Juplite — Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite swap page: fast non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
-
-  <!-- 🔥 AUTO CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function addCacheBuster() {
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        if (!link.href) return;
-        link.href = link.href.split('?')[0] + '?v=' + version;
-      });
-      document.querySelectorAll('script[data-cache]').forEach(sc => {
-        if (!sc.src) return;
-        sc.src = sc.src.split('?')[0] + '?v=' + version;
-      });
-    }
-    document.addEventListener("DOMContentLoaded", addCacheBuster);
-  </script>
+        content="Juplite Swap — focused Solana swap page via the official Jupiter Plugin with referral support." />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
 
-  <!-- OG / Social (можно упростить или скопировать как у index.html) -->
+  <!-- OG -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://juplite.com/swap" />
+  <meta property="og:url" content="https://juplite.com/swap.html" />
   <meta property="og:title" content="Juplite — Swap" />
   <meta property="og:description"
-        content="Direct swap page powered by Jupiter Plugin on Solana with referral support." />
+        content="Focused swap interface for Solana using the official Jupiter Plugin with referral support." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juplite — Swap" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+        content="Fast non-custodial swaps via Jupiter Plugin with referral support." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
   <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <script src="https://plugin.jup.ag/plugin-v1.js" defer></script>
 
-  <!-- Styles -->
+  <!-- Общие стили -->
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+    .swap-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px 12px 24px;
+    }
+    .swap-header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .swap-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .swap-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+    }
+    .swap-brand {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .swap-brand-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .swap-brand-tagline {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .swap-back-link {
+      font-size: 12px;
+      color: #9ca3af;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .swap-main {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .swap-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 4px 0;
+      text-align: left;
+    }
+    .swap-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0 0 6px;
+    }
+    .swap-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 20px;
+      padding: 12px 12px 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+    .swap-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    #jupiter-plugin-swap {
+      width: 100%;
+      min-height: 540px;
+    }
+    .swap-caption {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .swap-footer {
+      margin-top: 16px;
+      font-size: 10px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      max-width: 460px;
+    }
+    .swap-footer a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="page">
-    <header class="header">
-      <div class="logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
-        <div class="brand">
-          <span class="brand-name">Juplite</span>
-          <span class="brand-tagline">Solana Swap Router</span>
+  <div class="swap-page">
+    <header class="swap-header">
+      <div class="swap-logo-wrap">
+        <img src="ui-logo-64.png" alt="Juplite logo" class="swap-logo" />
+        <div class="swap-brand">
+          <span class="swap-brand-name">Juplite</span>
+          <span class="swap-brand-tagline">Solana Swap Router</span>
         </div>
       </div>
-
-      <nav class="nav">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/swap" class="nav-link active">Swap</a>
-        <a href="/#deep-links" class="nav-link">Links</a>
-        <a href="/#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
-      </nav>
+      <a href="/" class="swap-back-link">Back to main</a>
     </header>
 
-    <main class="main">
-      <section class="section">
-        <div class="hero-widget">
-          <div class="widget-title">
-            Swap via Jupiter
-            <span id="pair-label" class="pair-label"></span>
-          </div>
-          <div id="jupiter-plugin" class="jupiter-container"></div>
-          <p class="widget-caption">
-            Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
-            Referral support is embedded where applicable.
-          </p>
-        </div>
+    <main class="swap-main">
+      <div>
+        <h1 class="swap-title">Focused swap interface</h1>
+        <p class="swap-sub">
+          Execute Solana swaps with the official Jupiter Plugin. Non-custodial, with integrator referral enabled.
+        </p>
+      </div>
+
+      <section class="swap-card">
+        <div class="swap-card-title">Swap via Jupiter</div>
+        <div id="jupiter-plugin-swap"></div>
+        <p class="swap-caption">
+          Powered by Jupiter routing. Fees where applicable are shared with the Juplite integrator account.
+        </p>
       </section>
     </main>
 
-    <footer class="footer">
-      <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
-      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
+    <footer class="swap-footer">
+      <span>© <span id="year-swap"></span> Juplite</span>
+      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer">Powered by Jupiter</a>
     </footer>
   </div>
 
-  <!-- ⭐ ВСЕ СКРИПТЫ НИЖЕ — С КЭШ-БАСТЕРОМ ⭐ -->
-  <script data-cache>
-    // Год в футере
+  <script>
     (function () {
-      var yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
+      const y = document.getElementById('year-swap');
+      if (y) y.textContent = new Date().getFullYear();
     })();
+  </script>
 
-    // Чтение ?pair=SOL-USDC из URL и показ в заголовке
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair'); // формат ожидаем: SOL-USDC, JUP-USDC, BONK-SOL и т.д.
-      const label = document.getElementById('pair-label');
-      if (pair && label) {
-        label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
-      }
-    })();
-
-    // Инициализация Jupiter Plugin с твоей рефкой
+  <!-- Jupiter init для swap.html -->
+  <script>
     window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
+      if (!window.Jupiter || !window.Jupiter.init) {
+        console.warn("Jupiter Plugin not available");
+        return;
+      }
 
       window.Jupiter.init({
         displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        referral: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b"
+        integratedTargetId: "jupiter-plugin-swap",
+        defaultExplorer: "Solscan",
+        formProps: {
+          fixedMint: "",
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50,
+        },
+        branding: {
+          logoUri: "https://juplite.com/icon-192.png",
+          name: "JupLite",
+        },
       });
     });
   </script>
