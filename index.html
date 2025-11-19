@@ -1,83 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Juplite — Solana Swap Router</title>
 
-  <!-- Main description -->
   <meta name="description"
-        content="Juplite routes every swap through Jupiter Plugin for the best price and referral rewards." />
+        content="Juplite routes every swap through Jupiter Plugin for the best available price, with your referral enabled." />
 
-  <!-- PWA -->
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#020617" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-  <link rel="icon" href="/favicon.ico" />
-
-  <!-- OG tags -->
-  <meta property="og:title" content="Juplite — Solana Swap Router" />
-  <meta property="og:description" content="Fast non-custodial swaps on Solana via Jupiter Plugin." />
-  <meta property="og:image" content="/og.jpg" />
+  <!-- PWA + Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <meta name="theme-color" content="#020617">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    :root {
+      --bg: #020617;
+      --text-main: #e5e7eb;
+      --radius-lg: 16px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      height: 100%;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 40px;
+    }
+
+    #logo {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 20px;
+      border-radius: 999px;
+      box-shadow: 0 0 40px rgba(56,189,248,0.4);
+    }
+
+    #swap-container {
+      width: 94%;
+      max-width: 420px;
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+  </style>
 </head>
 
 <body>
+<div id="app">
+  <img id="logo" src="/ui_logo_64.png" alt="Juplite">
 
-  <div id="app">
-    <div id="header">
-      <img src="/ui-logo-64.png" id="logo" />
-      <h1>Juplite</h1>
-    </div>
-
-    <div id="swap-container">
-      <div id="jupiter-plugin"></div>
-    </div>
+  <div id="swap-container">
+    <div id="jupiter-terminal"></div>
   </div>
+</div>
 
-  <!-- ========================================================== -->
-  <!-- ⭐ FIX: Force Jupiter Plugin to use Helius RPC instead of ANKR -->
-  <!-- ========================================================== -->
-  <script>
-    const HELIUS_KEY = "REPLACE_WITH_YOUR_KEY";  // ← Вставь ключ сюда
+<!-- Jupiter Plugin (без integrity!) -->
+<script src="https://terminal.jup.ag/main-v2.js"></script>
 
-    const originalFetch = window.fetch;
-    window.fetch = async function(url, options) {
-      try {
-        if (typeof url === "string" && url.includes("rpc")) {
-          url = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`;
-        }
-      } catch (e) {}
-      return originalFetch(url, options);
-    };
-  </script>
+<script>
+  window.Jupiter.init({
+    displayMode: "integrated",
+    integratedTargetId: "jupiter-terminal",
 
-  <!-- Jupiter Plugin Loader -->
-  <script
-    src="https://terminal.jup.ag/main-v2.js"
-    integrity="sha256-VJgI0ZpbbgQkkRWNffjPI4H54uHrv4efa3PL1U1t1z0="
-    crossorigin="anonymous">
-  </script>
+    // 🔥 твоя рефка
+    referral: {
+      address: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+      feeBps: 50
+    },
 
-  <!-- ========================================================== -->
-  <!-- ⭐ Jupiter INIT with your referral -->
-  <!-- ========================================================== -->
-  <script>
-    window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) {
-        console.warn("Jupiter Plugin not available");
-        return;
-      }
-
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz",  // твоя рефка
-      });
-    });
-  </script>
+    // брендинг
+    branding: {
+      name: "Juplite",
+      logoUri: "https://juplite.com/ui_logo_64.png"
+    }
+  });
+</script>
 
 </body>
 </html>
