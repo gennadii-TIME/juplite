@@ -2,122 +2,553 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Juplite — Swap</title>
+  <title>Juplite — Ultra Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite swap page: fast non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
-
-  <!-- 🔥 AUTO CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function addCacheBuster() {
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        if (!link.href) return;
-        link.href = link.href.split('?')[0] + '?v=' + version;
-      });
-      document.querySelectorAll('script[data-cache]').forEach(sc => {
-        if (!sc.src) return;
-        sc.src = sc.src.split('?')[0] + '?v=' + version;
-      });
-    }
-    document.addEventListener("DOMContentLoaded", addCacheBuster);
-  </script>
+        content="Juplite Ultra Swap: direct Solana swaps via Jupiter Ultra API with integrator fees and custom UI." />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
 
-  <!-- OG / Social (можно упростить или скопировать как у index.html) -->
+  <!-- OG / Social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://juplite.com/swap" />
-  <meta property="og:title" content="Juplite — Swap" />
+  <meta property="og:title" content="Juplite — Ultra Swap" />
   <meta property="og:description"
-        content="Direct swap page powered by Jupiter Plugin on Solana with referral support." />
+        content="Custom Ultra Swap UI on Solana with Jupiter Ultra API and integrator fees." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Juplite — Swap" />
+  <meta name="twitter:title" content="Juplite — Ultra Swap" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+        content="Fast, non-custodial swaps on Solana via Jupiter Ultra with integrator fees." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <!-- Solana web3.js v1 (IIFE, даёт глобальный solanaWeb3) -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.0/lib/index.iife.min.js"></script>
 
-  <!-- Styles -->
+  <!-- Styles (твой общий styles.css) -->
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px;
+      box-sizing: border-box;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .brand-tagline {
+      font-size: 11px;
+      opacity: 0.7;
+      display: block;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav-link {
+      color: #9ca3af;
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .nav-link.active {
+      color: #e5e7eb;
+      border-color: rgba(56, 189, 248, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .swap-card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.7);
+      padding: 18px 18px 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .swap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .swap-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.6);
+      color: #7dd3fc;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .label {
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    select, input {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 8px 12px;
+      color: #e5e7eb;
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    select:focus, input:focus {
+      border-color: rgba(56, 189, 248, 0.8);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #22c55e);
+      color: #020617;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.4);
+      width: 100%;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-primary:not(:disabled):active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      font-size: 13px;
+      padding-inline: 14px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #9ca3af;
+    }
+
+    .muted {
+      font-size: 11px;
+      opacity: 0.75;
+      line-height: 1.4;
+    }
+
+    .status {
+      font-size: 11px;
+      line-height: 1.5;
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      max-height: 120px;
+      overflow: auto;
+    }
+
+    .status span.ok {
+      color: #4ade80;
+    }
+
+    .status span.err {
+      color: #fb7185;
+    }
+
+    .status a {
+      color: #7dd3fc;
+    }
+
+    .footer {
+      font-size: 11px;
+      opacity: 0.65;
+      padding: 8px 0 16px;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav {
+        justify-content: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
     <header class="header">
       <div class="logo-wrap">
         <img src="ui-logo-64.png" alt="Juplite logo" class="logo" />
-        <div class="brand">
+        <div>
           <span class="brand-name">Juplite</span>
-          <span class="brand-tagline">Solana Swap Router</span>
+          <span class="brand-tagline">Ultra Swap via Jupiter</span>
         </div>
       </div>
 
       <nav class="nav">
         <a href="/" class="nav-link">Home</a>
-        <a href="/swap" class="nav-link active">Swap</a>
+        <a href="/swap" class="nav-link active">Ultra Swap</a>
         <a href="/#deep-links" class="nav-link">Links</a>
         <a href="/#about" class="nav-link">About</a>
-        <a href="https://jup.ag" target="_blank" class="nav-link">Jupiter</a>
+        <a href="https://jup.ag" target="_blank" rel="noreferrer" class="nav-link">Jupiter</a>
       </nav>
     </header>
 
     <main class="main">
-      <section class="section">
-        <div class="hero-widget">
-          <div class="widget-title">
-            Swap via Jupiter
-            <span id="pair-label" class="pair-label"></span>
+      <section class="swap-card">
+        <div class="swap-header">
+          <div>
+            <div class="swap-title">Ultra Swap</div>
+            <div class="muted">Direct Ultra route · 1% integrator fee</div>
           </div>
-          <div id="jupiter-plugin" class="jupiter-container"></div>
-          <p class="widget-caption">
-            Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
-            Referral support is embedded where applicable.
-          </p>
+          <button id="connect-btn" class="btn btn-secondary">Connect wallet</button>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <span class="label">From token</span>
+            <select id="from-mint">
+              <option value="So11111111111111111111111111111111111111112">SOL</option>
+              <option value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">USDC</option>
+            </select>
+          </div>
+          <div class="field">
+            <span class="label">To token</span>
+            <select id="to-mint">
+              <option value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">USDC</option>
+              <option value="So11111111111111111111111111111111111111112">SOL</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Amount (Exact in)</span>
+          <input id="amount-input" type="number" min="0" step="0.0000001" placeholder="0.1" />
+        </div>
+
+        <div class="row" style="justify-content: space-between; align-items: center;">
+          <span class="pill">Referral: 1% (80% you · 20% Jupiter Ultra)</span>
+          <span id="expected-out" class="muted"></span>
+        </div>
+
+        <button id="swap-btn" class="btn btn-primary" disabled>
+          Swap via Ultra
+        </button>
+
+        <div id="status" class="status">
+          <span>Connect wallet and enter amount to start.</span>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
-      <a href="https://jup.ag" target="_blank" rel="noreferrer" class="footer-link">Powered by Jupiter</a>
+      Swaps use <a href="https://dev.jup.ag/docs/ultra" target="_blank" rel="noreferrer">Jupiter Ultra</a>.
+      Funds never leave your wallet without a signed transaction.
     </footer>
   </div>
 
-  <!-- ⭐ ВСЕ СКРИПТЫ НИЖЕ — С КЭШ-БАСТЕРОМ ⭐ -->
-  <script data-cache>
-    // Год в футере
+  <script>
     (function () {
-      var yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-    })();
+      const ULTRA_BASE = "https://lite-api.jup.ag/ultra/v1";
+      const REFERRAL_ACCOUNT = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b"; // твой Ultra referral
+      const REFERRAL_FEE_BPS = 100; // 1%
 
-    // Чтение ?pair=SOL-USDC из URL и показ в заголовке
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair'); // формат ожидаем: SOL-USDC, JUP-USDC, BONK-SOL и т.д.
-      const label = document.getElementById('pair-label');
-      if (pair && label) {
-        label.textContent = ' · ' + pair.replace('-', ' ⇄ ');
+      const connectBtn = document.getElementById("connect-btn");
+      const swapBtn = document.getElementById("swap-btn");
+      const fromMintEl = document.getElementById("from-mint");
+      const toMintEl = document.getElementById("to-mint");
+      const amountInput = document.getElementById("amount-input");
+      const statusEl = document.getElementById("status");
+      const expectedOutEl = document.getElementById("expected-out");
+
+      let wallet = null;
+      let walletPubkey = null;
+
+      function logStatus(html, isError = false) {
+        statusEl.innerHTML = isError
+          ? '<span class="err">' + html + "</span>"
+          : '<span class="ok">' + html + "</span>";
       }
-    })();
 
-    // Инициализация Jupiter Plugin с твоей рефкой
-    window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
+      function appendStatus(html, isError = false) {
+        statusEl.innerHTML += "<br>" + (isError
+          ? '<span class="err">' + html + "</span>"
+          : html);
+        statusEl.scrollTop = statusEl.scrollHeight;
+      }
 
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        referral: "5AnFdijpAt5jhyhtP2ccMHVjMzC1LFAwRKEQiCtQsdHPz"
+      function detectWallet() {
+        if (window.solana && window.solana.isPhantom) {
+          return window.solana;
+        }
+        // если есть другой провайдер
+        if (window.solana) return window.solana;
+        return null;
+      }
+
+      connectBtn.addEventListener("click", async () => {
+        try {
+          const provider = detectWallet();
+          if (!provider) {
+            logStatus("Wallet not found. Install Phantom or another Solana wallet.", true);
+            window.open("https://phantom.app/", "_blank");
+            return;
+          }
+
+          const res = await provider.connect();
+          wallet = provider;
+          walletPubkey = res.publicKey || provider.publicKey;
+          connectBtn.textContent = walletPubkey.toBase58()
+            .slice(0, 4) + "..." + walletPubkey.toBase58().slice(-4);
+          connectBtn.disabled = true;
+
+          swapBtn.disabled = false;
+          logStatus("Wallet connected: " + walletPubkey.toBase58());
+        } catch (e) {
+          console.error(e);
+          logStatus("Failed to connect wallet.", true);
+        }
       });
-    });
+
+      // helper: amount → integer (lamports / 10^6)
+      function toBaseUnits(amountStr, mint) {
+        const v = Number(amountStr);
+        if (!isFinite(v) || v <= 0) return null;
+
+        // SOL = 9 знаков, USDC = 6
+        const decimals = mint === "So11111111111111111111111111111111111111112" ? 9 : 6;
+        const factor = 10 ** decimals;
+        return Math.floor(v * factor);
+      }
+
+      function fromBaseUnits(intAmount, mint) {
+        const decimals = mint === "So11111111111111111111111111111111111111112" ? 9 : 6;
+        return intAmount / 10 ** decimals;
+      }
+
+      swapBtn.addEventListener("click", async () => {
+        if (!wallet || !walletPubkey) {
+          logStatus("Connect wallet first.", true);
+          return;
+        }
+
+        const fromMint = fromMintEl.value;
+        const toMint = toMintEl.value;
+        if (fromMint === toMint) {
+          logStatus("From and To token must be different.", true);
+          return;
+        }
+
+        const amountStr = amountInput.value.trim();
+        const amountInt = toBaseUnits(amountStr, fromMint);
+        if (!amountInt || amountInt <= 0) {
+          logStatus("Enter a valid amount.", true);
+          return;
+        }
+
+        swapBtn.disabled = true;
+        swapBtn.textContent = "Building route...";
+        logStatus("Requesting Ultra /order...");
+
+        try {
+          const params = new URLSearchParams({
+            inputMint: fromMint,
+            outputMint: toMint,
+            amount: String(amountInt),
+            taker: walletPubkey.toBase58(),
+            swapMode: "ExactIn",
+            referralAccount: REFERRAL_ACCOUNT,
+            referralFee: String(REFERRAL_FEE_BPS),
+          });
+
+          const orderRes = await fetch(ULTRA_BASE + "/order?" + params.toString());
+          const orderJson = await orderRes.json();
+
+          if (!orderRes.ok || orderJson.error) {
+            console.error(orderJson);
+            logStatus("Ultra order error: " + (orderJson.error || orderRes.statusText), true);
+            swapBtn.disabled = false;
+            swapBtn.textContent = "Swap via Ultra";
+            return;
+          }
+
+          appendStatus("Route built. Total feeBps: " + (orderJson.feeBps ?? "n/a"));
+          if (orderJson.outAmount) {
+            const estOut = fromBaseUnits(Number(orderJson.outAmount), toMint);
+            expectedOutEl.textContent = "Estimated: ~" + estOut.toFixed(6);
+          }
+
+          const txBase64 = orderJson.transaction;
+          if (!txBase64) {
+            logStatus("No transaction returned from Ultra.", true);
+            swapBtn.disabled = false;
+            swapBtn.textContent = "Swap via Ultra";
+            return;
+          }
+
+          appendStatus("Deserializing transaction & requesting signature...");
+
+          // base64 → Uint8Array
+          const txBytes = Uint8Array.from(atob(txBase64), c => c.charCodeAt(0));
+          const tx = solanaWeb3.VersionedTransaction.deserialize(txBytes);
+
+          // подписать через кошелёк
+          const signedTx = await wallet.signTransaction(tx);
+          const signedBytes = signedTx.serialize();
+          const signedBase64 = btoa(String.fromCharCode(...signedBytes));
+
+          appendStatus("Sending signed transaction to Ultra /execute...");
+
+          const execRes = await fetch(ULTRA_BASE + "/execute", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              signedTransaction: signedBase64,
+              requestId: orderJson.requestId,
+            }),
+          });
+
+          const execJson = await execRes.json();
+          console.log("execute response", execJson);
+
+          if (execJson.status === "Success") {
+            const sig = execJson.signature;
+            logStatus(
+              'Swap successful. <a href="https://solscan.io/tx/' +
+                sig +
+                '" target="_blank" rel="noreferrer">View on Solscan</a>'
+            );
+          } else {
+            logStatus(
+              "Swap failed: " + (execJson.error || JSON.stringify(execJson)),
+              true
+            );
+          }
+        } catch (e) {
+          console.error(e);
+          logStatus("Unexpected error: " + e.message, true);
+        } finally {
+          swapBtn.disabled = false;
+          swapBtn.textContent = "Swap via Ultra";
+        }
+      });
+    })();
   </script>
 </body>
 </html>
