@@ -8,7 +8,6 @@
   <meta name="description"
         content="Juplite routes every swap through Jupiter Plugin for the best available price, with your referral enabled." />
 
-  <!-- PWA + Icons -->
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -44,10 +43,8 @@
 </head>
 
 <body>
-  <!-- ЕДИНСТВЕННЫЙ контейнер, куда встраивается плагин -->
   <div id="jupiter-terminal"></div>
 
-  <!-- Jupiter Plugin (без integrity) -->
   <script src="https://terminal.jup.ag/main-v2.js"></script>
   <script>
     window.addEventListener("load", function () {
