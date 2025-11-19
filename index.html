@@ -45,28 +45,38 @@
 <body>
   <div id="jupiter-terminal"></div>
 
+  <!-- Jupiter Plugin -->
   <script src="https://terminal.jup.ag/main-v2.js"></script>
   <script>
     window.addEventListener("load", function () {
+      console.log("✅ window load fired");
+      console.log("✅ jupiter-terminal div:", document.getElementById("jupiter-terminal"));
+      console.log("✅ window.Jupiter:", window.Jupiter);
+
       if (!window.Jupiter) {
-        console.error("Jupiter SDK not loaded");
+        console.error("❌ Jupiter SDK not loaded (script blocked или не загрузился)");
         return;
       }
 
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-terminal",
+      try {
+        window.Jupiter.init({
+          displayMode: "integrated",
+          integratedTargetId: "jupiter-terminal",
 
-        referral: {
-          address: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-          feeBps: 50
-        },
+          referral: {
+            address: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+            feeBps: 50
+          },
 
-        branding: {
-          name: "Juplite",
-          logoUri: "https://juplite.com/ui_logo_64.png"
-        }
-      });
+          branding: {
+            name: "Juplite",
+            logoUri: "https://juplite.com/ui_logo_64.png"
+          }
+        });
+        console.log("🚀 Jupiter.init вызван");
+      } catch (e) {
+        console.error("🔥 Ошибка внутри Jupiter.init:", e);
+      }
     });
   </script>
 </body>
