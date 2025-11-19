@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Juplite — Solana Swap Router</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin for the best route and price, with referral support." />
+
+  <script>
+    const version = Date.now();
+    function addCacheBuster() {
+      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        if (!link.href) return;
+        link.href = link.href.split('?')[0] + '?v=' + version;
+      });
+      document.querySelectorAll('script[data-cache]').forEach(sc => {
+        if (!sc.src) return;
+        sc.src = sc.src.split('?')[0] + '?v=' + version;
+      });
+    }
+    document.addEventListener("DOMContentLoaded", addCacheBuster);
+  </script>
+
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://juplite.com/" />
+  <meta property="og:title" content="Juplite — Solana Swap Router" />
+  <meta property="og:description"
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+  <meta property="og:image" content="https://juplite.com/og.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Juplite — Solana Swap Router" />
+  <meta name="twitter:description"
+        content="Fast, non-custodial swaps on Solana via Jupiter Plugin with referral support." />
+  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
+
+  <script src="https://terminal.jup.ag/main-v2.js?v=20251119" defer></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <!-- content omitted for brevity -->
+    <div id="jupiter-plugin" class="jupiter-container"></div>
+  </div>
+
+  <script src="script.js" data-cache></script>
+
+  <script>
+    window.addEventListener("load", function () {
+      if (!window.Jupiter || !window.Jupiter.init) {
+        console.warn("Jupiter Plugin not available");
+        return;
+      }
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-plugin",
+        endpoint: "https://rpc.ankr.com/solana",
+        formProps: {
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 100
+        }
+      });
+    });
+  </script>
+</body>
+</html>
