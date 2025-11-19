@@ -5,25 +5,7 @@
   <title>Juplite — Mobile Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Fast, non-custodial mobile swaps on Solana via the official Jupiter Plugin with referral support." />
-
-  <!-- 🔥 AUTO CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function addCacheBuster() {
-      // обновляем все CSS
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        if (!link.href) return;
-        link.href = link.href.split('?')[0] + '?v=' + version;
-      });
-      // обновляем только скрипты с data-cache
-      document.querySelectorAll('script[data-cache]').forEach(sc => {
-        if (!sc.src) return;
-        sc.src = sc.src.split('?')[0] + '?v=' + version;
-      });
-    }
-    document.addEventListener("DOMContentLoaded", addCacheBuster);
-  </script>
+        content="Juplite mobile — fast Solana swaps via the official Jupiter Plugin with referral support." />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
@@ -35,242 +17,231 @@
   <meta property="og:url" content="https://juplite.com/mobile.html" />
   <meta property="og:title" content="Juplite — Mobile Swap" />
   <meta property="og:description"
-        content="Full-screen mobile swap interface powered by the official Jupiter Plugin on Solana with referral support." />
+        content="Mobile-friendly Solana swap interface using the official Jupiter Plugin with referral support." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juplite — Mobile Swap" />
   <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin in a clean mobile view." />
+        content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
 
   <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+  <script src="https://plugin.jup.ag/plugin-v1.js" defer></script>
 
-  <!-- Styles -->
+  <!-- Основные стили -->
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    body.mobile-body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: #020617;
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      display: flex;
-      flex-direction: column;
-    }
 
-    .mobile-shell {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
+  <!-- Небольшой mobile-лейаут поверх -->
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+    .mobile-page {
+      min-height: 100vh;
       max-width: 480px;
       margin: 0 auto;
       padding: 12px 12px 16px;
-      gap: 8px;
-      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
-
     .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 4px 0 10px;
+    }
+    .mobile-logo-wrap {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
-    .mobile-header-logo {
+    .mobile-logo {
       width: 32px;
       height: 32px;
-      border-radius: 999px;
+      border-radius: 12px;
     }
-
-    .mobile-header-title {
+    .mobile-brand {
       display: flex;
       flex-direction: column;
-      line-height: 1.2;
+      line-height: 1.1;
     }
-
-    .mobile-header-title span:first-child {
+    .mobile-brand-name {
+      font-size: 17px;
       font-weight: 600;
-      font-size: 15px;
     }
-
-    .mobile-header-title span:last-child {
+    .mobile-brand-tagline {
       font-size: 11px;
-      opacity: 0.7;
+      color: #9ca3af;
     }
-
-    .mobile-pair-label {
-      font-size: 11px;
-      opacity: 0.75;
-      margin-top: 2px;
-    }
-
-    .mobile-widget {
-      flex: 1;
-      min-height: 360px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #020617;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      padding: 8px;
-      box-sizing: border-box;
-    }
-
-    .mobile-footer {
-      margin-top: 8px;
-      font-size: 10px;
-      text-align: center;
-      opacity: 0.6;
-    }
-
-    .mobile-footer a {
-      color: inherit;
-      text-decoration: underline;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .mobile-actions {
-      margin-top: 12px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .mobile-link-main {
       font-size: 12px;
-      opacity: 0;
-      animation: fadeUp 0.5s ease-out 0.15s forwards;
-    }
-
-    .mobile-btn {
-      display: block;
-      padding: 10px 16px;
+      color: #9ca3af;
+      text-decoration: none;
+      padding: 6px 10px;
       border-radius: 999px;
-      font-size: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .mobile-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mobile-title {
+      font-size: 18px;
       font-weight: 600;
+      margin: 4px 0;
+    }
+    .mobile-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0 0 8px;
+    }
+    .mobile-widget-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
+      padding: 10px 10px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+    .mobile-widget-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #e5e7eb;
+    }
+    #jupiter-plugin-mobile {
+      width: 100%;
+      min-height: 520px;
+    }
+    .mobile-caption {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .mobile-quick-links {
+      margin-top: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 16px;
+      padding: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .mobile-quick-links h3 {
+      font-size: 13px;
+      margin: 0 0 6px;
+    }
+    .mobile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .mobile-tag {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.4);
       text-decoration: none;
       color: #e5e7eb;
-      border: 1px solid rgba(148,163,184,0.5);
-      transform: translateY(4px);
-      animation: fadeUp 0.4s ease-out forwards;
     }
-
-    .btn-phantom {
-      background: rgba(129, 140, 248, 0.25);
-      animation-delay: 0.2s;
+    .mobile-footer {
+      margin-top: 12px;
+      font-size: 10px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
     }
-
-    .btn-solflare {
-      background: rgba(250, 204, 21, 0.1);
-      color: #fcd34d;
-      animation-delay: 0.3s;
-    }
-
-    .mobile-btn:active {
-      transform: translateY(4px) scale(0.97);
-    }
-
-    .mobile-info {
-      font-size: 11px;
-      opacity: 0.75;
-      margin-top: 4px;
-      line-height: 1.3;
+    .mobile-footer a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 10px;
     }
   </style>
 </head>
-
-<body class="mobile-body">
-  <div class="mobile-shell">
-
+<body>
+  <div class="mobile-page">
     <header class="mobile-header">
-      <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-header-logo" />
-      <div class="mobile-header-title">
-        <span>Juplite</span>
-        <span>Juplite добывает лучший маршрут из всей Solana-сети.</span>
-        <span>Территория опытных трейдеров. Нон-кастодиально.</span>
-        <span>Официальный Jupiter Plugin.</span>
-        <span id="mobile-pair" class="mobile-pair-label"></span>
+      <div class="mobile-logo-wrap">
+        <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-logo" />
+        <div class="mobile-brand">
+          <span class="mobile-brand-name">Juplite</span>
+          <span class="mobile-brand-tagline">Solana Swap Router</span>
+        </div>
       </div>
+      <a href="/" class="mobile-link-main">Desktop version</a>
     </header>
 
-    <main class="mobile-widget">
-      <div id="jupiter-plugin" class="jupiter-container"></div>
+    <main class="mobile-main">
+      <div>
+        <h1 class="mobile-title">Swap on Solana in one tap</h1>
+        <p class="mobile-sub">
+          Mobile-first interface powered by the official Jupiter Plugin. Non-custodial. Your funds stay in your wallet.
+        </p>
+      </div>
+
+      <section class="mobile-widget-card">
+        <div class="mobile-widget-title">Swap via Jupiter</div>
+        <div id="jupiter-plugin-mobile"></div>
+        <p class="mobile-caption">
+          Swaps are routed through Jupiter for the best available price on Solana.
+          Referral support is embedded and fees are sent to the Juplite integrator account.
+        </p>
+      </section>
+
+      <section class="mobile-quick-links">
+        <h3>Quick pairs</h3>
+        <div class="mobile-tags">
+          <a href="/swap?pair=SOL-USDC" class="mobile-tag">SOL ⇄ USDC</a>
+          <a href="/swap?pair=JUP-USDC" class="mobile-tag">JUP ⇄ USDC</a>
+          <a href="/swap?pair=BONK-SOL" class="mobile-tag">BONK ⇄ SOL</a>
+          <a href="/swap?pair=WIF-SOL" class="mobile-tag">WIF ⇄ SOL</a>
+        </div>
+      </section>
     </main>
 
     <footer class="mobile-footer">
-      Swaps are executed inside the official Jupiter Plugin. Funds stay in your wallet. Referral enabled.
+      <span>© <span id="year-mobile"></span> Juplite</span>
+      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer">Powered by Jupiter</a>
     </footer>
-
-    <!-- ACTION BUTTONS -->
-    <div class="mobile-actions" id="mobile-actions">
-      <div class="mobile-info">
-        Wallets are not detected in Safari.<br />
-        Open Juplite inside Phantom or Solflare to connect your wallet and sign swaps.
-      </div>
-
-      <a class="mobile-btn btn-phantom"
-         href="phantom://browse/https://juplite.com/mobile.html">
-        Open in Phantom
-      </a>
-
-      <a class="mobile-btn btn-solflare"
-         href="solflare://browse/https://juplite.com/mobile.html">
-        Open in Solflare
-      </a>
-    </div>
-
   </div>
 
-  <!-- ⭐ СКРИПТ ИНИЦИАЛИЗАЦИИ PLUGIN + АВТОДЕТЕКТОР (с кэш-бастером) ⭐ -->
-  <script data-cache>
-    // Pair from URL
+  <script>
     (function () {
-      const params = new URLSearchParams(window.location.search);
-      const pair = params.get('pair');
-      if (pair) {
-        document.getElementById('mobile-pair').textContent =
-          'Pair: ' + pair.replace('-', ' ⇄ ');
-      }
-    })();
-
-    // Jupiter init with referral
-    window.addEventListener("load", function () {
-      if (!window.Jupiter) return;
-
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        referral: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b"
-      });
-    });
-
-    // Авто-детектор Phantom / Solflare
-    (function () {
-      const actions = document.getElementById('mobile-actions');
-      if (!actions) return;
-
-      const ua = (navigator.userAgent || '').toLowerCase();
-      const isPhantomUA = ua.includes('phantom');
-      const isSolflareUA = ua.includes('solflare');
-
-      const isWalletInjected =
-        (window.solana && (window.solana.isPhantom || window.solana.isSolflare)) ||
-        window.phantom || window.solflare;
-
-      if (isPhantomUA || isSolflareUA || isWalletInjected) {
-        actions.style.display = 'none';
-      }
+      const y = document.getElementById('year-mobile');
+      if (y) y.textContent = new Date().getFullYear();
     })();
   </script>
 
+  <!-- Jupiter init для mobile -->
+  <script>
+    window.addEventListener("load", function () {
+      if (!window.Jupiter || !window.Jupiter.init) {
+        console.warn("Jupiter Plugin not available");
+        return;
+      }
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jupiter-plugin-mobile",
+        defaultExplorer: "Solscan",
+        formProps: {
+          fixedMint: "",
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50,
+        },
+        branding: {
+          logoUri: "https://juplite.com/icon-192.png",
+          name: "JupLite",
+        },
+      });
+    });
+  </script>
 </body>
 </html>
