@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <title>Juplite — Mobile Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
   <meta name="description"
         content="Fast, non-custodial mobile swaps on Solana via the official Jupiter Plugin with referral support." />
 
@@ -11,12 +12,11 @@
   <script>
     const version = Date.now();
     function addCacheBuster() {
-      // обновляем все CSS
       document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
         if (!link.href) return;
         link.href = link.href.split('?')[0] + '?v=' + version;
       });
-      // обновляем только скрипты с data-cache
+
       document.querySelectorAll('script[data-cache]').forEach(sc => {
         if (!sc.src) return;
         sc.src = sc.src.split('?')[0] + '?v=' + version;
@@ -49,6 +49,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
+
   <style>
     body.mobile-body {
       margin: 0;
@@ -68,8 +69,7 @@
       max-width: 480px;
       margin: 0 auto;
       padding: 12px 12px 16px;
-      gap: 8px;
-      box-sizing: border-box;
+      gap: 12px;
     }
 
     .mobile-header {
@@ -84,106 +84,68 @@
       border-radius: 999px;
     }
 
-    .mobile-header-title {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .mobile-header-title span:first-child {
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    .mobile-header-title span:last-child {
-      font-size: 11px;
-      opacity: 0.7;
+    .mobile-header-title span {
+      display: block;
+      font-size: 13px;
+      opacity: 0.9;
+      line-height: 1.3;
     }
 
     .mobile-pair-label {
-      font-size: 11px;
-      opacity: 0.75;
+      color: #38bdf8;
+      font-size: 12px;
       margin-top: 2px;
     }
 
     .mobile-widget {
-      flex: 1;
-      min-height: 360px;
+      width: 100%;
+      background: #020617;
+      padding-top: 6px;
+    }
+
+    .jupiter-container {
       border-radius: 16px;
       overflow: hidden;
-      background: #020617;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      padding: 8px;
-      box-sizing: border-box;
+      background: #0f172a;
+      width: 100%;
+      min-height: 420px;
     }
 
     .mobile-footer {
-      margin-top: 8px;
-      font-size: 10px;
+      margin-top: 12px;
+      font-size: 11px;
+      opacity: 0.7;
       text-align: center;
-      opacity: 0.6;
-    }
-
-    .mobile-footer a {
-      color: inherit;
-      text-decoration: underline;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      line-height: 1.3;
     }
 
     .mobile-actions {
+      padding: 14px;
       margin-top: 12px;
-      text-align: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      line-height: 1.4;
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+
+    .mobile-info {
+      opacity: 0.85;
       font-size: 12px;
-      opacity: 0;
-      animation: fadeUp 0.5s ease-out 0.15s forwards;
     }
 
     .mobile-btn {
       display: block;
-      padding: 10px 16px;
+      width: 100%;
+      padding: 12px 14px;
+      background: #38bdf8;
+      color: #002033;
       border-radius: 999px;
-      font-size: 14px;
       font-weight: 600;
+      text-align: center;
       text-decoration: none;
-      color: #e5e7eb;
-      border: 1px solid rgba(148,163,184,0.5);
-      transform: translateY(4px);
-      animation: fadeUp 0.4s ease-out forwards;
-    }
-
-    .btn-phantom {
-      background: rgba(129, 140, 248, 0.25);
-      animation-delay: 0.2s;
-    }
-
-    .btn-solflare {
-      background: rgba(250, 204, 21, 0.1);
-      color: #fcd34d;
-      animation-delay: 0.3s;
-    }
-
-    .mobile-btn:active {
-      transform: translateY(4px) scale(0.97);
-    }
-
-    .mobile-info {
-      font-size: 11px;
-      opacity: 0.75;
-      margin-top: 4px;
-      line-height: 1.3;
     }
   </style>
 </head>
@@ -212,25 +174,25 @@
     <div class="mobile-actions" id="mobile-actions">
       <div class="mobile-info">
         Wallets are not detected in Safari.<br />
-        Open Juplite inside Phantom or Solflare to connect your wallet and sign swaps.
+        Open Juplite inside Phantom or Solflare to connect and sign swaps.
       </div>
 
+      <!-- FIXED LINKS -->
       <a class="mobile-btn btn-phantom"
-         href="phantom://browse/https://juplite.com/mobile">
+         href="phantom://browse/https://juplite.com/mobile.html">
         Open in Phantom
       </a>
 
       <a class="mobile-btn btn-solflare"
-         href="solflare://browse/https://juplite.com/mobile">
+         href="solflare://browse/https://juplite.com/mobile.html">
         Open in Solflare
       </a>
     </div>
 
   </div>
 
-  <!-- ⭐ СКРИПТ ИНИЦИАЛИЗАЦИИ PLUGIN + АВТОДЕТЕКТОР (с кэш-бастером) ⭐ -->
+  <!-- ⭐ PLUGIN INIT ⭐ -->
   <script data-cache>
-    // Pair from URL
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pair = params.get('pair');
@@ -240,7 +202,6 @@
       }
     })();
 
-    // Jupiter init with referral
     window.addEventListener("load", function () {
       if (!window.Jupiter) return;
 
@@ -251,12 +212,9 @@
       });
     });
 
-    // Авто-детектор Phantom / Solflare
     (function () {
       const actions = document.getElementById('mobile-actions');
-      if (!actions) return;
-
-      const ua = (navigator.userAgent || '').toLowerCase();
+      const ua = navigator.userAgent.toLowerCase();
       const isPhantomUA = ua.includes('phantom');
       const isSolflareUA = ua.includes('solflare');
 
