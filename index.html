@@ -7,43 +7,10 @@
   <meta name="description"
         content="Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin for the best route and price, with referral support." />
 
-  <!-- 🔥 AUTO CACHE BUSTER -->
-  <script>
-    const version = Date.now();
-    function addCacheBuster() {
-      document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        if (!link.href) return;
-        link.href = link.href.split('?')[0] + '?v=' + version;
-      });
-      document.querySelectorAll('script[data-cache]').forEach(sc => {
-        if (!sc.src) return;
-        sc.src = sc.src.split('?')[0] + '?v=' + version;
-      });
-    }
-    document.addEventListener("DOMContentLoaded", addCacheBuster);
-  </script>
-
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-
-  <!-- OG / Social -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://juplite.com/" />
-  <meta property="og:title" content="Juplite — Solana Swap Router" />
-  <meta property="og:description"
-        content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with built-in referral support." />
-  <meta property="og:image" content="https://juplite.com/og.jpg" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Juplite — Solana Swap Router" />
-  <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
-  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
-
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
@@ -76,13 +43,15 @@
     <main class="main" id="home">
       <section class="hero">
         <div class="hero-text">
-          <h1>JupLite extracts the best route from the entire Solana network.</h1>
+
+          <h1>Juplite extracts the best route from the entire Solana network.</h1>
 
           <p class="hero-sub" id="hero-sub-en">
-            <span>JupLite extracts the best route from the entire Solana network.</span>
+            <span>Juplite extracts the best route from the entire Solana network.</span>
             <span>A zone for experienced traders. Non-custodial.</span>
             <span>Official Jupiter Plugin.</span>
           </p>
+
           <p class="hero-sub" id="hero-sub-ru" style="display:none">
             <span>Juplite добывает лучший маршрут из всей Solana-сети.</span>
             <span>Территория опытных трейдеров. Нон-кастодиально.</span>
@@ -94,194 +63,9 @@
             <a href="#deep-links" class="btn-ghost">Quick links</a>
           </div>
 
-          <div class="hero-list">
-            <h3>Popular pairs</h3>
-            <div class="tags">
-              <a href="/swap?pair=SOL-USDC" class="tag">SOL ⇄ USDC</a>
-              <a href="/swap?pair=JUP-USDC" class="tag">JUP ⇄ USDC</a>
-              <a href="/swap?pair=BONK-SOL" class="tag">BONK ⇄ SOL</a>
-              <a href="/swap?pair=WIF-SOL" class="tag">WIF ⇄ SOL</a>
-            </div>
-          </div>
         </div>
-
-        <div class="hero-widget" id="swap">
-          <div class="widget-title">Swap via Jupiter</div>
-          <div id="jupiter-plugin" class="jupiter-container"></div>
-          <p class="widget-caption">
-            Swaps are executed inside the official Jupiter Plugin. Your funds always stay in your wallet.
-            Referral support is embedded where applicable.
-          </p>
-        </div>
-      </section>
-
-      <section class="section" id="deep-links">
-        <h2>Deep links & quick routes</h2>
-        <p class="section-sub">
-          Share links like <code>/swap?pair=SOL-USDC</code> to open the exact pair with your referral attached.
-        </p>
-
-        <div class="cards">
-          <div class="card">
-            <h3>Quick links</h3>
-            <ul>
-              <li><a href="/swap?pair=SOL-USDC">Swap SOL ⇄ USDC</a></li>
-              <li><a href="/swap?pair=JUP-USDC">Swap JUP ⇄ USDC</a></li>
-              <li><a href="/swap?pair=BONK-SOL">Swap BONK ⇄ SOL</a></li>
-              <li><a href="/swap?pair=WIF-SOL">Swap WIF ⇄ SOL</a></li>
-            </ul>
-          </div>
-
-          <div class="card" id="raydium">
-            <h3>Raydium ready</h3>
-            <p>
-              Fallback button opens Raydium swap with your referrer preserved for supported pools.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>SEO & Social</h3>
-            <p>
-              Static, fast, EN/RU ready, OpenGraph & Twitter cards for token landings.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ABOUT EN/RU -->
-      <section class="section" id="about">
-        <h2>About Juplite</h2>
-
-        <div class="about-block" id="about-en">
-          <h3>Juplite — Fast Solana Swap Router</h3>
-          <p>
-            Juplite is a lightweight, mobile-friendly interface that routes every trade through the
-            <strong>official Jupiter Plugin</strong> — the leading swap aggregator on Solana.
-          </p>
-
-          <h4>Why Use Juplite</h4>
-          <ul>
-            <li>Best prices via Jupiter routes</li>
-            <li>Simple mobile-app layout</li>
-            <li>Fast load, no ads</li>
-            <li>Curated popular pairs</li>
-            <li>No account or registration</li>
-          </ul>
-
-          <h4>Transparency</h4>
-          <p>
-            Juplite is an independent interface using the official Jupiter Plugin.
-          </p>
-        </div>
-
-        <div class="about-block" id="about-ru" style="display:none">
-          <h3>Juplite — быстрый роутер обменов Solana</h3>
-          <p>
-            Juplite — это лёгкий интерфейс, направляющий каждый обмен через
-            <strong>официальный Jupiter Plugin</strong> — один из лучших агрегаторов Solana.
-          </p>
-
-          <h4>Преимущества</h4>
-          <ul>
-            <li>Лучшие цены</li>
-            <li>Удобный мобильный интерфейс</li>
-            <li>Быстрая загрузка</li>
-            <li>Популярные пары</li>
-            <li>Без регистрации</li>
-          </ul>
-
-          <h4>Прозрачность</h4>
-          <p>
-            Juplite — независимый интерфейс на основе Jupiter Plugin.
-          </p>
-        </div>
-
       </section>
     </main>
-
-    <footer class="footer">
-      <span>© <span id="year"></span> Juplite. Independent interface using the official Jupiter Plugin.</span>
-      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer" class="footer-link">Powered by Jupiter</a>
-    </footer>
   </div>
-
-  <!-- Your scripts (с кэш-бастером) -->
-  <script src="script.js" data-cache></script>
-
-  <!-- YEAR & LANGUAGE SWITCHER -->
-  <script>
-    (function () {
-      const enBtn = document.querySelector('.lang-btn[data-lang="en"]');
-      const ruBtn = document.querySelector('.lang-btn[data-lang="ru"]');
-
-      const heroSubEn = document.getElementById('hero-sub-en');
-      const heroSubRu = document.getElementById('hero-sub-ru');
-
-      const aboutEn = document.getElementById('about-en');
-      const aboutRu = document.getElementById('about-ru');
-
-      const yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      if (!enBtn || !ruBtn || !heroSubEn || !heroSubRu || !aboutEn || !aboutRu) return;
-
-      function setLang(lang) {
-        if (lang === 'en') {
-          enBtn.classList.add('active');
-          ruBtn.classList.remove('active');
-
-          heroSubEn.style.display = '';
-          heroSubRu.style.display = 'none';
-
-          aboutEn.style.display = '';
-          aboutRu.style.display = 'none';
-
-          document.documentElement.lang = 'en';
-        } else {
-          ruBtn.classList.add('active');
-          enBtn.classList.remove('active');
-
-          heroSubEn.style.display = 'none';
-          heroSubRu.style.display = '';
-
-          aboutEn.style.display = 'none';
-          aboutRu.style.display = '';
-
-          document.documentElement.lang = 'ru';
-        }
-      }
-
-      enBtn.addEventListener('click', () => setLang('en'));
-      ruBtn.addEventListener('click', () => setLang('ru'));
-
-      setLang('en');
-    })();
-  </script>
-
-  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT (NEW) ⭐⭐⭐ -->
-  <script>
-    window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) {
-        console.warn("Jupiter Plugin not available");
-        return;
-      }
-
-      window.Jupiter.init({
-        displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin", // совпадает с <div id="jupiter-plugin">
-        defaultExplorer: "Solscan",
-        formProps: {
-          fixedMint: "",
-          referralAccount: "FpJWQNTP71qeWgrV2Pq1Ugyx8bMh5YQYaXqEegKM7Ewg",
-          referralFee: 50,
-        },
-        branding: {
-          logoUri: "https://juplite.com/icon-192.png",
-          name: "JupLite",
-        },
-      });
-    });
-  </script>
-
 </body>
 </html>
