@@ -258,17 +258,27 @@
     })();
   </script>
 
-  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT ⭐⭐⭐ -->
+  <!-- ⭐⭐⭐ Jupiter REFERRAL INIT (NEW) ⭐⭐⭐ -->
   <script>
     window.addEventListener("load", function () {
       if (!window.Jupiter || !window.Jupiter.init) {
         console.warn("Jupiter Plugin not available");
         return;
       }
+
       window.Jupiter.init({
         displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin",
-        referral: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b"
+        integratedTargetId: "jupiter-plugin", // совпадает с <div id="jupiter-plugin">
+        defaultExplorer: "Solscan",
+        formProps: {
+          fixedMint: "",
+          referralAccount: "FpJWQNTP71qeWgrV2Pq1Ugyx8bMh5YQYaXqEegKM7Ewg",
+          referralFee: 50,
+        },
+        branding: {
+          logoUri: "https://juplite.com/icon-192.png",
+          name: "JupLite",
+        },
       });
     });
   </script>
