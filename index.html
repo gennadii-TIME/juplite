@@ -2,476 +2,679 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <title>Juplite — Solana Swap Router</title>
 
-  <title>JupLite — Solana Swap Terminal</title>
-
-  <!-- Base meta (EN по умолчанию, дальше переопределим через JS для RU) -->
-  <meta
-    name="description"
-    content="JupLite is an ultra-light swap interface on Solana powered by the official Jupiter engine. Fast non-custodial swaps with best price routing and deep liquidity."
-    data-i18n-meta="description"
-  />
-
-  <meta property="og:type" content="website" />
-  <meta
-    property="og:title"
-    content="JupLite — Solana Swap Terminal"
-    data-i18n-meta="ogTitle"
-  />
-  <meta
-    property="og:description"
-    content="Swap Solana tokens with best price routing, deep liquidity, and non-custodial wallet-native security via the official Jupiter engine."
-    data-i18n-meta="ogDescription"
-  />
-  <meta property="og:url" content="https://juplite.com/" />
-  <meta property="og:image" content="https://juplite.com/og-1200x630.png" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="Juplite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards." />
   <meta name="theme-color" content="#020617" />
 
-  <!-- PWA / Icons (подставь свои реальные пути) -->
-  <link rel="manifest" href="/manifest.json" />
+  <!-- Иконки / манифест (подкорректируй пути под свои файлы) -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js"></script>
+  <link rel="manifest" href="/manifest.json" />
 
   <style>
     :root {
       --bg: #020617;
       --bg-elevated: #020617;
-      --border-subtle: rgba(148, 163, 184, 0.3);
+      --border-subtle: rgba(148, 163, 184, 0.35);
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
       --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.14);
+      --accent-soft: rgba(56, 189, 248, 0.15);
       --radius-lg: 18px;
       --radius-full: 999px;
       --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --max-width: 1180px;
+      --topbar-height: 52px;
     }
 
-    * ,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      min-height: 100%;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-      color: var(--text-main);
+      height: 100%;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        -system-ui, sans-serif;
+        "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
     }
 
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
+      min-height: 100vh;
     }
 
-    .app-shell {
-      width: 100%;
-      max-width: 1120px;
-      border-radius: 32px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      background: radial-gradient(
-          circle at top left,
-          rgba(56, 189, 248, 0.08),
-          transparent 55%
-        ),
-        radial-gradient(
-          circle at bottom right,
-          rgba(37, 99, 235, 0.12),
-          transparent 60%
-        ),
-        #020617;
-      box-shadow: var(--shadow-soft);
-      padding: 28px 28px 32px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-      gap: 24px;
+    .shell {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 12px 28px;
     }
 
-    @media (max-width: 900px) {
-      .app-shell {
-        grid-template-columns: minmax(0, 1fr);
-        padding: 20px;
-        border-radius: 24px;
-      }
-    }
-
-    header {
+    /* ====== TOPBAR (как у Jupiter) ====== */
+    .topbar {
+      height: var(--topbar-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      gap: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top left, #020617, #020617 55%, #000 100%);
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
-    .brand {
+    .topbar-inner {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-right {
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
     }
 
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 12px;
-      background: radial-gradient(circle at 20% 0, #38bdf8 0, #0ea5e9 40%, #020617 100%);
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      padding: 2px;
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45),
-        0 16px 40px rgba(15, 23, 42, 0.9);
-      font-weight: 700;
-      font-size: 18px;
     }
 
-    .brand-name {
-      font-weight: 600;
-      letter-spacing: 0.04em;
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14px;
-      text-transform: uppercase;
+      font-weight: 700;
       color: #e5e7eb;
+      letter-spacing: 0.06em;
     }
 
-    .brand-tag {
-      font-size: 12px;
+    .logo-text-main {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
       color: var(--text-muted);
     }
 
-    .hero {
-      padding-right: 8px;
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .nav a.nav-active {
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .nav a:hover {
+      color: #e5e7eb;
+    }
+
+    .nav-badge-new {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      background: #22c55e;
+      color: #020617;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    .search {
+      position: relative;
+      min-width: 0;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 6px 26px 6px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .search-hotkey {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #6b7280;
+      border-radius: 4px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 1px 4px;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .icon-btn:hover {
+      border-color: rgba(75, 85, 99, 0.9);
+      color: var(--text-main);
+    }
+
+    .connect-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+      white-space: nowrap;
+    }
+
+    .connect-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    /* ====== TICKER BAR (котировки) ====== */
+    .ticker-shell {
+      background: #020617;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .ticker {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ticker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .ticker-token-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .ticker-symbol {
+      font-weight: 500;
+    }
+
+    .ticker-price {
+      color: #e5e7eb;
+    }
+
+    .ticker-change-up {
+      color: #4ade80;
+    }
+
+    .ticker-change-down {
+      color: #f97373;
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    .page-main {
+      max-width: var(--max-width);
+      margin: 12px auto 0;
+      padding: 0 12px 24px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.99));
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(18px);
     }
 
     .hero-title {
-      font-size: 30px;
-      line-height: 1.1;
-      margin: 0 0 16px;
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
     }
 
-    .hero-title span.highlight-jup {
-      background: linear-gradient(90deg, #38bdf8, #22c55e);
+    .hero-highlight {
+      background: radial-gradient(circle at 0 0, #38bdf8, #22c55e);
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
     }
 
     .hero-text {
-      margin: 0 0 20px;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 13px;
+      line-height: 1.5;
       color: var(--text-muted);
-      max-width: 520px;
+      max-width: 440px;
     }
 
-    .hero-badges {
+    .hero-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 22px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: radial-gradient(
-          circle at top left,
-          rgba(56, 189, 248, 0.22),
-          transparent 55%
-        ),
-        rgba(15, 23, 42, 0.96);
       font-size: 11px;
-      color: #e5e7eb;
-      white-space: nowrap;
+      color: var(--text-muted);
     }
 
-    .hero-badge::before {
-      content: "✓";
-      font-size: 11px;
+    .hero-pill {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.14), transparent 60%);
     }
 
-    .hero-actions {
+    .hero-footer {
+      margin-top: 4px;
       display: flex;
       flex-wrap: wrap;
+      gap: 10px;
       align-items: center;
-      gap: 14px;
+      justify-content: flex-start;
     }
 
-    .hero-button {
+    .cta-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
       border: none;
       cursor: pointer;
-      padding: 11px 20px;
-      border-radius: 999px;
-      background: radial-gradient(
-          circle at 0 0,
-          rgba(248, 250, 252, 0.8),
-          transparent 55%
-        ),
-        linear-gradient(135deg, #0ea5e9, #22c55e);
+      font-size: 13px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
       color: #020617;
-      font-weight: 600;
-      font-size: 14px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.3),
-        0 18px 40px rgba(15, 23, 42, 0.9);
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.5);
+      text-decoration: none;
     }
 
-    .hero-button::before {
-      content: "↻";
-      font-size: 14px;
+    .cta-btn span {
+      font-size: 15px;
+      line-height: 1;
     }
 
-    .hero-button:hover {
-      filter: brightness(1.05);
-      transform: translateY(-0.5px);
+    .ref-label {
+      font-size: 11px;
+      color: var(--text-muted);
     }
 
-    .hero-ref {
+    .ref-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      word-break: break-all;
+    }
+
+    .swap-wrapper {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .swap-header {
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       font-size: 11px;
       color: var(--text-muted);
     }
 
-    .hero-ref-pill {
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px dashed rgba(148, 163, 184, 0.7);
+    .swap-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
       background: rgba(15, 23, 42, 0.9);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
-      font-size: 11px;
-      color: #e5e7eb;
     }
 
-    @media (max-width: 900px) {
-      .hero-title {
-        font-size: 24px;
-      }
-      .hero-text {
-        font-size: 13px;
-      }
-    }
-
-    /* Plugin container */
-    .swap-panel {
-      border-radius: 24px;
-      background: radial-gradient(
-          circle at top,
-          rgba(15, 23, 42, 0.9),
-          rgba(2, 6, 23, 0.98)
-        ),
-        #020617;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
-      padding: 8px;
-      min-height: 520px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    #target-container {
-      width: 100%;
-      height: 100%;
-      min-height: 500px;
-      border-radius: 16px;
+    #jup-container {
+      flex: 1;
+      min-height: 480px;
+      max-height: 640px;
+      border-radius: 14px;
       overflow: hidden;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+    }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 6px auto 0;
+      padding: 0 12px 18px;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      opacity: 0.85;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== MOBILE ====== */
+    @media (max-width: 900px) {
+      .topbar-inner {
+        padding-inline: 8px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .search {
+        max-width: 180px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel {
+        padding: 14px 12px 16px;
+      }
+
+      .hero-title {
+        font-size: 20px;
+      }
+
+      #jup-container {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo-text-sub {
+        display: none;
+      }
+
+      .hero-text {
+        max-width: none;
+      }
     }
   </style>
+
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js"></script>
 </head>
+
 <body>
-  <main class="app-shell">
-    <section class="hero">
-      <header>
-        <div class="brand">
-          <div class="brand-logo">J</div>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <div class="logo-wrap">
+          <div class="logo-circle">
+            <div class="logo-inner">J</div>
+          </div>
           <div>
-            <div class="brand-name">JupLite</div>
-            <div class="brand-tag">Solana Swap Terminal</div>
+            <div class="logo-text-main">Juplite</div>
+            <div class="logo-text-sub">Swap · Router · Solana</div>
           </div>
         </div>
-      </header>
 
-      <h1 class="hero-title" data-i18n="heroTitle">
-        Fast swaps on Solana, <span class="highlight-jup">Jupiter engine.</span>
-      </h1>
-
-      <p class="hero-text" data-i18n="heroText">
-        JupLite is an ultra-light mobile-style swap interface built on the official Jupiter engine.
-        Every trade is routed through the best price and deepest liquidity across Solana DEXes.
-        Fast execution, low fees, and fully non-custodial wallet-native security — your keys and your
-        funds always remain under your control.
-      </p>
-
-      <div class="hero-badges">
-        <span class="hero-badge" data-i18n="badge1">
-          Aggregated liquidity across Solana DEXes
-        </span>
-        <span class="hero-badge" data-i18n="badge2">
-          Non-custodial, wallet-native
-        </span>
-        <span class="hero-badge" data-i18n="badge3">
-          Built-in referral rewards
-        </span>
+        <nav class="nav">
+          <a href="#" class="nav-active">Swap</a>
+          <a href="#">Pro</a>
+          <a href="#">Perps</a>
+          <a href="#">Lend</a>
+          <a href="#">Portfolio</a>
+          <a href="#">
+            Predict
+            <span class="nav-badge-new">new</span>
+          </a>
+        </nav>
       </div>
 
-      <div class="hero-actions">
-        <button class="hero-button" data-i18n="startButton">
-          Start swapping
-        </button>
+      <div class="topbar-right">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search token, wallet or feature" />
+          <span class="search-hotkey">/</span>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
+        <button class="connect-btn" type="button">Connect</button>
       </div>
+    </div>
+  </div>
 
-      <div class="hero-ref">
-        <span class="hero-ref-label" data-i18n="refLabel">
-          Referral account
-        </span>
-        <span class="hero-ref-pill">
-          DM3A9thieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
-        </span>
+  <!-- TICKER LINE -->
+  <div class="ticker-shell">
+    <div class="ticker">
+      <div class="ticker-item">
+        <div class="ticker-token-icon">K</div>
+        <span class="ticker-symbol">KMNO</span>
+        <span class="ticker-price">$0.0539</span>
+        <span class="ticker-change-down">-1.1%</span>
       </div>
-    </section>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">M</div>
+        <span class="ticker-symbol">MET</span>
+        <span class="ticker-price">$0.3669</span>
+        <span class="ticker-change-down">-5.0%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">J</div>
+        <span class="ticker-symbol">JUP</span>
+        <span class="ticker-price">$0.2715</span>
+        <span class="ticker-change-up">+3.6%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">S</div>
+        <span class="ticker-symbol">SOL</span>
+        <span class="ticker-price">$142.10</span>
+        <span class="ticker-change-up">+2.3%</span>
+      </div>
+    </div>
+  </div>
 
-    <section class="swap-panel">
-      <div id="target-container"></div>
-    </section>
-  </main>
+  <!-- MAIN CONTENT -->
+  <div class="page-main">
+    <div class="layout">
+      <!-- ЛЕВАЯ ПАНЕЛЬ: текст / маркетинг -->
+      <section class="panel">
+        <div>
+          <div class="hero-title">
+            Fast swaps on Solana,
+            <span class="hero-highlight">Jupiter engine</span>.
+          </div>
+          <p class="hero-text">
+            Juplite is a minimal swap interface that routes every trade through
+            official Jupiter aggregation for best price and deep liquidity.
+            Your keys and funds stay in your wallet.
+          </p>
+        </div>
 
-  <!-- Инициализация Jupiter Plugin -->
+        <div class="hero-meta">
+          <div class="hero-pill">✓ Aggregated liquidity across Solana DEXes</div>
+          <div class="hero-pill">✓ Non-custodial, wallet-native</div>
+          <div class="hero-pill">✓ Built-in referral rewards</div>
+        </div>
+
+        <div class="hero-footer">
+          <button class="cta-btn" type="button" onclick="scrollToSwap()">
+            <span>↻</span>
+            <span>Start swapping</span>
+          </button>
+          <div>
+            <div class="ref-label">Referral account</div>
+            <div class="ref-code">
+              DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ПРАВАЯ ПАНЕЛЬ: Jupiter Plugin -->
+      <section class="panel">
+        <div class="swap-wrapper">
+          <div class="swap-header">
+            <div>Swap</div>
+            <div class="swap-badge">Routed by Jupiter Plugin</div>
+          </div>
+          <div id="jup-container"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <div>Juplite is an independent interface built on top of Jupiter.</div>
+    <div>Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.</div>
+  </footer>
+
   <script>
-    window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) return;
+    function initJupiter() {
+      if (!window.Jupiter) return;
 
       window.Jupiter.init({
         displayMode: "integrated",
-        integratedTargetId: "target-container",
-        endpoint: "https://quote-api.jup.ag",
-        strictTokenList: false,
+        integratedTargetId: "jup-container",
+        defaultExplorer: "Solscan",
         formProps: {
-          initialInputMint: "So11111111111111111111111111111111111111112", // SOL
+          // дефолт: как твой deeplink USDC → SOL
+          defaultInputMint:  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+          defaultOutputMint: "So11111111111111111111111111111111111111112", // SOL (wSOL)
+
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50 // 50 bps = 0.5%
         },
-        // Брендинг
         branding: {
-          name: "JupLite",
-          logoUri: "https://juplite.com/icons/icon-192.png",
-        },
-        // Реферальный аккаунт (если поддерживается плагином)
-        referralAccount: "DM3A9thieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          name: "Juplite",
+          logoUri: "https://juplite.com/icon-192.png"
+        }
       });
+    }
+
+    function scrollToSwap() {
+      const el = document.getElementById("jup-container");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    window.addEventListener("load", function () {
+      if (window.Jupiter) {
+        initJupiter();
+      } else {
+        setTimeout(initJupiter, 800);
+      }
     });
-  </script>
-
-  <!-- Автоопределение языка и локализация EN/RU -->
-  <script>
-    (function () {
-      const translations = {
-        en: {
-          heroTitle: "Fast swaps on Solana, Jupiter engine.",
-          heroText:
-            "JupLite is an ultra-light mobile-style swap interface built on the official Jupiter engine. " +
-            "Every trade is routed through the best price and deepest liquidity across Solana DEXes. " +
-            "Fast execution, low fees, and fully non-custodial wallet-native security — your keys and your funds always remain under your control.",
-          badge1: "Aggregated liquidity across Solana DEXes",
-          badge2: "Non-custodial, wallet-native",
-          badge3: "Built-in referral rewards",
-          startButton: "Start swapping",
-          refLabel: "Referral account",
-        },
-        ru: {
-          heroTitle: "Мгновенные свопы на Solana, движок Jupiter.",
-          heroText:
-            "JupLite — это лёгкий и быстрый интерфейс для обмена токенов на Solana, работающий на официальном движке Jupiter. " +
-            "Каждый своп проходит по лучшему маршруту с максимальной ликвидностью и минимальными комиссиями. " +
-            "Быстро, надёжно и полностью некастодиально — ваши ключи и средства всегда остаются у вас.",
-          badge1: "Агрегированная ликвидность со всех DEX Solana",
-          badge2: "Некастодиально, через ваш кошелёк",
-          badge3: "Встроенные реферальные вознаграждения",
-          startButton: "Начать обмен",
-          refLabel: "Реферальный аккаунт",
-        },
-      };
-
-      const metaTranslations = {
-        en: {
-          title: "JupLite — Solana Swap Terminal",
-          description:
-            "JupLite is an ultra-light swap interface on Solana powered by the official Jupiter engine. Fast non-custodial swaps with best price routing and deep liquidity.",
-          ogTitle: "JupLite — Solana Swap Terminal",
-          ogDescription:
-            "Swap Solana tokens with best price routing, deep liquidity, and non-custodial wallet-native security via the official Jupiter engine.",
-        },
-        ru: {
-          title: "JupLite — Терминал свопов на Solana",
-          description:
-            "JupLite — лёгкий интерфейс для обмена токенов на Solana на официальном движке Jupiter. Быстрые некастодиальные свопы с лучшим маршрутом и глубокой ликвидностью.",
-          ogTitle: "JupLite — Терминал свопов на Solana",
-          ogDescription:
-            "Обменивайте токены Solana с лучшим маршрутом, глубокой ликвидностью и некастодиальной защитой кошелька на официальном движке Jupiter.",
-        },
-      };
-
-      const userLang =
-        (navigator.language || navigator.userLanguage || "en").toLowerCase();
-      const lang = userLang.startsWith("ru") ? "ru" : "en";
-
-      const dict = translations[lang];
-      const metaDict = metaTranslations[lang];
-
-      // lang на <html>
-      document.documentElement.lang = lang;
-
-      // Hero-тексты
-      Object.keys(dict).forEach((key) => {
-        const el = document.querySelector('[data-i18n="' + key + '"]');
-        if (el) el.textContent = dict[key];
-      });
-
-      // Title
-      if (metaDict.title) {
-        document.title = metaDict.title;
-      }
-
-      // Meta description / OG
-      const metaDescription = document.querySelector(
-        'meta[data-i18n-meta="description"]'
-      );
-      if (metaDescription && metaDict.description) {
-        metaDescription.setAttribute("content", metaDict.description);
-      }
-
-      const ogTitle = document.querySelector(
-        'meta[data-i18n-meta="ogTitle"]'
-      );
-      if (ogTitle && metaDict.ogTitle) {
-        ogTitle.setAttribute("content", metaDict.ogTitle);
-      }
-
-      const ogDescription = document.querySelector(
-        'meta[data-i18n-meta="ogDescription"]'
-      );
-      if (ogDescription && metaDict.ogDescription) {
-        ogDescription.setAttribute("content", metaDict.ogDescription);
-      }
-    })();
   </script>
 </body>
 </html>
