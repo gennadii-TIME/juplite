@@ -1,7 +1,7 @@
 {
-  "name": "Juplite — Solana Swap Router",
-  "short_name": "Juplite",
-  "description": "Juplite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin with referral support.",
+  "name": "JupLite — Solana Swap Router",
+  "short_name": "JupLite",
+  "description": "JupLite is a lightweight Solana swap interface that routes every trade through the official Jupiter Plugin with referral support.",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",

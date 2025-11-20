@@ -1,4 +1,4 @@
-Juplite v3.0 skeleton
+JupLite v3.0 skeleton
 
 Files:
 - index.html   — main landing with embedded Jupiter Plugin

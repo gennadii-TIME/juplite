@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Juplite — Solana Swap Router</title>
+  <title>JupLite — Solana Swap Router</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards." />
+        content="JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards." />
   <meta name="theme-color" content="#020617" />
 
   <!-- Иконки / манифест (подкорректируй пути под свои файлы) -->
@@ -102,29 +102,36 @@
     }
 
     .logo-circle {
-      width: 28px;
-      height: 28px;
+      position: relative;
+      width: 32px;
+      height: 32px;
       border-radius: 999px;
-      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
-      padding: 2px;
-      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: visible;
     }
 
-    .logo-inner {
-      width: 100%;
-      height: 100%;
+    .logo-glow {
+      position: absolute;
+      inset: -6px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: #e5e7eb;
-      letter-spacing: 0.06em;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(6px);
+      opacity: 0.9;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      position: relative;
+      z-index: 2;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.4),
+        0 8px 18px rgba(15, 23, 42, 0.7);
+      display: block;
     }
 
     .logo-text-main {
@@ -521,10 +528,11 @@
       <div class="topbar-left">
         <div class="logo-wrap">
           <div class="logo-circle">
-            <div class="logo-inner">J</div>
+            <div class="logo-glow"></div>
+            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
           </div>
           <div>
-            <div class="logo-text-main">Juplite</div>
+            <div class="logo-text-main">JupLite</div>
             <div class="logo-text-sub">Swap · Router · Solana</div>
           </div>
         </div>
@@ -595,7 +603,7 @@
             <span class="hero-highlight">Jupiter engine</span>.
           </div>
           <p class="hero-text">
-            Juplite is a minimal swap interface that routes every trade through
+            JupLite is a minimal swap interface that routes every trade through
             official Jupiter aggregation for best price and deep liquidity.
             Your keys and funds stay in your wallet.
           </p>
@@ -635,7 +643,7 @@
   </div>
 
   <footer>
-    <div>Juplite is an independent interface built on top of Jupiter.</div>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
     <div>Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.</div>
   </footer>
 
@@ -656,7 +664,7 @@
           referralFee: 50 // 50 bps = 0.5%
         },
         branding: {
-          name: "Juplite",
+          name: "JupLite",
           logoUri: "https://juplite.com/icon-192.png"
         }
       });

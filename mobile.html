@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Juplite — Mobile Swap</title>
+  <title>JupLite — Mobile Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite mobile — fast Solana swaps via the official Jupiter Plugin with referral support." />
+        content="JupLite mobile — fast Solana swaps via the official Jupiter Plugin with referral support." />
 
   <meta name="theme-color" content="#020617" />
   <link rel="manifest" href="/manifest.json" />
@@ -15,13 +15,13 @@
   <!-- OG / Social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://juplite.com/mobile.html" />
-  <meta property="og:title" content="Juplite — Mobile Swap" />
+  <meta property="og:title" content="JupLite — Mobile Swap" />
   <meta property="og:description"
         content="Mobile-friendly Solana swap interface using the official Jupiter Plugin with referral support." />
   <meta property="og:image" content="https://juplite.com/og.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Juplite — Mobile Swap" />
+  <meta name="twitter:title" content="JupLite — Mobile Swap" />
   <meta name="twitter:description"
         content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
   <meta name="twitter:image" content="https://juplite.com/og.jpg" />
@@ -61,9 +61,24 @@
       gap: 8px;
     }
     .mobile-logo {
+      position: relative;
       width: 32px;
       height: 32px;
-      border-radius: 12px;
+      border-radius: 999px;
+      display: block;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.4),
+        0 8px 18px rgba(15, 23, 42, 0.7);
+    }
+    .mobile-logo-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(6px);
+      opacity: 0.9;
+      z-index: -1;
     }
     .mobile-brand {
       display: flex;
@@ -169,9 +184,12 @@
   <div class="mobile-page">
     <header class="mobile-header">
       <div class="mobile-logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-logo" />
+        <div style="position:relative; width:32px; height:32px;">
+          <div class="mobile-logo-glow"></div>
+          <img src="ui-logo-64.png" alt="JupLite logo" class="mobile-logo" />
+        </div>
         <div class="mobile-brand">
-          <span class="mobile-brand-name">Juplite</span>
+          <span class="mobile-brand-name">JupLite</span>
           <span class="mobile-brand-tagline">Solana Swap Router</span>
         </div>
       </div>
@@ -191,7 +209,7 @@
         <div id="jupiter-plugin-mobile"></div>
         <p class="mobile-caption">
           Swaps are routed through Jupiter for the best available price on Solana.
-          Referral support is embedded and fees are sent to the Juplite integrator account.
+          Referral support is embedded and fees are sent to the JupLite integrator account.
         </p>
       </section>
 
@@ -207,7 +225,7 @@
     </main>
 
     <footer class="mobile-footer">
-      <span>© <span id="year-mobile"></span> Juplite</span>
+      <span>© <span id="year-mobile"></span> JupLite</span>
       <a href="https://jup.ag" target="_blank" rel="noopener noreferrer">Powered by Jupiter</a>
     </footer>
   </div>
