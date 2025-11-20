@@ -906,7 +906,13 @@
           if (target === "swap") {
             scrollToSwap();
           } else {
-            window.scrollTo({ top: document.querySelector(".page-main").offsetTop - 16, behavior: "smooth" });
+            const main = document.querySelector(".page-main");
+            if (main) {
+              window.scrollTo({
+                top: main.offsetTop - 16,
+                behavior: "smooth"
+              });
+            }
           }
         });
       });
