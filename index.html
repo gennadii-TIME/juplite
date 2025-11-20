@@ -2,248 +2,413 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Juplite — Mobile Swap</title>
+  <title>Juplite — Solana Swap Router</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="Juplite mobile — fast Solana swaps via the official Jupiter Plugin with referral support." />
-
+        content="Juplite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards." />
   <meta name="theme-color" content="#020617" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.ico" />
+
+  <!-- (если уже есть favicon/manifest — оставь свои пути) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
 
-  <!-- OG / Social -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://juplite.com/mobile.html" />
-  <meta property="og:title" content="Juplite — Mobile Swap" />
-  <meta property="og:description"
-        content="Mobile-friendly Solana swap interface using the official Jupiter Plugin with referral support." />
-  <meta property="og:image" content="https://juplite.com/og.jpg" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Juplite — Mobile Swap" />
-  <meta name="twitter:description"
-        content="Fast, non-custodial swaps on Solana via the official Jupiter Plugin with referral support." />
-  <meta name="twitter:image" content="https://juplite.com/og.jpg" />
-
-  <!-- Jupiter Plugin -->
-  <script src="https://plugin.jup.ag/plugin-v1.js" defer></script>
-
-  <!-- Styles (можешь использовать тот же styles.css) -->
-  <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Небольшой тюнинг под мобильную страницу */
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    :root {
+      --bg: #020617;
+      --bg-elevated: rgba(15, 23, 42, 0.95);
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --max-width: 1120px;
     }
-    .mobile-page {
+
+    * , *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+    }
+
+    body {
+      display: flex;
       min-height: 100vh;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .page {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 16px 16px 32px;
       display: flex;
       flex-direction: column;
-      padding: 12px 12px 16px;
-      max-width: 480px;
-      margin: 0 auto;
+      gap: 16px;
     }
-    .mobile-header {
+
+    header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 4px 0 10px;
+      gap: 12px;
     }
-    .mobile-logo-wrap {
+
+    .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .mobile-logo {
+
+    .brand-logo {
       width: 32px;
       height: 32px;
       border-radius: 12px;
-    }
-    .mobile-brand {
+      background: radial-gradient(circle at 30% 20%, #a5f3fc 0, #38bdf8 35%, #0f172a 100%);
       display: flex;
-      flex-direction: column;
-      line-height: 1.1;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      color: #0f172a;
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.45);
     }
-    .mobile-brand-name {
-      font-size: 17px;
-      font-weight: 600;
-    }
-    .mobile-brand-tagline {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .mobile-link-main {
-      font-size: 12px;
-      color: #9ca3af;
-      text-decoration: none;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
-    .mobile-main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .mobile-title {
+
+    .brand-text-title {
       font-size: 18px;
       font-weight: 600;
-      margin: 4px 0;
+      letter-spacing: 0.03em;
     }
-    .mobile-sub {
+
+    .brand-text-sub {
       font-size: 12px;
-      color: #9ca3af;
-      margin: 0 0 8px;
+      color: var(--text-muted);
     }
-    .mobile-widget-card {
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: 18px;
-      padding: 10px 10px 12px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
-    }
-    .mobile-widget-title {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: #e5e7eb;
-    }
-    #jupiter-plugin-mobile {
-      width: 100%;
-      min-height: 520px;
-    }
-    .mobile-caption {
-      margin-top: 6px;
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.8);
       font-size: 11px;
-      color: #9ca3af;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      white-space: nowrap;
     }
-    .mobile-quick-links {
-      margin-top: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 16px;
-      padding: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.2);
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
     }
-    .mobile-quick-links h3 {
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.98));
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(20px);
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-highlight {
+      background: radial-gradient(circle at 0 0, #38bdf8, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
       font-size: 13px;
-      margin: 0 0 6px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 420px;
     }
-    .mobile-tags {
+
+    .hero-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-    }
-    .mobile-tag {
+      gap: 10px;
       font-size: 11px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      text-decoration: none;
-      color: #e5e7eb;
+      color: var(--text-muted);
     }
-    .mobile-footer {
-      margin-top: 12px;
+
+    .hero-pill {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.14), transparent 60%);
+    }
+
+    .hero-footer {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .cta-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.5);
+      text-decoration: none;
+    }
+
+    .cta-btn span {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .ref-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .ref-code {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      word-break: break-all;
+    }
+
+    /* Jupiter Plugin wrapper */
+    .swap-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .swap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .swap-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    #jup-container {
+      flex: 1;
+      min-height: 480px;
+      max-height: 640px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+    }
+
+    footer {
+      margin-top: 8px;
       font-size: 10px;
-      color: #6b7280;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      align-items: center;
+      opacity: 0.85;
     }
-    .mobile-footer a {
-      color: #9ca3af;
+
+    footer a {
+      color: var(--accent);
       text-decoration: none;
-      font-size: 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile layout */
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .page {
+        padding: 10px 10px 22px;
+      }
+
+      .panel {
+        padding: 14px 12px 16px;
+      }
+
+      header {
+        flex-direction: row;
+      }
+
+      .hero-title {
+        font-size: 20px;
+      }
+
+      #jup-container {
+        min-height: 520px;
+      }
     }
   </style>
+
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js"></script>
 </head>
+
 <body>
-  <div class="mobile-page">
-    <header class="mobile-header">
-      <div class="mobile-logo-wrap">
-        <img src="ui-logo-64.png" alt="Juplite logo" class="mobile-logo" />
-        <div class="mobile-brand">
-          <span class="mobile-brand-name">Juplite</span>
-          <span class="mobile-brand-tagline">Solana Swap Router</span>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">J</div>
+        <div>
+          <div class="brand-text-title">Juplite</div>
+          <div class="brand-text-sub">Lightweight Solana swap • Powered by Jupiter</div>
         </div>
       </div>
-      <a href="/" class="mobile-link-main">Desktop version</a>
+
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Non-custodial · Jupiter routing</span>
+      </div>
     </header>
 
-    <main class="mobile-main">
-      <div>
-        <h1 class="mobile-title">Swap on Solana in one tap</h1>
-        <p class="mobile-sub">
-          Mobile-first interface powered by the official Jupiter Plugin. Non-custodial. Your funds stay in your wallet.
-        </p>
-      </div>
+    <main>
+      <!-- Left: text / marketing -->
+      <section class="panel">
+        <div>
+          <div class="hero-title">
+            Fast swaps on Solana,
+            <span class="hero-highlight">Jupiter engine</span>.
+          </div>
+          <p class="hero-text">
+            Juplite is a minimal swap interface that sends every trade through
+            official Jupiter routing for the best price and deep liquidity.
+            Your keys and funds stay in your wallet.
+          </p>
+        </div>
 
-      <section class="mobile-widget-card">
-        <div class="mobile-widget-title">Swap via Jupiter</div>
+        <div class="hero-meta">
+          <div class="hero-pill">✓ Aggregated liquidity across Solana DEXes</div>
+          <div class="hero-pill">✓ Wallet-native, non-custodial</div>
+          <div class="hero-pill">✓ Built-in referral rewards</div>
+        </div>
 
-        <!-- Контейнер для плагина -->
-        <div id="jupiter-plugin-mobile"></div>
-
-        <p class="mobile-caption">
-          Swaps are routed through Jupiter for the best available price on Solana.
-          Referral support is embedded and fees are sent to the Juplite integrator account.
-        </p>
+        <div class="hero-footer">
+          <button class="cta-btn" type="button" onclick="scrollToSwap()">
+            <span>↻</span>
+            <span>Start swapping</span>
+          </button>
+          <div>
+            <div class="ref-label">Referral account</div>
+            <div class="ref-code">
+              DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="mobile-quick-links">
-        <h3>Quick pairs</h3>
-        <div class="mobile-tags">
-          <a href="/swap?pair=SOL-USDC" class="mobile-tag">SOL ⇄ USDC</a>
-          <a href="/swap?pair=JUP-USDC" class="mobile-tag">JUP ⇄ USDC</a>
-          <a href="/swap?pair=BONK-SOL" class="mobile-tag">BONK ⇄ SOL</a>
-          <a href="/swap?pair=WIF-SOL" class="mobile-tag">WIF ⇄ SOL</a>
+      <!-- Right: embedded Jupiter Plugin -->
+      <section class="panel">
+        <div class="swap-wrapper">
+          <div class="swap-header">
+            <div>Swap</div>
+            <div class="swap-badge">Routed by Jupiter Plugin</div>
+          </div>
+          <div id="jup-container"></div>
         </div>
       </section>
     </main>
 
-    <footer class="mobile-footer">
-      <span>© <span id="year-mobile"></span> Juplite</span>
-      <a href="https://jup.ag" target="_blank" rel="noopener noreferrer">Powered by Jupiter</a>
+    <footer>
+      <div>Juplite is an independent interface built on top of Jupiter.</div>
+      <div>Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.</div>
     </footer>
   </div>
 
   <script>
-    // год в футере
-    (function () {
-      const y = document.getElementById('year-mobile');
-      if (y) y.textContent = new Date().getFullYear();
-    })();
-  </script>
-
-  <!-- ⭐ Jupiter init для mobile ⭐ -->
-  <script>
-    window.addEventListener("load", function () {
-      if (!window.Jupiter || !window.Jupiter.init) {
-        console.warn("Jupiter Plugin not available");
-        return;
-      }
+    function initJupiter() {
+      if (!window.Jupiter) return;
 
       window.Jupiter.init({
         displayMode: "integrated",
-        integratedTargetId: "jupiter-plugin-mobile",
+        integratedTargetId: "jup-container",
         defaultExplorer: "Solscan",
+        // mainnet by default; можно явно указать cluster: "mainnet-beta"
         formProps: {
-          fixedMint: "",
+          // если хочешь закрепить токены — можно указать fixedInputMint / fixedOutputMint
           referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-          referralFee: 50,
+          referralFee: 50 // 50 bps = 0.5% (80% тебе, 20% Jupiter Ultra)
         },
         branding: {
-          logoUri: "https://juplite.com/icon-192.png",
-          name: "JupLite",
-        },
+          name: "Juplite",
+          logoUri: "https://juplite.com/icon-192.png"
+        }
       });
+    }
+
+    function scrollToSwap() {
+      const el = document.getElementById("jup-container");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // Ждём, пока подгрузится скрипт плагина
+    window.addEventListener("load", function () {
+      if (window.Jupiter) {
+        initJupiter();
+      } else {
+        // небольшая подстраховка, если скрипт грузится медленно
+        setTimeout(initJupiter, 800);
+      }
     });
   </script>
 </body>
