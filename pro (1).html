@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JupLite Pro — Trading Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="JupLite Pro embeds the official Jupiter Terminal in full trading mode with Gena's referral on every trade." />
+
+  <link rel="icon" type="image/png" href="/favicon-32.png" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.4);
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
+    }
+
+    * , *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 14px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.96), #020617);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .brand-logo-wrap {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      overflow: visible;
+    }
+
+    .brand-logo-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 16px;
+      background: conic-gradient(from 150deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(7px);
+      opacity: 0.9;
+    }
+
+    .brand-logo-img {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.5),
+        0 0 18px rgba(56, 189, 248, 0.5),
+        0 12px 28px rgba(15, 23, 42, 0.95);
+      display: block;
+    }
+
+    .brand-text-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .nav-chip {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.92);
+    }
+
+    .nav-chip-primary {
+      border-color: rgba(56, 189, 248, 0.9);
+      color: #e0f2fe;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(15, 23, 42, 0.96));
+    }
+
+    .nav-chip:hover {
+      filter: brightness(1.06);
+    }
+
+    .terminal-wrapper {
+      flex: 1;
+      border-radius: 24px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      box-shadow: var(--shadow-soft);
+      padding: 10px;
+      min-height: 520px;
+    }
+
+    #jup-terminal {
+      width: 100%;
+      height: min(82vh, 780px);
+      min-height: 520px;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .powered {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+      opacity: 0.82;
+    }
+
+    @media (max-width: 768px) {
+      .shell {
+        padding: 12px 10px 20px;
+      }
+
+      .topbar {
+        padding-inline: 10px;
+      }
+
+      .brand-text-sub {
+        display: none;
+      }
+
+      #jup-terminal {
+        height: calc(100vh - 140px);
+      }
+    }
+  </style>
+
+  <!-- Jupiter Terminal script -->
+  <script src="https://terminal.jup.ag/main-v2.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a href="/index.html" class="brand" aria-label="Back to JupLite main page">
+        <div class="brand-logo-wrap">
+          <div class="brand-logo-glow"></div>
+          <img src="https://juplite.com/icon-192.png" alt="JupLite logo" class="brand-logo-img" loading="lazy" />
+        </div>
+        <div>
+          <div class="brand-text-title">JupLite Pro</div>
+          <div class="brand-text-sub">Full Jupiter Terminal · Your referral on every trade</div>
+        </div>
+      </a>
+      <div class="nav-right">
+        <a href="/index.html" class="nav-chip">Main</a>
+        <span class="nav-chip nav-chip-primary">Pro terminal</span>
+      </div>
+    </header>
+
+    <main class="terminal-wrapper">
+      <div id="jup-terminal"></div>
+      <div class="powered">
+        Powered by Jupiter Terminal · Referral: DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener("load", function () {
+      if (!window.Jupiter || typeof window.Jupiter.init !== "function") {
+        console.warn("Jupiter Terminal script not ready");
+        return;
+      }
+
+      window.Jupiter.init({
+        displayMode: "terminal",
+        integratedTargetId: "jup-terminal",
+        // твой бренд
+        branding: {
+          name: "JupLite",
+          logoUri: "https://juplite.com/icon-192.png"
+        },
+        // твоя рефка + комиссия
+        referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+        platformFeeBps: 50
+      });
+    });
+  </script>
+</body>
+</html>
