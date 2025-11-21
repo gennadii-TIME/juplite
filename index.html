@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JupLite — Solana Swap Router</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards." />
+  <meta name="theme-color" content="#020617" />
+
+  <!-- Icons / manifest -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --max-width: 1180px;
+      --topbar-height: 52px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    /* ====== TOPBAR (как у Jupiter) ====== */
+    .topbar {
+      height: var(--topbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top left, #020617, #020617 55%, #000 100%);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Glow logo like Jupiter */
+    .logo-circle {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(6px);
+      opacity: 0.9;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      position: relative;
+      z-index: 2;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.4),
+        0 8px 18px rgba(15, 23, 42, 0.7);
+      display: block;
+    }
+
+    .logo-text-main {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 999px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav a.nav-active {
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .nav a:hover {
+      color: #e5e7eb;
+    }
+
+    .nav-badge-new {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      background: #22c55e;
+      color: #020617;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    .search {
+      position: relative;
+      min-width: 0;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 6px 26px 6px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .search-hotkey {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #6b7280;
+      border-radius: 4px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 1px 4px;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .icon-btn:hover {
+      border-color: rgba(75, 85, 99, 0.9);
+      color: var(--text-main);
+    }
+
+    .connect-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+      white-space: nowrap;
+    }
+
+    .connect-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    /* ====== TICKER BAR ====== */
+    .ticker-shell {
+      background: #020617;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .ticker {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ticker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    @keyframes ticker-flash-up {
+      0%   { background-color: rgba(34, 197, 94, 0.25); }
+      100% { background-color: transparent; }
+    }
+
+    @keyframes ticker-flash-down {
+      0%   { background-color: rgba(248, 113, 113, 0.3); }
+      100% { background-color: transparent; }
+    }
+
+    .ticker-item.flash-up {
+      animation: ticker-flash-up 0.35s ease-out;
+    }
+
+    .ticker-item.flash-down {
+      animation: ticker-flash-down 0.35s ease-out;
+    }
+
+    .ticker-token-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .ticker-symbol {
+      font-weight: 500;
+    }
+
+    .ticker-price {
+      color: #e5e7eb;
+    }
+
+    .ticker-change-up {
+      color: #4ade80;
+    }
+
+    .ticker-change-down {
+      color: #f97373;
+    }
+
+    /* ====== MAIN / VIEWS ====== */
+    .page-main {
+      max-width: var(--max-width);
+      margin: 12px auto 0;
+      padding: 0 12px 24px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view-active {
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.99));
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-highlight {
+      background: radial-gradient(circle at 0 0, #38bdf8, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 440px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-pill {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.14), transparent 60%);
+    }
+
+    .hero-footer {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .cta-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.5);
+      text-decoration: none;
+    }
+
+    .cta-btn span {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .ref-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .ref-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      word-break: break-all;
+    }
+
+    .swap-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .swap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .swap-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    #jup-container {
+      flex: 1;
+      min-height: 480px;
+      max-height: 640px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+    }
+
+    /* Секции для Pro / Perps / Lend / Portfolio / Predict */
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .section-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 6px auto 0;
+      padding: 0 12px 18px;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      opacity: 0.85;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== MOBILE ====== */
+    @media (max-width: 900px) {
+      .topbar-inner {
+        padding-inline: 8px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .search {
+        max-width: 180px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel {
+        padding: 14px 12px 16px;
+      }
+
+      .hero-title {
+        font-size: 20px;
+      }
+
+      #jup-container {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo-text-sub {
+        display: none;
+      }
+
+      .hero-text, .section-text {
+        max-width: none;
+      }
+    }
+  </style>
+
+  <!-- Jupiter Plugin -->
+  <script src="https://plugin.jup.ag/plugin-v1.js"></script>
+</head>
+
+<body>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <div class="logo-wrap">
+          <div class="logo-circle">
+            <div class="logo-glow"></div>
+            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
+          </div>
+          <div>
+            <div class="logo-text-main">JupLite</div>
+            <div class="logo-text-sub">Swap · Router · Solana</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-active" data-view="swap">Swap</a>
+          <a href="#" data-view="pro">Pro</a>
+          <a href="#" data-view="perps">Perps</a>
+          <a href="#" data-view="lend">Lend</a>
+          <a href="#" data-view="portfolio">Portfolio</a>
+          <a href="#" data-view="predict">
+            Predict
+            <span class="nav-badge-new">new</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search token, wallet or feature" />
+          <span class="search-hotkey">/</span>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
+        <button class="connect-btn" type="button">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER LINE -->
+  <div class="ticker-shell">
+    <div class="ticker">
+      <div class="ticker-item">
+        <div class="ticker-token-icon">K</div>
+        <span class="ticker-symbol">KMNO</span>
+        <span class="ticker-price">$0.0515</span>
+        <span class="ticker-change-down">-2.9%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">M</div>
+        <span class="ticker-symbol">MET</span>
+        <span class="ticker-price">$0.3408</span>
+        <span class="ticker-change-down">-3.0%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">J</div>
+        <span class="ticker-symbol">JUP</span>
+        <span class="ticker-price">$0.2544</span>
+        <span class="ticker-change-up">+1.1%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">S</div>
+        <span class="ticker-symbol">SOL</span>
+        <span class="ticker-price">$132.41</span>
+        <span class="ticker-change-down">-0.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT (views) -->
+  <div class="page-main">
+    <!-- VIEW: SWAP (основная) -->
+    <div id="view-swap" class="view view-active">
+      <div class="layout">
+        <!-- ЛЕВАЯ ПАНЕЛЬ: текст / маркетинг -->
+        <section class="panel">
+          <div>
+            <div class="hero-title">
+              Fast swaps on Solana,
+              <span class="hero-highlight">Jupiter engine</span>.
+            </div>
+            <p class="hero-text">
+              JupLite is a minimal swap interface that routes every trade through
+              official Jupiter aggregation for the best route, deep liquidity and
+              built-in referral rewards. Your keys and funds always stay in your wallet.
+            </p>
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-pill">✓ Aggregated liquidity across Solana DEXes</div>
+            <div class="hero-pill">✓ Non-custodial, wallet-native</div>
+            <div class="hero-pill">✓ Built-in referral rewards</div>
+          </div>
+
+          <div class="hero-footer">
+            <button class="cta-btn" type="button" onclick="scrollToSwap()">
+              <span>↻</span>
+              <span>Start swapping</span>
+            </button>
+            <div>
+              <div class="ref-label">Referral account</div>
+              <div class="ref-code">
+                DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ПРАВАЯ ПАНЕЛЬ: Jupiter Plugin -->
+        <section class="panel">
+          <div class="swap-wrapper">
+            <div class="swap-header">
+              <div>Swap</div>
+              <div class="swap-badge">Routed by Jupiter Plugin</div>
+            </div>
+            <div id="jup-container"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW: PRO -->
+    <div id="view-pro" class="view">
+      <section class="panel">
+        <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
+        <div class="section-tag">Advanced routing · custom fees · multi-wallet</div>
+        <p class="section-text">
+          Pro-режим для активных трейдеров Solana: продвинутая конфигурация маршрутов,
+          собственные списки токенов, несколько кошельков и гибкая настройка реферальных
+          стратегий. Интерфейс будет построен на Ultra /quote, /order и /execute API
+          Jupiter.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PERPS -->
+    <div id="view-perps" class="view">
+      <section class="panel">
+        <div class="section-title">Perps dashboard</div>
+        <div class="section-tag">Perpetuals aggregation · risk tools</div>
+        <p class="section-text">
+          Здесь появится агрегатор перпетуальных контрактов на Solana с единым интерфейсом
+          управления риском, маржей и PnL. Пока раздел в разработке.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: LEND -->
+    <div id="view-lend" class="view">
+      <section class="panel">
+        <div class="section-title">Lend & Earn</div>
+        <div class="section-tag">Lending markets · yield strategies</div>
+        <p class="section-text">
+          Раздел JupLite Lend будет собирать лучшие лендинг-рынки Solana в одном окне:
+          депозиты, заём, health-factor и автоматические стратегии доходности поверх
+          Jupiter Lend API.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PORTFOLIO -->
+    <div id="view-portfolio" class="view">
+      <section class="panel">
+        <div class="section-title">Portfolio</div>
+        <div class="section-tag">Wallet overview · PnL tracking</div>
+        <p class="section-text">
+          Здесь будет живой дэшборд по твоему Solana-портфелю: токены, позиции в пулах,
+          история свопов через JupLite и доход от реферальных комиссий.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PREDICT -->
+    <div id="view-predict" class="view">
+      <section class="panel">
+        <div class="section-title">Predict <span class="nav-badge-new">new</span></div>
+        <div class="section-tag">Simple prediction markets · social layer</div>
+        <p class="section-text">
+          Раздел лёгких предикшен-рынков поверх Solana: быстрые рынки «выше/ниже» и
+          социальные пулы. Интерфейс будет интегрирован с Jupiter и сторонними
+          протоколами. Сейчас это превью будущего функционала.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
+    <div>
+      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
+      <span class="visit-counter">· visitors: <span id="visitor-count">—</span></span>
+    </div>
+  </footer>
+
+  <script>
+    /* ===== Jupiter Plugin init ===== */
+    function initJupiter() {
+      if (!window.Jupiter) return;
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jup-container",
+        defaultExplorer: "Solscan",
+        formProps: {
+          defaultInputMint:  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+          defaultOutputMint: "So11111111111111111111111111111111111111112", // SOL (wSOL)
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50 // 50 bps = 0.5%
+        },
+        branding: {
+          name: "JupLite",
+          logoUri: "https://juplite.com/icon-192.png"
+        }
+      });
+    }
+
+    function scrollToSwap() {
+      const el = document.getElementById("jup-container");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    /* ===== Live ticker via Jupiter Price API V3 ===== */
+    const JUPLITE_TICKER_TOKENS = {
+      KMNO: {
+        mint: "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
+        decimals: 4,
+      },
+      MET: {
+        mint: "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+        decimals: 4,
+      },
+      JUP: {
+        mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+        decimals: 4,
+      },
+      SOL: {
+        mint: "So11111111111111111111111111111111111111112",
+        decimals: 2,
+      },
+    };
+
+    async function fetchJupiterPrices() {
+      const ids = Object.values(JUPLITE_TICKER_TOKENS)
+        .map((t) => t.mint)
+        .join(",");
+      const url = "https://lite-api.jup.ag/price/v3?ids=" + encodeURIComponent(ids);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Price API error");
+      return res.json();
+    }
+
+    function initLiveTicker() {
+      const items = Array.from(document.querySelectorAll(".ticker-item"));
+      if (!items.length) return;
+
+      const bindings = items.map((item) => {
+        const symbolEl = item.querySelector(".ticker-symbol");
+        const priceEl = item.querySelector(".ticker-price");
+        const changeEl =
+          item.querySelector(".ticker-change-up") ||
+          item.querySelector(".ticker-change-down");
+
+        if (!symbolEl || !priceEl || !changeEl) return null;
+
+        const symbol = symbolEl.textContent.trim().toUpperCase();
+        const cfg = JUPLITE_TICKER_TOKENS[symbol];
+        if (!cfg) return null;
+
+        return { item, symbol, priceEl, changeEl, cfg };
+      }).filter(Boolean);
+
+      if (!bindings.length) return;
+
+      async function refresh() {
+        try {
+          const data = await fetchJupiterPrices();
+
+          bindings.forEach(({ item, priceEl, changeEl, cfg }) => {
+            const tokenData = data[cfg.mint];
+            if (!tokenData) return;
+
+            const price = tokenData.usdPrice;
+            const change24 = tokenData.priceChange24h ?? 0;
+
+            const oldPrice = parseFloat(
+              priceEl.textContent.replace(/[^\d.]/g, "") || "0"
+            );
+
+            const decimals = cfg.decimals ?? 4;
+            priceEl.textContent =
+              "$" +
+              (decimals === 2 ? price.toFixed(2) : price.toFixed(decimals));
+
+            const isUp = change24 >= 0;
+            const sign = isUp ? "+" : "";
+            changeEl.textContent = sign + change24.toFixed(1) + "%";
+            changeEl.classList.toggle("ticker-change-up", isUp);
+            changeEl.classList.toggle("ticker-change-down", !isUp);
+
+            if (oldPrice) {
+              const goingUp = price >= oldPrice;
+              item.classList.remove("flash-up", "flash-down");
+              void item.offsetWidth;
+              item.classList.add(goingUp ? "flash-up" : "flash-down");
+            }
+          });
+        } catch (e) {
+          console.warn("Ticker error", e);
+        }
+      }
+
+      refresh();
+      setInterval(refresh, 10000);
+    }
+
+    /* ===== Nav tabs (Swap / Pro / Perps / ...) ===== */
+    function initNavViews() {
+      const links = document.querySelectorAll(".nav a[data-view]");
+      const views = document.querySelectorAll(".view");
+
+      if (!links.length || !views.length) return;
+
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = link.dataset.view;
+          if (!target) return;
+
+          links.forEach((l) =>
+            l.classList.toggle("nav-active", l === link)
+          );
+
+          views.forEach((v) =>
+            v.classList.toggle("view-active", v.id === "view-" + target)
+          );
+
+          if (target === "swap") {
+            scrollToSwap();
+          } else {
+            const main = document.querySelector(".page-main");
+            if (main) {
+              window.scrollTo({
+                top: main.offsetTop - 16,
+                behavior: "smooth"
+              });
+            }
+          }
+        });
+      });
+    }
+
+    
+    // ===== Small visitor counter =====
+    function initVisitorCounter() {
+      const el = document.getElementById("visitor-count");
+      if (!el) return;
+
+      const url = "https://api.countapi.xyz/hit/juplite.com/mainpage";
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.value === "number") {
+            el.textContent = data.value.toLocaleString("en-US");
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(() => {
+          el.textContent = "—";
+        });
+    }
+
+window.addEventListener("load", function () {
+      if (window.Jupiter) {
+        initJupiter();
+      } else {
+        setTimeout(initJupiter, 800);
+      }
+
+      initLiveTicker();
+      initNavViews();
+      initVisitorCounter();
+    });
+  </script>
+</body>
+</html>
