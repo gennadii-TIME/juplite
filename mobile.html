@@ -59,7 +59,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      cursor: pointer; /* логотип-кнопка Home */
+    }
+    .mobile-home {
+      cursor: pointer;
     }
     .mobile-logo {
       position: relative;
@@ -184,22 +186,21 @@
 <body>
   <div class="mobile-page">
     <header class="mobile-header">
-      <!-- ЛОГОТИП КАК HOME-КНОПКА -->
-      <div class="mobile-logo-wrap"
+      <div class="mobile-logo-wrap mobile-home"
            role="button"
            tabindex="0"
-           onclick="jupLiteGoHome()"
-           onkeydown="if(event.key==='Enter'||event.key===' ') jupLiteGoHome();">
+           onclick="window.location.href='/index.html'"
+           onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
         <div style="position:relative; width:32px; height:32px;">
           <div class="mobile-logo-glow"></div>
-          <img src="ui-logo-64.png" alt="JupLite logo" class="mobile-logo" />
+          <img src="/icon-192.png" alt="JupLite logo" class="mobile-logo" />
         </div>
         <div class="mobile-brand">
           <span class="mobile-brand-name">JupLite</span>
           <span class="mobile-brand-tagline">Solana Swap Router</span>
         </div>
       </div>
-      <a href="/" class="mobile-link-main">Desktop version</a>
+      <a href="/index.html" class="mobile-link-main">Desktop version</a>
     </header>
 
     <main class="mobile-main">
@@ -222,7 +223,6 @@
       <section class="mobile-quick-links">
         <h3>Quick pairs</h3>
         <div class="mobile-tags">
-          <!-- ведём на swap.html, чтобы не было /swap 404 -->
           <a href="/swap.html?pair=SOL-USDC" class="mobile-tag">SOL ⇄ USDC</a>
           <a href="/swap.html?pair=JUP-USDC" class="mobile-tag">JUP ⇄ USDC</a>
           <a href="/swap.html?pair=BONK-SOL" class="mobile-tag">BONK ⇄ SOL</a>
@@ -242,16 +242,6 @@
       const y = document.getElementById('year-mobile');
       if (y) y.textContent = new Date().getFullYear();
     })();
-
-    // Home-кнопка (та же логика, что на index.html)
-    function jupLiteGoHome() {
-      const path = window.location.pathname;
-      if (path === "/" || path === "/index.html") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        window.location.href = "/index.html";
-      }
-    }
   </script>
 
   <!-- Jupiter init для mobile -->

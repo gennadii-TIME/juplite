@@ -60,6 +60,9 @@
       align-items: center;
       gap: 10px;
     }
+    .swap-home {
+      cursor: pointer;
+    }
     .swap-logo {
       width: 36px;
       height: 36px;
@@ -145,14 +148,18 @@
 <body>
   <div class="swap-page">
     <header class="swap-header">
-      <div class="swap-logo-wrap">
-        <img src="ui-logo-64.png" alt="JupLite logo" class="swap-logo" />
+      <div class="swap-logo-wrap swap-home"
+           role="button"
+           tabindex="0"
+           onclick="window.location.href='/index.html'"
+           onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
+        <img src="/icon-192.png" alt="JupLite logo" class="swap-logo" />
         <div class="swap-brand">
           <span class="swap-brand-name">JupLite</span>
           <span class="swap-brand-tagline">Solana Swap Router</span>
         </div>
       </div>
-      <a href="/" class="swap-back-link">Back to main</a>
+      <a href="/index.html" class="swap-back-link">Back to main</a>
     </header>
 
     <main class="swap-main">
