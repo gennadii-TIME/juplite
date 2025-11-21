@@ -609,4 +609,536 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="topbar-left">
-        <!-- ЛОГОТИП КА
+        <!-- ЛОГОТИП КАК HOME-КНОПКА -->
+        <div class="logo-wrap"
+             role="button"
+             tabindex="0"
+             onclick="jupLiteGoHome()"
+             onkeydown="if(event.key==='Enter'||event.key===' ') jupLiteGoHome();">
+          <div class="logo-circle">
+            <div class="logo-glow"></div>
+            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
+          </div>
+          <div>
+            <div class="logo-text-main">JupLite</div>
+            <div class="logo-text-sub">Swap · Router · Solana</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-active" data-view="swap">Swap</a>
+          <a href="#" data-view="pro">Pro</a>
+          <a href="#" data-view="perps">Perps</a>
+          <a href="#" data-view="lend">Lend</a>
+          <a href="#" data-view="portfolio">Portfolio</a>
+          <a href="#" data-view="predict">
+            Predict
+            <span class="nav-badge-new">new</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search token, wallet or feature" />
+          <span class="search-hotkey">/</span>
+        </div>
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn lang-active" type="button" data-lang="en">EN</button>
+          <button class="lang-btn" type="button" data-lang="ru">RU</button>
+          <button class="lang-btn" type="button" data-lang="es">ES</button>
+          <button class="lang-btn" type="button" data-lang="hi">HI</button>
+          <button class="lang-btn" type="button" data-lang="ar">AR</button>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
+        <button class="connect-btn" type="button">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER LINE -->
+  <div class="ticker-shell">
+    <div class="ticker">
+      <div class="ticker-item">
+        <div class="ticker-token-icon">K</div>
+        <span class="ticker-symbol">KMNO</span>
+        <span class="ticker-price">$0.0515</span>
+        <span class="ticker-change-down">-2.9%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">M</div>
+        <span class="ticker-symbol">MET</span>
+        <span class="ticker-price">$0.3408</span>
+        <span class="ticker-change-down">-3.0%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">J</div>
+        <span class="ticker-symbol">JUP</span>
+        <span class="ticker-price">$0.2544</span>
+        <span class="ticker-change-up">+1.1%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">S</div>
+        <span class="ticker-symbol">SOL</span>
+        <span class="ticker-price">$132.41</span>
+        <span class="ticker-change-down">-0.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT (views) -->
+  <div class="page-main">
+    <!-- VIEW: SWAP (основная) -->
+    <div id="view-swap" class="view view-active">
+      <div class="layout">
+        <!-- ЛЕВАЯ ПАНЕЛЬ: текст / маркетинг -->
+        <section class="panel">
+          <div>
+            <div class="hero-title">
+              Fast swaps on Solana,
+              <span class="hero-highlight">Jupiter engine</span>.
+            </div>
+            <p class="hero-text">
+              JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.
+            </p>
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-pill">✓ Aggregated liquidity across Solana DEXes</div>
+            <div class="hero-pill">✓ Non-custodial, wallet-native</div>
+            <div class="hero-pill">✓ Built-in referral rewards</div>
+          </div>
+
+          <div class="hero-footer">
+            <button class="cta-btn" type="button" onclick="scrollToSwap()">
+              <span>↻</span>
+              <span>Start swapping</span>
+            </button>
+            <div>
+              <div class="ref-label">Referral account</div>
+              <div class="ref-code">
+                DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ПРАВАЯ ПАНЕЛЬ: Jupiter Plugin -->
+        <section class="panel">
+          <div class="swap-wrapper">
+            <div class="swap-header">
+              <div>Swap</div>
+              <div class="swap-badge">Routed by Jupiter Plugin</div>
+            </div>
+            <div id="jup-container"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW: PRO -->
+    <div id="view-pro" class="view">
+      <section class="panel">
+        <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
+        <div class="section-tag">Advanced routing · custom fees · multi-wallet</div>
+        <p class="section-text">
+          Pro-режим для активных трейдеров Solana: продвинутая конфигурация маршрутов,
+          собственные списки токенов, несколько кошельков и гибкая настройка реферальных
+          стратегий. Интерфейс будет построен на Ultra /quote, /order и /execute API
+          Jupiter.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PERPS -->
+    <div id="view-perps" class="view">
+      <section class="panel">
+        <div class="section-title">Perps dashboard</div>
+        <div class="section-tag">Perpetuals aggregation · risk tools</div>
+        <p class="section-text">
+          Здесь появится агрегатор перпетуальных контрактов на Solana с единым интерфейсом
+          управления риском, маржей и PnL. Пока раздел в разработке.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: LEND -->
+    <div id="view-lend" class="view">
+      <section class="panel">
+        <div class="section-title">Lend & Earn</div>
+        <div class="section-tag">Lending markets · yield strategies</div>
+        <p class="section-text">
+          Раздел JupLite Lend будет собирать лучшие лендинг-рынки Solana в одном окне:
+          депозиты, заём, health-factor и автоматические стратегии доходности поверх
+          Jupiter Lend API.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PORTFOLIO -->
+    <div id="view-portfolio" class="view">
+      <section class="panel">
+        <div class="section-title">Portfolio</div>
+        <div class="section-tag">Wallet overview · PnL tracking</div>
+        <p class="section-text">
+          Здесь будет живой дэшборд по твоему Solana-портфелю: токены, позиции в пулах,
+          история свопов через JupLite и доход от реферальных комиссий.
+        </p>
+      </section>
+    </div>
+
+    <!-- VIEW: PREDICT -->
+    <div id="view-predict" class="view">
+      <section class="panel">
+        <div class="section-title">Predict <span class="nav-badge-new">new</span></div>
+        <div class="section-tag">Simple prediction markets · social layer</div>
+        <p class="section-text">
+          Раздел лёгких предикшен-рынков поверх Solana: быстрые рынки «выше/ниже» и
+          социальные пулы. Интерфейс будет интегрирован с Jupiter и сторонними
+          протоколами. Сейчас это превью будущего функционала.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
+    <div>
+      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
+      <span class="visit-counter">· visitors: <span id="visitor-count">—</span></span>
+    </div>
+  </footer>
+
+  <script>
+    const JUPLITE_I18N = {"en": {"title": "JupLite — Solana Swap Router", "description": "JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards.", "logoSub": "Swap · Router · Solana", "heroTitleMain": "Fast swaps on Solana,", "heroHighlight": "Jupiter engine", "heroText": "JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.", "heroPills": ["✓ Aggregated liquidity across Solana DEXes", "✓ Non-custodial, wallet-native", "✓ Built-in referral rewards"], "cta": "Start swapping", "swapBadge": "Routed by Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Lend", "portfolio": "Portfolio", "predict": "Predict"}}, "ru": {"title": "JupLite — быстрый обмен токенов Solana", "description": "JupLite — лёгкий интерфейс обмена токенов в сети Solana на базе Jupiter с лучшим маршрутом, низкими комиссиями и реферальными наградами.", "logoSub": "Своп · Маршрутизатор · Solana", "heroTitleMain": "Быстрые обмены в сети Solana,", "heroHighlight": "движок Jupiter", "heroText": "JupLite — №1 среди Solana-свопов. Уникальность платформы — минимально возможные комиссии. Официальный агрегатор Jupiter подбирает лучший курс и обеспечивает самую глубокую ликвидность. Профессионалы выбрали JupLite: обмены проходят безопасно, прозрачно и без передачи ключей третьим лицам.", "heroPills": ["✓ Ликвидность со всех DEX в Solana", "✓ Некостодиальный кошелёк — только вы", "✓ Встроенные реферальные награды"], "cta": "Начать обмен", "swapBadge": "Маршрутизация через Jupiter Plugin", "nav": {"swap": "Своп", "pro": "Про", "perps": "Перпетуалы", "lend": "Лендинг", "portfolio": "Портфель", "predict": "Прогнозы"}}, "es": {"title": "JupLite — Intercambios rápidos en Solana", "description": "JupLite es una interfaz ligera de intercambio en Solana impulsada por Jupiter, con mejor ruta, bajas comisiones y recompensas por referidos.", "logoSub": "Swap · Enrutador · Solana", "heroTitleMain": "Swaps rápidos en Solana con", "heroHighlight": "motor de Jupiter", "heroText": "JupLite es la plataforma de swaps #1 en Solana. Su singularidad son las comisiones mínimas posibles. El agregador oficial Jupiter encuentra la mejor ruta y la liquidez más profunda. Los profesionales eligen JupLite por intercambios seguros y transparentes sin entregar sus claves a terceros.", "heroPills": ["✓ Liquidez agregada de los DEX de Solana", "✓ No custodial, control total de tu wallet", "✓ Recompensas integradas por referidos"], "cta": "Empezar a intercambiar", "swapBadge": "Ruteado por Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Préstamos", "portfolio": "Portafolio", "predict": "Predicciones"}}, "hi": {"title": "JupLite — Solana पर तेज़ टोकन स्वैप", "description": "JupLite एक हल्का Solana स्वैप इंटरफ़ेस है जो Jupiter पर आधारित है, जो बेहतर रूट, कम फ़ीस और रेफरल रिवॉर्ड्स देता है।", "logoSub": "स्वैप · राउटर · Solana", "heroTitleMain": "Solana पर तेज़ स्वैप,", "heroHighlight": "Jupiter इंजन के साथ", "heroText": "JupLite Solana स्वैप के लिए नंबर 1 प्लेटफ़ॉर्म है। इसकी खासियत है कि फ़ीस लगभग न्यूनतम रहती है। आधिकारिक Jupiter एग्रीगेटर सबसे अच्छा रूट और सबसे गहरी लिक्विडिटी चुनता है। प्रोफेशनल ट्रेडर्स JupLite को सुरक्षित और पारदर्शी स्वैप के लिए चुनते हैं — बिना किसी थर्ड पार्टी को चाबियाँ दिए।", "heroPills": ["✓ Solana DEX से एग्रीगेटेड लिक्विडिटी", "✓ नॉन-कस्टोडियल, आपका अपना वॉलेट", "✓ इनबिल्ट रेफरल रिवॉर्ड्स"], "cta": "स्वैप शुरू करें", "swapBadge": "Jupiter Plugin द्वारा रूटेड", "nav": {"swap": "स्वैप", "pro": "प्रो", "perps": "परपेचुअल", "lend": "लेंड", "portfolio": "पोर्टफोलियो", "predict": "प्रिडिक्ट"}}, "ar": {"title": "JupLite — تبادل سريع للتوكنات على Solana", "description": "JupLite هو واجهة خفيفة لتبديل التوكنات على شبكة Solana تعمل بمحرك Jupiter مع أفضل مسار وعمولات منخفضة ومكافآت إحالة.", "logoSub": "سواب · موجه · Solana", "heroTitleMain": "تبديلات سريعة على Solana مع", "heroHighlight": "محرك Jupiter", "heroText": "JupLite هي المنصّة رقم 1 لمقايضات Solana. تميّزها هو الرسوم المنخفضة إلى الحد الأدنى الممكن. مجمّع Jupiter الرسمي يختار أفضل مسار ويوفّر أعمق سيولة. يختار المحترفون JupLite لإجراء مقايضات آمنة وشفافة من دون تسليم المفاتيح لطرف ثالث.", "heroPills": ["✓ سيولة مجمّعة من منصات DEX على Solana", "✓ غير وصائي — التحكم الكامل في محفظتك", "✓ مكافآت إحالة مدمجة"], "cta": "ابدأ التبديل", "swapBadge": "مُوجَّه بواسطة Jupiter Plugin", "nav": {"swap": "سواب", "pro": "برو", "perps": "عقود دائمة", "lend": "إقراض", "portfolio": "محفظة", "predict": "توقعات"}}};
+
+    function jupLiteDetectInitialLang() {
+      const saved = localStorage.getItem("jupLiteLang");
+      if (saved && JUPLITE_I18N[saved]) return saved;
+
+      const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+      if (nav.startsWith("ru")) return "ru";
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("hi")) return "hi";
+      if (nav.startsWith("ar")) return "ar";
+      return "en";
+    }
+
+    function jupLiteSetLangActiveButton(lang) {
+      const buttons = document.querySelectorAll(".lang-btn");
+      buttons.forEach((btn) => {
+        const code = btn.getAttribute("data-lang");
+        btn.classList.toggle("lang-active", code === lang);
+      });
+    }
+
+    function jupLiteApplyLanguage(lang) {
+      if (!JUPLITE_I18N[lang]) lang = "en";
+      const dict = JUPLITE_I18N[lang];
+
+      // html lang + direction
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
+
+      // <title> + description
+      if (dict.title) {
+        document.title = dict.title;
+      }
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.description) {
+        metaDesc.setAttribute("content", dict.description);
+      }
+
+      // logo subtitle
+      const logoSub = document.querySelector(".logo-text-sub");
+      if (logoSub && dict.logoSub) {
+        logoSub.textContent = dict.logoSub;
+      }
+
+      // nav items
+      if (dict.nav) {
+        document.querySelectorAll(".nav a[data-view]").forEach((a) => {
+          const key = a.dataset.view;
+          if (dict.nav[key]) {
+            // оставляем вложенные элементы (например, <span class="nav-badge-new">)
+            const badge = a.querySelector(".nav-badge-new");
+            a.textContent = dict.nav[key];
+            if (badge) {
+              a.appendChild(document.createTextNode(" "));
+              a.appendChild(badge);
+            }
+          }
+        });
+      }
+
+      // hero title + highlight
+      const heroTitle = document.querySelector(".hero-title");
+      const heroHighlight = document.querySelector(".hero-highlight");
+      if (heroTitle && heroHighlight && dict.heroTitleMain && dict.heroHighlight) {
+        // предполагаем, что первый child — текст
+        if (heroTitle.firstChild && heroTitle.firstChild.nodeType === Node.TEXT_NODE) {
+          heroTitle.firstChild.nodeValue = dict.heroTitleMain + " ";
+        }
+        heroHighlight.textContent = dict.heroHighlight;
+      }
+
+      // hero text
+      const heroText = document.querySelector(".hero-text");
+      if (heroText && dict.heroText) {
+        heroText.textContent = dict.heroText;
+      }
+
+      // hero pills
+      const pills = document.querySelectorAll(".hero-pill");
+      if (pills.length && Array.isArray(dict.heroPills)) {
+        pills.forEach((pill, i) => {
+          if (dict.heroPills[i]) {
+            pill.textContent = dict.heroPills[i];
+          }
+        });
+      }
+
+      // CTA button text (второй span внутри .cta-btn)
+      const ctaBtn = document.querySelector(".cta-btn");
+      if (ctaBtn && dict.cta) {
+        const spans = ctaBtn.querySelectorAll("span");
+        if (spans.length > 1) {
+          spans[1].textContent = dict.cta;
+        }
+      }
+
+      // swap badge
+      const swapBadge = document.querySelector(".swap-badge");
+      if (swapBadge && dict.swapBadge) {
+        swapBadge.textContent = dict.swapBadge;
+      }
+
+      jupLiteSetLangActiveButton(lang);
+      try {
+        localStorage.setItem("jupLiteLang", lang);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function initLangSwitcher() {
+      const initialLang = jupLiteDetectInitialLang();
+      jupLiteApplyLanguage(initialLang);
+
+      const buttons = document.querySelectorAll(".lang-btn");
+      if (!buttons.length) return;
+
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.getAttribute("data-lang");
+          jupLiteApplyLanguage(lang);
+        });
+      });
+    }
+
+    /* HOME-кнопка по клику на логотип */
+    function jupLiteGoHome() {
+      const path = window.location.pathname;
+      if (path === "/" || path === "/index.html") {
+        // уже на главной — просто скроллим вверх
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        // с любой другой страницы ведём на главную
+        window.location.href = "/index.html";
+      }
+    }
+
+    /* ===== Jupiter Plugin init ===== */
+    function initJupiter() {
+      if (!window.Jupiter) return;
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jup-container",
+        defaultExplorer: "Solscan",
+        formProps: {
+          defaultInputMint:  "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v", // USDC
+          defaultOutputMint: "So11111111111111111111111111111111111111112", // SOL (wSOL)
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50 // 50 bps = 0.5%
+        },
+        branding: {
+          name: "JupLite",
+          logoUri: "https://juplite.com/icon-192.png"
+        }
+      });
+    }
+
+    function scrollToSwap() {
+      const el = document.getElementById("jup-container");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    /* ===== Live ticker via Jupiter Price API V3 ===== */
+    const JUPLITE_TICKER_TOKENS = {
+      KMNO: {
+        mint: "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
+        decimals: 4,
+      },
+      MET: {
+        mint: "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+        decimals: 4,
+      },
+      JUP: {
+        mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+        decimals: 4,
+      },
+      SOL: {
+        mint: "So11111111111111111111111111111111111111112",
+        decimals: 2,
+      },
+    };
+
+    async function fetchJupiterPrices() {
+      const ids = Object.values(JUPLITE_TICKER_TOKENS)
+        .map((t) => t.mint)
+        .join(",");
+      const url = "https://lite-api.jup.ag/price/v3?ids=" + encodeURIComponent(ids);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Price API error");
+      return res.json();
+    }
+
+    function initLiveTicker() {
+      const items = Array.from(document.querySelectorAll(".ticker-item"));
+      if (!items.length) return;
+
+      const bindings = items.map((item) => {
+        const symbolEl = item.querySelector(".ticker-symbol");
+        const priceEl = item.querySelector(".ticker-price");
+        const changeEl =
+          item.querySelector(".ticker-change-up") ||
+          item.querySelector(".ticker-change-down");
+
+        if (!symbolEl || !priceEl || !changeEl) return null;
+
+        const symbol = symbolEl.textContent.trim().toUpperCase();
+        const cfg = JUPLITE_TICKER_TOKENS[symbol];
+        if (!cfg) return null;
+
+        return { item, symbol, priceEl, changeEl, cfg };
+      }).filter(Boolean);
+
+      if (!bindings.length) return;
+
+      async function refresh() {
+        try {
+          const data = await fetchJupiterPrices();
+
+          bindings.forEach(({ item, priceEl, changeEl, cfg }) => {
+            const tokenData = data[cfg.mint];
+            if (!tokenData) return;
+
+            const price = tokenData.usdPrice;
+            const change24 = tokenData.priceChange24h ?? 0;
+
+            const oldPrice = parseFloat(
+              priceEl.textContent.replace(/[^\d.]/g, "") || "0"
+            );
+
+            const decimals = cfg.decimals ?? 4;
+            priceEl.textContent =
+              "$" +
+              (decimals === 2 ? price.toFixed(2) : price.toFixed(decimals));
+
+            const isUp = change24 >= 0;
+            const sign = isUp ? "+" : "";
+            changeEl.textContent = sign + change24.toFixed(1) + "%";
+            changeEl.classList.toggle("ticker-change-up", isUp);
+            changeEl.classList.toggle("ticker-change-down", !isUp);
+
+            if (oldPrice) {
+              const goingUp = price >= oldPrice;
+              item.classList.remove("flash-up", "flash-down");
+              void item.offsetWidth;
+              item.classList.add(goingUp ? "flash-up" : "flash-down");
+            }
+          });
+        } catch (e) {
+          console.warn("Ticker error", e);
+        }
+      }
+
+      refresh();
+      setInterval(refresh, 10000);
+    }
+
+    /* ===== Nav tabs (Swap / Pro / Perps / ...) ===== */
+    function initNavViews() {
+      const links = document.querySelectorAll(".nav a[data-view]");
+      const views = document.querySelectorAll(".view");
+
+      if (!links.length || !views.length) return;
+
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = link.dataset.view;
+          if (!target) return;
+
+          links.forEach((l) =>
+            l.classList.toggle("nav-active", l === link)
+          );
+
+          views.forEach((v) =>
+            v.classList.toggle("view-active", v.id === "view-" + target)
+          );
+
+          if (target === "swap") {
+            scrollToSwap();
+          } else {
+            const main = document.querySelector(".page-main");
+            if (main) {
+              window.scrollTo({
+                top: main.offsetTop - 16,
+                behavior: "smooth"
+              });
+            }
+          }
+        });
+      });
+    }
+
+    // ===== Small visitor counter =====
+    function initVisitorCounter() {
+      const el = document.getElementById("visitor-count");
+      if (!el) return;
+
+      const url = "https://api.countapi.xyz/hit/juplite.com/mainpage";
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.value === "number") {
+            el.textContent = data.value.toLocaleString("en-US");
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(() => {
+          el.textContent = "—";
+        });
+    }
+
+    window.addEventListener("load", function () {
+      initLangSwitcher();
+      if (window.Jupiter) {
+        initJupiter();
+      } else {
+        setTimeout(initJupiter, 800);
+      }
+
+      initLiveTicker();
+      initNavViews();
+      initVisitorCounter();
+    });
+  </script>
+</body>
+</html>
