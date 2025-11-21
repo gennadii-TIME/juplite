@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
 <link rel="icon" href="/favicon-32.png" />
+
+<!-- Solana Web3 + Wallet Adapters -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 <script src="https://unpkg.com/@solana/wallet-adapter-base"></script>
 <script src="https://unpkg.com/@solana/wallet-adapter-wallets"></script>
@@ -83,18 +85,26 @@
 </div>
 
 <script>
+/* Ultra endpoints */
 const ultraQuoteURL = "https://ultra-api.jup.ag/quote";
 const ultraOrderURL = "https://ultra-api.jup.ag/order";
 const ultraExecuteURL = "https://ultra-api.jup.ag/execute";
 
+/* Referral 0.50% */
 const REFERRAL = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b";
-const FEE_BPS = 50;
+const REFERRAL_BPS = 50;
 
+/* Extra Fee 0.50% */
+const EXTRA_FEE_BPS = 50; // 0.50%
+const EXTRA_FEE_WALLET = REFERRAL;
+
+/* Blockchain */
 let wallet = null;
 let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
 
 let tokenList = [];
 
+/* Load tokens */
 async function loadTokens() {
   const res = await fetch("https://cache.jup.ag/tokens");
   tokenList = await res.json();
@@ -103,22 +113,24 @@ async function loadTokens() {
   const toSel = document.getElementById("toToken");
 
   tokenList.forEach(t => {
-    const o1 = document.createElement("option");
-    o1.value = t.address;
-    o1.textContent = `${t.symbol}`;
-    fromSel.appendChild(o1);
+    const opt1 = document.createElement("option");
+    opt1.value = t.address;
+    opt1.textContent = t.symbol;
+    fromSel.appendChild(opt1);
 
-    const o2 = document.createElement("option");
-    o2.value = t.address;
-    o2.textContent = `${t.symbol}`;
-    toSel.appendChild(o2);
+    const opt2 = document.createElement("option");
+    opt2.value = t.address;
+    opt2.textContent = t.symbol;
+    toSel.appendChild(opt2);
   });
 
-  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";
-  toSel.value = "So11111111111111111111111111111111111111112";
+  // defaults
+  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";  // USDC
+  toSel.value = "So11111111111111111111111111111111111111112";  // SOL
 }
 loadTokens();
 
+/* Connect Wallet */
 document.getElementById("connectBtn").onclick = async () => {
   try {
     const provider = window.solana;
@@ -132,6 +144,7 @@ document.getElementById("connectBtn").onclick = async () => {
   }
 };
 
+/* Quote */
 let lastQuote = null;
 
 document.getElementById("quoteBtn").onclick = async () => {
@@ -144,7 +157,10 @@ document.getElementById("quoteBtn").onclick = async () => {
   const decimals = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
   const rawAmount = Math.round(amount * 10 ** decimals);
 
-  const url = `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}&amount=${rawAmount}&slippageBps=100&platformFeeBps=${FEE_BPS}&platformFeeAccount=${REFERRAL}`;
+  const url =
+    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
+    `&amount=${rawAmount}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
+    `&platformFeeAccount=${REFERRAL}`;
 
   const res = await fetch(url);
   lastQuote = await res.json();
@@ -154,29 +170,45 @@ document.getElementById("quoteBtn").onclick = async () => {
     return;
   }
 
-  log("Quote received:
-" + JSON.stringify(lastQuote.route, null, 2));
+  log("Quote received:\n" + JSON.stringify(lastQuote.route, null, 2));
   document.getElementById("swapBtn").disabled = false;
 };
 
+/* Swap (Ultra Order + Execute) */
 document.getElementById("swapBtn").onclick = async () => {
   if (!lastQuote) return;
 
-  log("Creating order…");
+  log("Creating Ultra order with Extra Fee…");
 
-  const orderData = {
+  const orderPayload = {
     route: lastQuote.route,
     userPublicKey: wallet.publicKey.toString(),
+
+    /* Jupiter referral (0.50%) */
+    platformFeeBps: REFERRAL_BPS,
+    platformFeeAccount: REFERRAL,
+
+    /* Your own Extra Fee (0.50%) */
+    extraFee: {
+      feeBps: EXTRA_FEE_BPS,
+      feeAccount: EXTRA_FEE_WALLET
+    }
   };
 
-  const res = await fetch(ultraOrderURL, {
+  const orderRes = await fetch(ultraOrderURL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(orderData)
+    body: JSON.stringify(orderPayload)
   });
 
-  const order = await res.json();
-  log("Order created");
+  const order = await orderRes.json();
+
+  if (!order.transaction) {
+    log("Order error:\n" + JSON.stringify(order, null, 2));
+    return;
+  }
+
+  log("Order created. Signing…");
 
   const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
   const signed = await wallet.signTransaction(tx);
@@ -184,26 +216,26 @@ document.getElementById("swapBtn").onclick = async () => {
   const raw = signed.serialize();
   const raw64 = raw.toString("base64");
 
-  const exec = await fetch(ultraExecuteURL, {
+  const execRes = await fetch(ultraExecuteURL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({signedTx: raw64})
+    body: JSON.stringify({ signedTx: raw64 })
   });
 
-  const out = await exec.json();
+  const out = await execRes.json();
 
   if (out.txid) {
-    log("Swap executed!
-https://solscan.io/tx/" + out.txid);
+    log("Swap executed!\nhttps://solscan.io/tx/" + out.txid);
   } else {
-    log("Execution error:
-" + JSON.stringify(out, null, 2));
+    log("Execution error:\n" + JSON.stringify(out, null, 2));
   }
 };
 
+/* Log helper */
 function log(txt) {
   document.getElementById("log").textContent = txt;
 }
 </script>
+
 </body>
 </html>
