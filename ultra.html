@@ -1,87 +1,260 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>JupLite Ultra Pro — Swap</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="utf-8" />
+  <title>JupLite Ultra Pro — Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-<link rel="icon" href="/favicon-32.png" />
+  <link rel="icon" href="/favicon-32.png" />
 
-<!-- Solana Web3 + Wallet Adapters -->
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-<script src="https://unpkg.com/@solana/wallet-adapter-base"></script>
-<script src="https://unpkg.com/@solana/wallet-adapter-wallets"></script>
-<script src="https://unpkg.com/@solana/wallet-adapter-browser"></script>
+  <!-- Solana Web3 + Wallet (Phantom) -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
-<style>
-  body {
-    margin: 0;
-    background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-    font-family: system-ui, sans-serif;
-    color: #e5e7eb;
-    padding: 24px;
-  }
-  .box {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 20px;
-    background: rgba(15,23,42,0.96);
-    border-radius: 18px;
-    border: 1px solid rgba(148,163,184,0.3);
-    box-shadow: 0 12px 45px rgba(0,0,0,0.45);
-  }
-  h1 { margin-top: 0; font-size: 22px; }
-  select, input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid rgba(148,163,184,0.35);
-    background: rgba(255,255,255,0.05);
-    color: white;
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-  button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 14px;
-    border: none;
-    font-size: 16px;
-    background: linear-gradient(135deg,#38bdf8,#0ea5e9);
-    color:#020617;
-    font-weight:600;
-    cursor:pointer;
-  }
-  button:disabled { opacity:0.5; cursor:not-allowed; }
-  .log {
-    margin-top: 12px;
-    font-size: 13px;
-    opacity: 0.8;
-    white-space: pre-line;
-  }
-</style>
+  <style>
+    :root {
+      --bg-card: rgba(15,23,42,0.96);
+      --border: rgba(148,163,184,0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --radius-lg: 18px;
+      --radius-full: 999px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--text-main);
+      /* важное отличие: фон прозрачный — Pro-плашка из pro.html */
+      background: transparent;
+    }
+
+    .ultra-shell {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .ultra-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      padding: 14px 14px 16px;
+    }
+
+    /* ГРАФИК / ИНФО */
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .pair-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .pair-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .chart-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,0.9);
+      height: 320px;
+    }
+
+    .chart-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ULTRA SWAP ПАНЕЛЬ */
+    .swap-header {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .swap-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .swap-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .connect-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: var(--radius-full);
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+      color: var(--text-main);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    input::placeholder {
+      color: #6b7280;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .primary-btn, .secondary-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 14px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+    }
+
+    .secondary-btn {
+      background: rgba(15,23,42,0.85);
+      color: var(--text-main);
+      border: 1px solid rgba(55,65,81,0.9);
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .log {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: pre-line;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+
+    .fee-note {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .ultra-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .chart-frame {
+        height: 260px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+<div class="ultra-shell">
+  <div class="ultra-layout">
 
-<div class="box">
-  <h1>Ultra Swap (JupLite Pro)</h1>
+    <!-- ЛЕВАЯ КОЛОНКА: ГРАФИК / ИНФО -->
+    <section class="card">
+      <div class="chart-header">
+        <div>
+          <div class="pair-title">SOL / USDC</div>
+          <div class="pair-sub">Ultra route · Jupiter</div>
+        </div>
+        <div class="pill">Chart preview</div>
+      </div>
+      <div class="chart-frame">
+        <!-- Простой TradingView виджет, можно сменить символ -->
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=0&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
 
-  <button id="connectBtn">Connect Wallet</button>
+    <!-- ПРАВАЯ КОЛОНКА: ULTRA SWAP -->
+    <section class="card">
+      <div class="swap-header">
+        <div class="swap-title">Ultra Swap (JupLite Pro)</div>
+        <div class="swap-sub">Market swap via Jupiter Ultra API, with JupLite fees.</div>
+      </div>
 
-  <label>From:</label>
-  <select id="fromToken"></select>
+      <button id="connectBtn" class="connect-btn">Connect Wallet</button>
 
-  <label>To:</label>
-  <select id="toToken"></select>
+      <label for="fromToken">From:</label>
+      <select id="fromToken"></select>
 
-  <label>Amount:</label>
-  <input id="amount" placeholder="0.0" />
+      <label for="toToken">To:</label>
+      <select id="toToken"></select>
 
-  <button id="quoteBtn">Get Quote</button>
-  <button id="swapBtn" disabled>Swap</button>
+      <label for="amount">Amount:</label>
+      <input id="amount" placeholder="0.0" />
 
-  <div class="log" id="log"></div>
+      <div class="btn-row">
+        <button id="quoteBtn" class="primary-btn">Get Quote</button>
+        <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
+      </div>
+
+      <div class="fee-note">
+        Fees: 0.5% Jupiter referral + 0.5% JupLite service fee (total 1.0%).
+      </div>
+
+      <div class="log" id="log"></div>
+    </section>
+
+  </div>
 </div>
 
 <script>
@@ -101,32 +274,35 @@ const EXTRA_FEE_WALLET = REFERRAL;
 /* Blockchain */
 let wallet = null;
 let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
-
 let tokenList = [];
 
 /* Load tokens */
 async function loadTokens() {
-  const res = await fetch("https://cache.jup.ag/tokens");
-  tokenList = await res.json();
+  try {
+    const res = await fetch("https://cache.jup.ag/tokens");
+    tokenList = await res.json();
 
-  const fromSel = document.getElementById("fromToken");
-  const toSel = document.getElementById("toToken");
+    const fromSel = document.getElementById("fromToken");
+    const toSel = document.getElementById("toToken");
 
-  tokenList.forEach(t => {
-    const opt1 = document.createElement("option");
-    opt1.value = t.address;
-    opt1.textContent = t.symbol;
-    fromSel.appendChild(opt1);
+    tokenList.forEach(t => {
+      const opt1 = document.createElement("option");
+      opt1.value = t.address;
+      opt1.textContent = t.symbol;
+      fromSel.appendChild(opt1);
 
-    const opt2 = document.createElement("option");
-    opt2.value = t.address;
-    opt2.textContent = t.symbol;
-    toSel.appendChild(opt2);
-  });
+      const opt2 = document.createElement("option");
+      opt2.value = t.address;
+      opt2.textContent = t.symbol;
+      toSel.appendChild(opt2);
+    });
 
-  // defaults
-  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";  // USDC
-  toSel.value = "So11111111111111111111111111111111111111112";  // SOL
+    // defaults
+    fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";  // USDC
+    toSel.value = "So11111111111111111111111111111111111111112";  // SOL
+  } catch (e) {
+    log("Token list error: " + e.message);
+  }
 }
 loadTokens();
 
@@ -141,6 +317,7 @@ document.getElementById("connectBtn").onclick = async () => {
     log("Wallet connected: " + wallet.publicKey.toString());
   } catch (e) {
     console.error(e);
+    log("Wallet connect error: " + e.message);
   }
 };
 
@@ -152,7 +329,11 @@ document.getElementById("quoteBtn").onclick = async () => {
 
   const inputMint = document.getElementById("fromToken").value;
   const outputMint = document.getElementById("toToken").value;
-  const amount = parseFloat(document.getElementById("amount").value);
+  const amount = parseFloat(document.getElementById("amount").value || "0");
+
+  if (!amount || amount <= 0) {
+    return alert("Enter amount");
+  }
 
   const decimals = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
   const rawAmount = Math.round(amount * 10 ** decimals);
@@ -162,16 +343,21 @@ document.getElementById("quoteBtn").onclick = async () => {
     `&amount=${rawAmount}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
     `&platformFeeAccount=${REFERRAL}`;
 
-  const res = await fetch(url);
-  lastQuote = await res.json();
+  try {
+    const res = await fetch(url);
+    lastQuote = await res.json();
 
-  if (!lastQuote.route) {
-    log("No route found");
-    return;
+    if (!lastQuote.route) {
+      log("No route found");
+      document.getElementById("swapBtn").disabled = true;
+      return;
+    }
+
+    log("Quote received:\n" + JSON.stringify(lastQuote.route, null, 2));
+    document.getElementById("swapBtn").disabled = false;
+  } catch (e) {
+    log("Quote error: " + e.message);
   }
-
-  log("Quote received:\n" + JSON.stringify(lastQuote.route, null, 2));
-  document.getElementById("swapBtn").disabled = false;
 };
 
 /* Swap (Ultra Order + Execute) */
@@ -195,45 +381,51 @@ document.getElementById("swapBtn").onclick = async () => {
     }
   };
 
-  const orderRes = await fetch(ultraOrderURL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(orderPayload)
-  });
+  try {
+    const orderRes = await fetch(ultraOrderURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(orderPayload)
+    });
 
-  const order = await orderRes.json();
+    const order = await orderRes.json();
 
-  if (!order.transaction) {
-    log("Order error:\n" + JSON.stringify(order, null, 2));
-    return;
-  }
+    if (!order.transaction) {
+      log("Order error:\n" + JSON.stringify(order, null, 2));
+      return;
+    }
 
-  log("Order created. Signing…");
+    log("Order created. Signing…");
 
-  const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
-  const signed = await wallet.signTransaction(tx);
+    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
+    const signed = await wallet.signTransaction(tx);
 
-  const raw = signed.serialize();
-  const raw64 = raw.toString("base64");
+    const raw = signed.serialize();
+    const raw64 = raw.toString("base64");
 
-  const execRes = await fetch(ultraExecuteURL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ signedTx: raw64 })
-  });
+    const execRes = await fetch(ultraExecuteURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ signedTx: raw64 })
+    });
 
-  const out = await execRes.json();
+    const out = await execRes.json();
 
-  if (out.txid) {
-    log("Swap executed!\nhttps://solscan.io/tx/" + out.txid);
-  } else {
-    log("Execution error:\n" + JSON.stringify(out, null, 2));
+    if (out.txid) {
+      log("Swap executed!\nhttps://solscan.io/tx/" + out.txid);
+    } else {
+      log("Execution error:\n" + JSON.stringify(out, null, 2));
+    }
+  } catch (e) {
+    log("Swap error: " + e.message);
   }
 };
 
 /* Log helper */
 function log(txt) {
-  document.getElementById("log").textContent = txt;
+  const el = document.getElementById("log");
+  if (!el) return;
+  el.textContent = txt;
 }
 </script>
 
