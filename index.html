@@ -94,10 +94,6 @@
       gap: 8px;
     }
 
-    .logo-home {
-      cursor: pointer;
-    }
-
     /* Glow logo like Jupiter */
     .logo-circle {
       position: relative;
@@ -565,7 +561,7 @@
         max-width: none;
       }
     }
-
+  
     .lang-switch {
       display: flex;
       align-items: center;
@@ -606,6 +602,8 @@
 
   <!-- Jupiter Plugin -->
   <script src="https://plugin.jup.ag/plugin-v1.js"></script>
+  <!-- Jupiter Terminal for Pro view -->
+  <script src="https://terminal.jup.ag/main-v3.js"></script>
 </head>
 
 <body>
@@ -613,11 +611,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="topbar-left">
-        <div class="logo-wrap logo-home"
-             role="button"
-             tabindex="0"
-             onclick="window.location.href='/index.html'"
-             onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
+        <div class="logo-wrap">
           <div class="logo-circle">
             <div class="logo-glow"></div>
             <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
@@ -743,13 +737,20 @@
     <!-- VIEW: PRO -->
     <div id="view-pro" class="view">
       <section class="panel">
-        <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
-        <div class="section-tag">Advanced routing · custom fees · multi-wallet</div>
-        <p class="section-text">
-          Pro-режим для активных трейдеров Solana: продвинутая конфигурация маршрутов,
-          собственные списки токенов, несколько кошельков и гибкая настройка реферальных
-          стратегий. Интерфейс будет построен на Ultra /quote, /order и /execute API
-          Jupiter.
+        <div class="section-title">JupLite Pro terminal</div>
+        <div class="section-tag">Full Jupiter trading UI · your referral on every trade</div>
+
+        <div id="jup-pro-terminal" style="
+          margin-top: 14px;
+          border-radius: 18px;
+          border: 1px solid rgba(31, 41, 55, 0.95);
+          overflow: hidden;
+          min-height: 560px;
+        "></div>
+
+        <p class="section-text" style="margin-top: 10px; font-size: 11px; opacity: .75;">
+          Это встроенный терминал Jupiter: свечи, стакан, ордера и маршрутизация работают через официальный
+          Ultra API, а все сделки, выполненные через JupLite Pro, учитывают ваш реферальный аккаунт.
         </p>
       </section>
     </div>
@@ -1062,6 +1063,32 @@
       setInterval(refresh, 10000);
     }
 
+
+    /* ===== JupLite Pro — Jupiter Terminal embed ===== */
+    let jupProInitialized = false;
+    function initJupiterPro() {
+      if (jupProInitialized || !window.Jupiter) return;
+      const target = document.getElementById("jup-pro-terminal");
+      if (!target) return;
+      jupProInitialized = true;
+
+      try {
+        window.Jupiter.init({
+          displayMode: "integrated",
+          integratedTargetId: "jup-pro-terminal",
+          endpoint: "https://api.mainnet-beta.solana.com",
+          branding: {
+            name: "JupLite",
+            logoUri: "https://juplite.com/icon-192.png"
+          },
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          platformFeeBps: 50
+        });
+      } catch (e) {
+        console.warn("Failed to init JupLite Pro terminal", e);
+      }
+    }
+
     /* ===== Nav tabs (Swap / Pro / Perps / ...) ===== */
     function initNavViews() {
       const links = document.querySelectorAll(".nav a[data-view]");
@@ -1098,7 +1125,7 @@
       });
     }
 
-
+    
     // ===== Small visitor counter =====
     function initVisitorCounter() {
       const el = document.getElementById("visitor-count");
