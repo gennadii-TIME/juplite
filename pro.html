@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>JupLite Pro — Full Jupiter Terminal</title>
+  <title>JupLite Pro — Trading Terminal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="JupLite Pro embeds the full Jupiter Terminal trading UI with Gena&apos;s referral and branding." />
+        content="JupLite Pro — embedded Jupiter Terminal for advanced trading on Solana with Gena’s referral." />
 
   <link rel="icon" type="image/png" href="/favicon-32.png" />
 
@@ -19,9 +19,7 @@
       --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
     }
 
-    * , *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -48,6 +46,7 @@
       flex: 1;
     }
 
+    /* TOPBAR */
     .topbar {
       display: flex;
       align-items: center;
@@ -89,27 +88,19 @@
     }
 
     .brand-logo-img {
-      position: relative;
       width: 32px;
       height: 32px;
       border-radius: 14px;
+      position: relative;
+      z-index: 2;
       box-shadow:
         0 0 0 1px rgba(56, 189, 248, 0.55),
         0 0 18px rgba(56, 189, 248, 0.5),
         0 12px 28px rgba(15, 23, 42, 0.95);
-      display: block;
-      background: #020617;
     }
 
-    .brand-text-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .brand-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .brand-text-title { font-size: 16px; font-weight: 600; }
+    .brand-text-sub { font-size: 11px; color: var(--text-muted); }
 
     .nav-right {
       display: flex;
@@ -134,16 +125,14 @@
       background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.96));
     }
 
-    .nav-chip:hover {
-      filter: brightness(1.06);
-    }
+    .nav-chip:hover { filter: brightness(1.06); }
 
+    /* TERMINAL */
     .terminal-wrapper {
       flex: 1;
       border-radius: 22px;
       border: 1px solid rgba(31, 41, 55, 0.95);
-      background:
-        radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
       box-shadow: var(--shadow-soft);
       padding: 10px;
       min-height: 540px;
@@ -164,43 +153,27 @@
       text-align: right;
       opacity: 0.82;
     }
-
-    @media (max-width: 768px) {
-      .shell {
-        padding: 12px 10px 20px;
-      }
-      .topbar {
-        padding-inline: 10px;
-      }
-      .brand-text-sub {
-        display: none;
-      }
-      .terminal-wrapper {
-        padding: 8px;
-      }
-      #jup-terminal {
-        height: calc(100vh - 140px);
-      }
-    }
   </style>
 
-  <!-- Jupiter Terminal -->
-  <script src="https://terminal.jup.ag/main-v3.js" data-preload defer></script>
+  <!-- Jupiter Terminal V3 -->
+  <script src="https://terminal.jup.ag/main-v3.js" defer></script>
 </head>
 <body>
   <div class="shell">
+
     <header class="topbar">
-      <a href="/index.html" class="brand" aria-label="Back to JupLite home">
+      <a href="/index.html" class="brand">
         <div class="brand-logo-wrap">
           <div class="brand-logo-glow"></div>
-          <img src="https://juplite.com/icon-192.png" alt="JupLite logo" class="brand-logo-img" loading="lazy" />
+          <img src="/icon-192.png" class="brand-logo-img" alt="logo" />
         </div>
         <div>
           <div class="brand-text-title">JupLite</div>
-          <div class="brand-text-sub">Pro trading via Jupiter Terminal</div>
+          <div class="brand-text-sub">Pro trading terminal</div>
         </div>
       </a>
-      <nav class="nav-right" aria-label="Main navigation">
+
+      <nav class="nav-right">
         <a href="/index.html" class="nav-chip">Home</a>
         <a href="/swap.html" class="nav-chip">Swap</a>
         <span class="nav-chip nav-chip-primary">Pro terminal</span>
@@ -210,31 +183,38 @@
     <main class="terminal-wrapper">
       <div id="jup-terminal"></div>
       <div class="powered">
-        Full Jupiter Terminal embedded via JupLite · Referral: <code style="font-size:10px;">DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b</code>
+        JupLite Pro · Referral:
+        <code style="font-size:10px;">DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b</code>
       </div>
     </main>
+
   </div>
 
   <script>
     window.addEventListener("load", function () {
       if (!window.Jupiter || typeof window.Jupiter.init !== "function") {
-        console.warn("Jupiter Terminal script not ready");
+        console.warn("Jupiter Terminal not ready yet");
         return;
       }
 
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "jup-terminal",
-        // endpoint can be customized later (QuickNode / Helius / own RPC)
-        endpoint: "https://api.mainnet-beta.solana.com",
+
+        /* ✔️ рабочий RPC (быстрый fallback) */
+        endpoint: "https://rpc.ankr.com/solana",
+
+        /* твоя рефка / fee */
+        referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+        platformFeeBps: 50,
+
         branding: {
           name: "JupLite",
           logoUri: "https://juplite.com/icon-192.png"
-        },
-        referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
-        platformFeeBps: 50
+        }
       });
     });
   </script>
+
 </body>
 </html>
