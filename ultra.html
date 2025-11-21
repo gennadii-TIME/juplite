@@ -28,7 +28,7 @@
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       color: var(--text-main);
-      background: transparent; /* важно: фон даёт pro.html */
+      background: transparent; /* фон даёт pro.html */
     }
 
     .ultra-shell {
@@ -51,7 +51,7 @@
       padding: 14px 14px 16px;
     }
 
-    /* ЛЕВАЯ КАРТA (график) */
+    /* ЛЕВАЯ КАРТА (график) */
     .chart-header {
       display: flex;
       justify-content: space-between;
@@ -218,13 +218,20 @@
       cursor: not-allowed;
     }
 
-    .log {
-      margin-top: 10px;
+    .quote-info {
+      margin-top: 8px;
+      padding: 8px 9px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(55,65,81,0.9);
       font-size: 11px;
       color: var(--text-muted);
-      white-space: pre-line;
-      max-height: 130px;
-      overflow-y: auto;
+    }
+
+    .quote-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
     }
 
     .fee-note {
@@ -241,6 +248,15 @@
       border-radius: 12px;
       border: 1px dashed rgba(75,85,99,0.9);
       background: rgba(15,23,42,0.8);
+    }
+
+    .log {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: pre-line;
+      max-height: 130px;
+      overflow-y: auto;
     }
 
     @media (max-width: 900px) {
@@ -319,6 +335,22 @@
         <div class="fee-note">
           Fees: 0.5% Jupiter referral + 0.5% JupLite service fee (total 1.0%).
         </div>
+
+        <!-- НОВЫЙ БЛОК QUOTE INFO -->
+        <div class="quote-info" id="quote-info" style="display:none;">
+          <div class="quote-row">
+            <span>Estimated out:</span>
+            <span id="qi-out">–</span>
+          </div>
+          <div class="quote-row">
+            <span>Min received (1%):</span>
+            <span id="qi-min">–</span>
+          </div>
+          <div class="quote-row">
+            <span>Price impact:</span>
+            <span id="qi-impact">–</span>
+          </div>
+        </div>
       </div>
 
       <!-- ФЕЙКОВЫЕ ВКЛАДКИ (LIMIT/DCA/TWAP) -->
@@ -348,12 +380,15 @@ const REFERRAL_BPS = 50;
 const EXTRA_FEE_BPS = 50; // 0.50%
 const EXTRA_FEE_WALLET = REFERRAL;
 
+/* Slippage (для min received) */
+const SLIPPAGE_BPS = 100; // 1%
+
 /* Blockchain */
 let wallet = null;
 let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
 let tokenList = [];
 
-/* ====== ЛОГИКА ВКЛАДОК (UI, без реальной логики Limit/DCA/TWAP) ====== */
+/* ====== ЛОГИКА ВКЛАДОК ====== */
 const tabs = document.querySelectorAll(".tab");
 const marketPanel = document.getElementById("market-panel");
 const comingPanel = document.getElementById("coming-soon-panel");
@@ -363,7 +398,6 @@ tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     const target = tab.getAttribute("data-tab");
     if (target !== "market") {
-      // фейковые вкладки: только меняем текст и показываем заглушку
       tabs.forEach(t => t.classList.remove("tab-active"));
       tab.classList.add("tab-active");
 
@@ -378,7 +412,6 @@ tabs.forEach(tab => {
         soonText.textContent = "TWAP execution (time-weighted average price) is planned here, similar to advanced Ultra tools.";
       }
     } else {
-      // обратно на Market
       tabs.forEach(t => t.classList.remove("tab-active"));
       tab.classList.add("tab-active");
       comingPanel.style.display = "none";
@@ -409,136 +442,4 @@ async function loadTokens() {
     });
 
     // defaults
-    fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";  // USDC
-    toSel.value = "So11111111111111111111111111111111111111112";  // SOL
-  } catch (e) {
-    log("Token list error: " + e.message);
-  }
-}
-loadTokens();
-
-/* ====== КОШЕЛЁК ====== */
-document.getElementById("connectBtn").onclick = async () => {
-  try {
-    const provider = window.solana;
-    if (!provider) return alert("Phantom Wallet not found");
-
-    await provider.connect();
-    wallet = provider;
-    log("Wallet connected: " + wallet.publicKey.toString());
-  } catch (e) {
-    console.error(e);
-    log("Wallet connect error: " + e.message);
-  }
-};
-
-/* ====== QUOTE ====== */
-let lastQuote = null;
-
-document.getElementById("quoteBtn").onclick = async () => {
-  if (!wallet) return alert("Connect wallet first");
-
-  const inputMint = document.getElementById("fromToken").value;
-  const outputMint = document.getElementById("toToken").value;
-  const amount = parseFloat(document.getElementById("amount").value || "0");
-
-  if (!amount || amount <= 0) {
-    return alert("Enter amount");
-  }
-
-  const decimals = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
-  const rawAmount = Math.round(amount * 10 ** decimals);
-
-  const url =
-    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
-    `&amount=${rawAmount}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
-    `&platformFeeAccount=${REFERRAL}`;
-
-  try {
-    const res = await fetch(url);
-    lastQuote = await res.json();
-
-    if (!lastQuote.route) {
-      log("No route found");
-      document.getElementById("swapBtn").disabled = true;
-      return;
-    }
-
-    log("Quote received:\n" + JSON.stringify(lastQuote.route, null, 2));
-    document.getElementById("swapBtn").disabled = false;
-  } catch (e) {
-    log("Quote error: " + e.message);
-  }
-};
-
-/* ====== SWAP (Ultra Order + Execute + ExtraFee) ====== */
-document.getElementById("swapBtn").onclick = async () => {
-  if (!lastQuote) return;
-
-  log("Creating Ultra order with Extra Fee…");
-
-  const orderPayload = {
-    route: lastQuote.route,
-    userPublicKey: wallet.publicKey.toString(),
-
-    // Jupiter referral (0.50%)
-    platformFeeBps: REFERRAL_BPS,
-    platformFeeAccount: REFERRAL,
-
-    // Твой Extra Fee (0.50%)
-    extraFee: {
-      feeBps: EXTRA_FEE_BPS,
-      feeAccount: EXTRA_FEE_WALLET
-    }
-  };
-
-  try {
-    const orderRes = await fetch(ultraOrderURL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(orderPayload)
-    });
-
-    const order = await orderRes.json();
-
-    if (!order.transaction) {
-      log("Order error:\n" + JSON.stringify(order, null, 2));
-      return;
-    }
-
-    log("Order created. Signing…");
-
-    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
-    const signed = await wallet.signTransaction(tx);
-
-    const raw = signed.serialize();
-    const raw64 = raw.toString("base64");
-
-    const execRes = await fetch(ultraExecuteURL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ signedTx: raw64 })
-    });
-
-    const out = await execRes.json();
-
-    if (out.txid) {
-      log("Swap executed!\nhttps://solscan.io/tx/" + out.txid);
-    } else {
-      log("Execution error:\n" + JSON.stringify(out, null, 2));
-    }
-  } catch (e) {
-    log("Swap error: " + e.message);
-  }
-};
-
-/* ====== LOG helper ====== */
-function log(txt) {
-  const el = document.getElementById("log");
-  if (!el) return;
-  el.textContent = txt;
-}
-</script>
-
-</body>
-</html>
+    fromSel.value = "
