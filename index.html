@@ -521,6 +521,12 @@
       text-decoration: underline;
     }
 
+    .visit-counter {
+      font-size: 9px;
+      opacity: 0.45;
+      margin-left: 8px;
+    }
+
     /* ====== MOBILE ====== */
     @media (max-width: 900px) {
       .topbar-inner {
@@ -651,9 +657,9 @@
               <span class="hero-highlight">Jupiter engine</span>.
             </div>
             <p class="hero-text">
-              JupLite is a minimal swap interface that routes every trade through
-              official Jupiter aggregation for the best route, deep liquidity and
-              built-in referral rewards. Your keys and funds always stay in your wallet.
+              JupLite — №1 среди Solana-свопов.<br>
+              Уникальность — минимально возможные комиссии. Платформа работает на официальном агрегаторе Jupiter, который подбирает лучший курс и обеспечивает самую глубокую ликвидность.<br>
+              Тысячи пользователей уже выбрали JupLite: обмены проходят безопасно, прозрачно и без передачи ключей третьим лицам.
             </p>
           </div>
 
@@ -921,7 +927,6 @@
       });
     }
 
-    
     // ===== Small visitor counter =====
     function initVisitorCounter() {
       const el = document.getElementById("visitor-count");
@@ -943,7 +948,7 @@
         });
     }
 
-window.addEventListener("load", function () {
+    window.addEventListener("load", function () {
       if (window.Jupiter) {
         initJupiter();
       } else {
