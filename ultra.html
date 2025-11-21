@@ -442,4 +442,178 @@ async function loadTokens() {
     });
 
     // defaults
-    fromSel.value = "
+    fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";  // USDC
+    toSel.value = "So11111111111111111111111111111111111111112";  // SOL
+  } catch (e) {
+    log("Token list error: " + e.message);
+  }
+}
+loadTokens();
+
+/* ====== КОШЕЛЁК ====== */
+document.getElementById("connectBtn").onclick = async () => {
+  try {
+    const provider = window.solana;
+    if (!provider) return alert("Phantom Wallet not found");
+
+    await provider.connect();
+    wallet = provider;
+    log("Wallet connected: " + wallet.publicKey.toString());
+  } catch (e) {
+    console.error(e);
+    log("Wallet connect error: " + e.message);
+  }
+};
+
+/* ====== QUOTE ====== */
+let lastQuote = null;
+
+document.getElementById("quoteBtn").onclick = async () => {
+  if (!wallet) return alert("Connect wallet first");
+
+  const inputMint = document.getElementById("fromToken").value;
+  const outputMint = document.getElementById("toToken").value;
+  const amount = parseFloat(document.getElementById("amount").value || "0");
+
+  if (!amount || amount <= 0) {
+    return alert("Enter amount");
+  }
+
+  const decimalsIn = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
+  const rawAmount = Math.round(amount * 10 ** decimalsIn);
+
+  const url =
+    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
+    `&amount=${rawAmount}&slippageBps=${SLIPPAGE_BPS}` +
+    `&platformFeeBps=${REFERRAL_BPS}&platformFeeAccount=${REFERRAL}`;
+
+  try {
+    const res = await fetch(url);
+    lastQuote = await res.json();
+
+    if (!lastQuote.route) {
+      log("No route found");
+      document.getElementById("swapBtn").disabled = true;
+      hideQuoteInfo();
+      return;
+    }
+
+    document.getElementById("swapBtn").disabled = false;
+    log("Quote received:\n" + JSON.stringify(lastQuote.route, null, 2));
+
+    updateQuoteInfo(lastQuote.route, outputMint);
+  } catch (e) {
+    log("Quote error: " + e.message);
+    hideQuoteInfo();
+  }
+};
+
+/* ====== ОБНОВЛЕНИЕ QUOTE INFO (Estimated / Min / Impact) ====== */
+function updateQuoteInfo(route, outputMint) {
+  const outAmount = Number(route.outAmount || 0);
+  const outToken = tokenList.find(t => t.address === outputMint);
+  const outDecimals = outToken?.decimals ?? 6;
+  const outSymbol = outToken?.symbol ?? "?";
+
+  const uiOut = outAmount / 10 ** outDecimals;
+  const minOut = uiOut * (1 - SLIPPAGE_BPS / 10000);
+
+  let impact = route.priceImpactPct;
+  if (impact !== undefined && impact !== null) {
+    // иногда бывает в долях, иногда в процентах — нормализуем
+    impact = Number(impact);
+    if (impact < 1) {
+      impact = impact * 100;
+    }
+  } else {
+    impact = null;
+  }
+
+  const qi = document.getElementById("quote-info");
+  const outEl = document.getElementById("qi-out");
+  const minEl = document.getElementById("qi-min");
+  const impactEl = document.getElementById("qi-impact");
+
+  outEl.textContent = uiOut ? uiOut.toFixed(6) + " " + outSymbol : "–";
+  minEl.textContent = minOut ? minOut.toFixed(6) + " " + outSymbol : "–";
+  impactEl.textContent = impact !== null ? impact.toFixed(2) + " %" : "–";
+
+  qi.style.display = "block";
+}
+
+function hideQuoteInfo() {
+  const qi = document.getElementById("quote-info");
+  if (qi) qi.style.display = "none";
+}
+
+/* ====== SWAP (Ultra Order + Execute + ExtraFee) ====== */
+document.getElementById("swapBtn").onclick = async () => {
+  if (!lastQuote) return;
+
+  log("Creating Ultra order with Extra Fee…");
+
+  const orderPayload = {
+    route: lastQuote.route,
+    userPublicKey: wallet.publicKey.toString(),
+
+    // Jupiter referral (0.50%)
+    platformFeeBps: REFERRAL_BPS,
+    platformFeeAccount: REFERRAL,
+
+    // Твой Extra Fee (0.50%)
+    extraFee: {
+      feeBps: EXTRA_FEE_BPS,
+      feeAccount: EXTRA_FEE_WALLET
+    }
+  };
+
+  try {
+    const orderRes = await fetch(ultraOrderURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(orderPayload)
+    });
+
+    const order = await orderRes.json();
+
+    if (!order.transaction) {
+      log("Order error:\n" + JSON.stringify(order, null, 2));
+      return;
+    }
+
+    log("Order created. Signing…");
+
+    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
+    const signed = await wallet.signTransaction(tx);
+
+    const raw = signed.serialize();
+    const raw64 = raw.toString("base64");
+
+    const execRes = await fetch(ultraExecuteURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ signedTx: raw64 })
+    });
+
+    const out = await execRes.json();
+
+    if (out.txid) {
+      log("Swap executed!\nhttps://solscan.io/tx/" + out.txid);
+    } else {
+      log("Execution error:\n" + JSON.stringify(out, null, 2));
+    }
+  } catch (e) {
+    log("Swap error: " + e.message);
+  }
+};
+
+/* ====== LOG helper ====== */
+function log(txt) {
+  const el = document.getElementById("log");
+  if (!el) return;
+  el.textContent = txt;
+}
+</script>
+
+</body>
+</html>
