@@ -756,14 +756,12 @@
   </div>
 
   <footer>
-  <div>JupLite is an independent interface built on top of Jupiter.</div>
-  <div>
-    Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
-    <span class="visit-counter">
-      · visitors: <span id="visitor-count">—</span>
-    </span>
-  </div>
-</footer>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
+    <div>
+      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
+      <span class="visit-counter">· visitors: <span id="visitor-count">—</span></span>
+    </div>
+  </footer>
 
   <script>
     /* ===== Jupiter Plugin init ===== */
@@ -923,7 +921,29 @@
       });
     }
 
-    window.addEventListener("load", function () {
+    
+    // ===== Small visitor counter =====
+    function initVisitorCounter() {
+      const el = document.getElementById("visitor-count");
+      if (!el) return;
+
+      const url = "https://api.countapi.xyz/hit/juplite.com/mainpage";
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.value === "number") {
+            el.textContent = data.value.toLocaleString("en-US");
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(() => {
+          el.textContent = "—";
+        });
+    }
+
+window.addEventListener("load", function () {
       if (window.Jupiter) {
         initJupiter();
       } else {
@@ -932,6 +952,7 @@
 
       initLiveTicker();
       initNavViews();
+      initVisitorCounter();
     });
   </script>
 </body>
