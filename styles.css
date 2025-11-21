@@ -318,6 +318,11 @@ a {
   justify-content: space-between;
   align-items: center;
 }
+    .visit-counter {
+      font-size: 9px;
+      opacity: 0.45;
+      margin-left: 8px;
+    }
 
 .footer-link {
   font-size: 11px;
