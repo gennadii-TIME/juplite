@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>JupLite Ultra Pro — Swap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+<link rel="icon" href="/favicon-32.png" />
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-base"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-wallets"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-browser"></script>
+
+<style>
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+    font-family: system-ui, sans-serif;
+    color: #e5e7eb;
+    padding: 24px;
+  }
+  .box {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(15,23,42,0.96);
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,0.3);
+    box-shadow: 0 12px 45px rgba(0,0,0,0.45);
+  }
+  h1 { margin-top: 0; font-size: 22px; }
+  select, input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(148,163,184,0.35);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    font-size: 16px;
+    background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+    color:#020617;
+    font-weight:600;
+    cursor:pointer;
+  }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  .log {
+    margin-top: 12px;
+    font-size: 13px;
+    opacity: 0.8;
+    white-space: pre-line;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Ultra Swap (JupLite Pro)</h1>
+
+  <button id="connectBtn">Connect Wallet</button>
+
+  <label>From:</label>
+  <select id="fromToken"></select>
+
+  <label>To:</label>
+  <select id="toToken"></select>
+
+  <label>Amount:</label>
+  <input id="amount" placeholder="0.0" />
+
+  <button id="quoteBtn">Get Quote</button>
+  <button id="swapBtn" disabled>Swap</button>
+
+  <div class="log" id="log"></div>
+</div>
+
+<script>
+const ultraQuoteURL = "https://ultra-api.jup.ag/quote";
+const ultraOrderURL = "https://ultra-api.jup.ag/order";
+const ultraExecuteURL = "https://ultra-api.jup.ag/execute";
+
+const REFERRAL = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b";
+const FEE_BPS = 50;
+
+let wallet = null;
+let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
+
+let tokenList = [];
+
+async function loadTokens() {
+  const res = await fetch("https://cache.jup.ag/tokens");
+  tokenList = await res.json();
+
+  const fromSel = document.getElementById("fromToken");
+  const toSel = document.getElementById("toToken");
+
+  tokenList.forEach(t => {
+    const o1 = document.createElement("option");
+    o1.value = t.address;
+    o1.textContent = `${t.symbol}`;
+    fromSel.appendChild(o1);
+
+    const o2 = document.createElement("option");
+    o2.value = t.address;
+    o2.textContent = `${t.symbol}`;
+    toSel.appendChild(o2);
+  });
+
+  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v";
+  toSel.value = "So11111111111111111111111111111111111111112";
+}
+loadTokens();
+
+document.getElementById("connectBtn").onclick = async () => {
+  try {
+    const provider = window.solana;
+    if (!provider) return alert("Phantom Wallet not found");
+
+    await provider.connect();
+    wallet = provider;
+    log("Wallet connected: " + wallet.publicKey.toString());
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+let lastQuote = null;
+
+document.getElementById("quoteBtn").onclick = async () => {
+  if (!wallet) return alert("Connect wallet first");
+
+  const inputMint = document.getElementById("fromToken").value;
+  const outputMint = document.getElementById("toToken").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+
+  const decimals = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
+  const rawAmount = Math.round(amount * 10 ** decimals);
+
+  const url = `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}&amount=${rawAmount}&slippageBps=100&platformFeeBps=${FEE_BPS}&platformFeeAccount=${REFERRAL}`;
+
+  const res = await fetch(url);
+  lastQuote = await res.json();
+
+  if (!lastQuote.route) {
+    log("No route found");
+    return;
+  }
+
+  log("Quote received:
+" + JSON.stringify(lastQuote.route, null, 2));
+  document.getElementById("swapBtn").disabled = false;
+};
+
+document.getElementById("swapBtn").onclick = async () => {
+  if (!lastQuote) return;
+
+  log("Creating order…");
+
+  const orderData = {
+    route: lastQuote.route,
+    userPublicKey: wallet.publicKey.toString(),
+  };
+
+  const res = await fetch(ultraOrderURL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(orderData)
+  });
+
+  const order = await res.json();
+  log("Order created");
+
+  const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
+  const signed = await wallet.signTransaction(tx);
+
+  const raw = signed.serialize();
+  const raw64 = raw.toString("base64");
+
+  const exec = await fetch(ultraExecuteURL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({signedTx: raw64})
+  });
+
+  const out = await exec.json();
+
+  if (out.txid) {
+    log("Swap executed!
+https://solscan.io/tx/" + out.txid);
+  } else {
+    log("Execution error:
+" + JSON.stringify(out, null, 2));
+  }
+};
+
+function log(txt) {
+  document.getElementById("log").textContent = txt;
+}
+</script>
+</body>
+</html>
