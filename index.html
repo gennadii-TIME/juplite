@@ -561,7 +561,44 @@
         max-width: none;
       }
     }
-  </style>
+  
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 10px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      padding: 2px 6px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    .lang-btn.lang-active {
+      background: rgba(56, 189, 248, 0.16);
+      color: #e5e7eb;
+    }
+
+    .lang-btn:hover {
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .lang-switch {
+        display: none;
+      }
+    }
+</style>
 
   <!-- Jupiter Plugin -->
   <script src="https://plugin.jup.ag/plugin-v1.js"></script>
@@ -601,6 +638,13 @@
           <span class="search-icon">🔍</span>
           <input type="text" placeholder="Search token, wallet or feature" />
           <span class="search-hotkey">/</span>
+        </div>
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn lang-active" type="button" data-lang="en">EN</button>
+          <button class="lang-btn" type="button" data-lang="ru">RU</button>
+          <button class="lang-btn" type="button" data-lang="es">ES</button>
+          <button class="lang-btn" type="button" data-lang="hi">HI</button>
+          <button class="lang-btn" type="button" data-lang="ar">AR</button>
         </div>
         <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
         <button class="connect-btn" type="button">Connect</button>
@@ -764,6 +808,133 @@
   </footer>
 
   <script>
+
+    const JUPLITE_I18N = {"en": {"title": "JupLite — Solana Swap Router", "description": "JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards.", "logoSub": "Swap · Router · Solana", "heroTitleMain": "Fast swaps on Solana,", "heroHighlight": "Jupiter engine", "heroText": "JupLite is a minimal swap interface that routes every trade through official Jupiter aggregation for the best route, deep liquidity and built-in referral rewards. Your keys and funds always stay in your wallet.", "heroPills": ["✓ Aggregated liquidity across Solana DEXes", "✓ Non-custodial, wallet-native", "✓ Built-in referral rewards"], "cta": "Start swapping", "swapBadge": "Routed by Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Lend", "portfolio": "Portfolio", "predict": "Predict"}}, "ru": {"title": "JupLite — быстрый обмен токенов Solana", "description": "JupLite — лёгкий интерфейс обмена токенов в сети Solana на базе Jupiter с лучшим маршрутом, низкими комиссиями и реферальными наградами.", "logoSub": "Своп · Маршрутизатор · Solana", "heroTitleMain": "Быстрые обмены в сети Solana,", "heroHighlight": "движок Jupiter", "heroText": "JupLite — это минималистичный интерфейс для свопов, который проводит каждый обмен через официальный агрегатор Jupiter, чтобы находить лучший маршрут, глубинную ликвидность и реферальные вознаграждения. Ключи и средства всегда остаются в вашем кошельке.", "heroPills": ["✓ Ликвидность со всех DEX в Solana", "✓ Некостодиальный кошелёк — только вы", "✓ Встроенные реферальные награды"], "cta": "Начать обмен", "swapBadge": "Маршрутизация через Jupiter Plugin", "nav": {"swap": "Своп", "pro": "Про", "perps": "Перпетуалы", "lend": "Лендинг", "portfolio": "Портфель", "predict": "Прогнозы"}}, "es": {"title": "JupLite — Intercambios rápidos en Solana", "description": "JupLite es una interfaz ligera de intercambio en Solana impulsada por Jupiter, con mejor ruta, bajas comisiones y recompensas por referidos.", "logoSub": "Swap · Enrutador · Solana", "heroTitleMain": "Swaps rápidos en Solana con", "heroHighlight": "motor de Jupiter", "heroText": "JupLite es una interfaz mínima de swap que envía cada operación a través del agregador oficial de Jupiter para conseguir la mejor ruta, liquidez profunda y recompensas por referidos. Tus claves y fondos siempre permanecen en tu monedero.", "heroPills": ["✓ Liquidez agregada de los DEX de Solana", "✓ No custodial, control total de tu wallet", "✓ Recompensas integradas por referidos"], "cta": "Empezar a intercambiar", "swapBadge": "Ruteado por Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Préstamos", "portfolio": "Portafolio", "predict": "Predicciones"}}, "hi": {"title": "JupLite — Solana पर तेज़ टोकन स्वैप", "description": "JupLite एक हल्का Solana स्वैप इंटरफ़ेस है जो Jupiter पर आधारित है, जो बेहतर रूट, कम फ़ीस और रेफरल रिवॉर्ड्स देता है।", "logoSub": "स्वैप · राउटर · Solana", "heroTitleMain": "Solana पर तेज़ स्वैप,", "heroHighlight": "Jupiter इंजन के साथ", "heroText": "JupLite एक मिनिमल स्वैप इंटरफ़ेस है जो हर ट्रेड को आधिकारिक Jupiter एग्रीगेशन के ज़रिए भेजता है ताकि आपको सबसे अच्छा रूट, गहरी लिक्विडिटी और बिल्ट‑इन रेफरल रिवॉर्ड्स मिलें। आपकी चाबियाँ और फंड हमेशा आपके वॉलेट में रहते हैं।", "heroPills": ["✓ Solana DEX से एग्रीगेटेड लिक्विडिटी", "✓ नॉन‑कस्टोडियल, आपका अपना वॉलेट", "✓ इनबिल्ट रेफरल रिवॉर्ड्स"], "cta": "स्वैप शुरू करें", "swapBadge": "Jupiter Plugin द्वारा रूटेड", "nav": {"swap": "स्वैप", "pro": "प्रो", "perps": "परपेचुअल", "lend": "लेंड", "portfolio": "पोर्टफोलियो", "predict": "प्रिडिक्ट"}}, "ar": {"title": "JupLite — تبادل سريع للتوكنات على Solana", "description": "JupLite هو واجهة خفيفة لتبديل التوكنات على شبكة Solana تعمل بمحرك Jupiter مع أفضل مسار وعمولات منخفضة ومكافآت إحالة.", "logoSub": "سواب · موجه · Solana", "heroTitleMain": "تبديلات سريعة على Solana مع", "heroHighlight": "محرك Jupiter", "heroText": "JupLite هي واجهة مبسطة لتبديل التوكنات، ترسل كل عملية swap عبر مجمع Jupiter الرسمي للحصول على أفضل مسار وسيولة عميقة ومكافآت إحالة مدمجة. مفاتيحك وأموالك تبقى دائماً في محفظتك.", "heroPills": ["✓ سيولة مجمّعة من منصات DEX على Solana", "✓ غير وصائي — التحكم الكامل في محفظتك", "✓ مكافآت إحالة مدمجة"], "cta": "ابدأ التبديل", "swapBadge": "مُوجَّه بواسطة Jupiter Plugin", "nav": {"swap": "سواب", "pro": "برو", "perps": "عقود دائمة", "lend": "إقراض", "portfolio": "محفظة", "predict": "توقعات"}}};
+
+    function jupLiteDetectInitialLang() {
+      const saved = localStorage.getItem("jupLiteLang");
+      if (saved && JUPLITE_I18N[saved]) return saved;
+
+      const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+      if (nav.startsWith("ru")) return "ru";
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("hi")) return "hi";
+      if (nav.startsWith("ar")) return "ar";
+      return "en";
+    }
+
+    function jupLiteSetLangActiveButton(lang) {
+      const buttons = document.querySelectorAll(".lang-btn");
+      buttons.forEach((btn) => {
+        const code = btn.getAttribute("data-lang");
+        btn.classList.toggle("lang-active", code === lang);
+      });
+    }
+
+    function jupLiteApplyLanguage(lang) {
+      if (!JUPLITE_I18N[lang]) lang = "en";
+      const dict = JUPLITE_I18N[lang];
+
+      // html lang + direction
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
+
+      // <title> + description
+      if (dict.title) {
+        document.title = dict.title;
+      }
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.description) {
+        metaDesc.setAttribute("content", dict.description);
+      }
+
+      // logo subtitle
+      const logoSub = document.querySelector(".logo-text-sub");
+      if (logoSub && dict.logoSub) {
+        logoSub.textContent = dict.logoSub;
+      }
+
+      // nav items
+      if (dict.nav) {
+        document.querySelectorAll(".nav a[data-view]").forEach((a) => {
+          const key = a.dataset.view;
+          if (dict.nav[key]) {
+            // оставляем вложенные элементы (например, <span class="nav-badge-new">)
+            const badge = a.querySelector(".nav-badge-new");
+            a.textContent = dict.nav[key];
+            if (badge) {
+              a.appendChild(document.createTextNode(" "));
+              a.appendChild(badge);
+            }
+          }
+        });
+      }
+
+      // hero title + highlight
+      const heroTitle = document.querySelector(".hero-title");
+      const heroHighlight = document.querySelector(".hero-highlight");
+      if (heroTitle && heroHighlight && dict.heroTitleMain && dict.heroHighlight) {
+        // предполагаем, что первый child — текст
+        if (heroTitle.firstChild && heroTitle.firstChild.nodeType === Node.TEXT_NODE) {
+          heroTitle.firstChild.nodeValue = dict.heroTitleMain + " ";
+        }
+        heroHighlight.textContent = dict.heroHighlight;
+      }
+
+      // hero text
+      const heroText = document.querySelector(".hero-text");
+      if (heroText && dict.heroText) {
+        heroText.textContent = dict.heroText;
+      }
+
+      // hero pills
+      const pills = document.querySelectorAll(".hero-pill");
+      if (pills.length && Array.isArray(dict.heroPills)) {
+        pills.forEach((pill, i) => {
+          if (dict.heroPills[i]) {
+            pill.textContent = dict.heroPills[i];
+          }
+        });
+      }
+
+      // CTA button text (второй span внутри .cta-btn)
+      const ctaBtn = document.querySelector(".cta-btn");
+      if (ctaBtn && dict.cta) {
+        const spans = ctaBtn.querySelectorAll("span");
+        if (spans.length > 1) {
+          spans[1].textContent = dict.cta;
+        }
+      }
+
+      // swap badge
+      const swapBadge = document.querySelector(".swap-badge");
+      if (swapBadge && dict.swapBadge) {
+        swapBadge.textContent = dict.swapBadge;
+      }
+
+      jupLiteSetLangActiveButton(lang);
+      try {
+        localStorage.setItem("jupLiteLang", lang);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function initLangSwitcher() {
+      const initialLang = jupLiteDetectInitialLang();
+      jupLiteApplyLanguage(initialLang);
+
+      const buttons = document.querySelectorAll(".lang-btn");
+      if (!buttons.length) return;
+
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.getAttribute("data-lang");
+          jupLiteApplyLanguage(lang);
+        });
+      });
+    }
+
     /* ===== Jupiter Plugin init ===== */
     function initJupiter() {
       if (!window.Jupiter) return;
@@ -944,6 +1115,7 @@
     }
 
 window.addEventListener("load", function () {
+      initLangSwitcher();
       if (window.Jupiter) {
         initJupiter();
       } else {
