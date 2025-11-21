@@ -7,7 +7,7 @@
 
   <link rel="icon" href="/favicon-32.png" />
 
-  <!-- Solana Web3 + Wallet (Phantom) -->
+  <!-- Solana Web3 (для Phantom) -->
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
   <style>
@@ -28,8 +28,7 @@
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       color: var(--text-main);
-      /* важное отличие: фон прозрачный — Pro-плашка из pro.html */
-      background: transparent;
+      background: transparent; /* важно: фон даёт pro.html */
     }
 
     .ultra-shell {
@@ -52,7 +51,7 @@
       padding: 14px 14px 16px;
     }
 
-    /* ГРАФИК / ИНФО */
+    /* ЛЕВАЯ КАРТA (график) */
     .chart-header {
       display: flex;
       justify-content: space-between;
@@ -91,10 +90,10 @@
       border: none;
     }
 
-    /* ULTRA SWAP ПАНЕЛЬ */
+    /* ПРАВАЯ КАРТА (ULTRA SWAP) */
     .swap-header {
       text-align: left;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .swap-title {
@@ -105,6 +104,49 @@
     .swap-sub {
       font-size: 11px;
       color: var(--text-muted);
+    }
+
+    /* ВКЛАДКИ */
+    .tabs {
+      display: inline-flex;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      padding: 3px;
+      margin: 10px 0 14px;
+      border: 1px solid rgba(31,41,55,0.9);
+      gap: 3px;
+    }
+
+    .tab {
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab-active {
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      font-weight: 600;
+    }
+
+    .tab-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.85);
+      color: var(--text-muted);
+    }
+
+    .tab-disabled {
+      opacity: 0.6;
+      cursor: default;
     }
 
     .connect-btn {
@@ -191,6 +233,16 @@
       color: var(--text-muted);
     }
 
+    .soon-box {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.8);
+    }
+
     @media (max-width: 900px) {
       .ultra-layout {
         grid-template-columns: minmax(0, 1fr);
@@ -206,7 +258,7 @@
 <div class="ultra-shell">
   <div class="ultra-layout">
 
-    <!-- ЛЕВАЯ КОЛОНКА: ГРАФИК / ИНФО -->
+    <!-- ЛЕВАЯ КОЛОНКА: ГРАФИК -->
     <section class="card">
       <div class="chart-header">
         <div>
@@ -216,7 +268,6 @@
         <div class="pill">Chart preview</div>
       </div>
       <div class="chart-frame">
-        <!-- Простой TradingView виджет, можно сменить символ -->
         <iframe
           src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=0&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en"
           loading="lazy">
@@ -228,27 +279,53 @@
     <section class="card">
       <div class="swap-header">
         <div class="swap-title">Ultra Swap (JupLite Pro)</div>
-        <div class="swap-sub">Market swap via Jupiter Ultra API, with JupLite fees.</div>
+        <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
       </div>
 
-      <button id="connectBtn" class="connect-btn">Connect Wallet</button>
-
-      <label for="fromToken">From:</label>
-      <select id="fromToken"></select>
-
-      <label for="toToken">To:</label>
-      <select id="toToken"></select>
-
-      <label for="amount">Amount:</label>
-      <input id="amount" placeholder="0.0" />
-
-      <div class="btn-row">
-        <button id="quoteBtn" class="primary-btn">Get Quote</button>
-        <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
+      <!-- ВКЛАДКИ -->
+      <div class="tabs" role="tablist">
+        <button class="tab tab-active" data-tab="market" type="button">
+          Market
+        </button>
+        <button class="tab tab-disabled" data-tab="limit" type="button">
+          Limit <span class="tab-badge">soon</span>
+        </button>
+        <button class="tab tab-disabled" data-tab="dca" type="button">
+          DCA <span class="tab-badge">soon</span>
+        </button>
+        <button class="tab tab-disabled" data-tab="twap" type="button">
+          TWAP <span class="tab-badge">soon</span>
+        </button>
       </div>
 
-      <div class="fee-note">
-        Fees: 0.5% Jupiter referral + 0.5% JupLite service fee (total 1.0%).
+      <!-- MARKET ПАНЕЛЬ -->
+      <div id="market-panel">
+        <button id="connectBtn" class="connect-btn">Connect Wallet</button>
+
+        <label for="fromToken">From:</label>
+        <select id="fromToken"></select>
+
+        <label for="toToken">To:</label>
+        <select id="toToken"></select>
+
+        <label for="amount">Amount:</label>
+        <input id="amount" placeholder="0.0" />
+
+        <div class="btn-row">
+          <button id="quoteBtn" class="primary-btn">Get Quote</button>
+          <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
+        </div>
+
+        <div class="fee-note">
+          Fees: 0.5% Jupiter referral + 0.5% JupLite service fee (total 1.0%).
+        </div>
+      </div>
+
+      <!-- ФЕЙКОВЫЕ ВКЛАДКИ (LIMIT/DCA/TWAP) -->
+      <div id="coming-soon-panel" style="display:none;">
+        <div class="soon-box" id="soon-text">
+          Limit orders, DCA and TWAP execution will appear here soon.
+        </div>
       </div>
 
       <div class="log" id="log"></div>
@@ -276,7 +353,41 @@ let wallet = null;
 let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
 let tokenList = [];
 
-/* Load tokens */
+/* ====== ЛОГИКА ВКЛАДОК (UI, без реальной логики Limit/DCA/TWAP) ====== */
+const tabs = document.querySelectorAll(".tab");
+const marketPanel = document.getElementById("market-panel");
+const comingPanel = document.getElementById("coming-soon-panel");
+const soonText = document.getElementById("soon-text");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    const target = tab.getAttribute("data-tab");
+    if (target !== "market") {
+      // фейковые вкладки: только меняем текст и показываем заглушку
+      tabs.forEach(t => t.classList.remove("tab-active"));
+      tab.classList.add("tab-active");
+
+      marketPanel.style.display = "none";
+      comingPanel.style.display = "block";
+
+      if (target === "limit") {
+        soonText.textContent = "Limit orders UI is coming soon. You will be able to set price and size like on jup.ag Ultra.";
+      } else if (target === "dca") {
+        soonText.textContent = "DCA (dollar-cost averaging) panel will appear here. Multiple timed buys/sells via Ultra.";
+      } else if (target === "twap") {
+        soonText.textContent = "TWAP execution (time-weighted average price) is planned here, similar to advanced Ultra tools.";
+      }
+    } else {
+      // обратно на Market
+      tabs.forEach(t => t.classList.remove("tab-active"));
+      tab.classList.add("tab-active");
+      comingPanel.style.display = "none";
+      marketPanel.style.display = "block";
+    }
+  });
+});
+
+/* ====== ЗАГРУЗКА ТОКЕНОВ ====== */
 async function loadTokens() {
   try {
     const res = await fetch("https://cache.jup.ag/tokens");
@@ -306,7 +417,7 @@ async function loadTokens() {
 }
 loadTokens();
 
-/* Connect Wallet */
+/* ====== КОШЕЛЁК ====== */
 document.getElementById("connectBtn").onclick = async () => {
   try {
     const provider = window.solana;
@@ -321,7 +432,7 @@ document.getElementById("connectBtn").onclick = async () => {
   }
 };
 
-/* Quote */
+/* ====== QUOTE ====== */
 let lastQuote = null;
 
 document.getElementById("quoteBtn").onclick = async () => {
@@ -360,7 +471,7 @@ document.getElementById("quoteBtn").onclick = async () => {
   }
 };
 
-/* Swap (Ultra Order + Execute) */
+/* ====== SWAP (Ultra Order + Execute + ExtraFee) ====== */
 document.getElementById("swapBtn").onclick = async () => {
   if (!lastQuote) return;
 
@@ -370,11 +481,11 @@ document.getElementById("swapBtn").onclick = async () => {
     route: lastQuote.route,
     userPublicKey: wallet.publicKey.toString(),
 
-    /* Jupiter referral (0.50%) */
+    // Jupiter referral (0.50%)
     platformFeeBps: REFERRAL_BPS,
     platformFeeAccount: REFERRAL,
 
-    /* Your own Extra Fee (0.50%) */
+    // Твой Extra Fee (0.50%)
     extraFee: {
       feeBps: EXTRA_FEE_BPS,
       feeAccount: EXTRA_FEE_WALLET
@@ -421,7 +532,7 @@ document.getElementById("swapBtn").onclick = async () => {
   }
 };
 
-/* Log helper */
+/* ====== LOG helper ====== */
 function log(txt) {
   const el = document.getElementById("log");
   if (!el) return;
