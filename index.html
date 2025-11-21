@@ -254,7 +254,281 @@
     .connect-btn:hover {
       filter: brightness(1.05);
     }
+    .connect-btn-connected {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+    }
 
+    .wallet-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 11px;
+      gap: 6px;
+    }
+    .wallet-chip span {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .wallet-chip-disconnected {
+      color: #9ca3af;
+    }
+    .wallet-chip-connected {
+      color: #bbf7d0;
+      border-color: rgba(34, 197, 94, 0.9);
+      background: rgba(22, 163, 74, 0.14);
+    }
+    .pro-wallet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+      margin-bottom: 16px;
+    }
+    .wallet-balance-value {
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    .pro-market {
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .pro-market select {
+      margin-top: 4px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 8px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+      padding: 6px 8px;
+      font-size: 12px;
+      width: 100%;
+    }
+    .pro-panels {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+    .pro-orderbook, .pro-orders {
+      border-radius: 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      padding: 10px;
+      font-size: 11px;
+    }
+    .pro-orderbook-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .pro-orderbook-placeholder {
+      margin-top: 12px;
+      color: #6b7280;
+    }
+    .pro-orders h3 {
+      margin: 0 0 6px;
+      font-size: 12px;
+    }
+    .pro-order-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .pro-order-form label {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .pro-order-form input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 12px;
+    }
+    .pro-order-btn {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      width: 100%;
+    }
+    .pro-order-btn-buy {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+    }
+    .pro-order-btn-sell {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #1b1308;
+    }
+
+
+
+    .pro-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .pro-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pro-pair-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 15px;
+    }
+    .pro-pair-symbol {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .pro-pair-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #9ca3af;
+    }
+    .pro-header-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .pro-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pro-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .pro-stat-value {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+    .pro-header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .pro-mode-toggle {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      font-size: 10px;
+    }
+    .pro-mode-toggle button {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      padding: 3px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .pro-mode-toggle button.pro-mode-active {
+      background: rgba(56, 189, 248, 0.18);
+      color: #e5e7eb;
+    }
+    .pro-wallet-chip-row {
+      font-size: 11px;
+    }
+    .pro-layout-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 0.9fr);
+      gap: 14px;
+    }
+    .pro-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pro-chart {
+      border-radius: 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      padding: 10px;
+      font-size: 11px;
+      min-height: 180px;
+    }
+    .pro-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      color: #9ca3af;
+    }
+    .pro-chart-placeholder {
+      margin-top: 8px;
+      color: #6b7280;
+      font-size: 11px;
+    }
+    .pro-lower {
+      margin-top: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      padding: 10px;
+      font-size: 11px;
+    }
+    .pro-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      margin-bottom: 8px;
+    }
+    .pro-tab {
+      padding: 4px 10px;
+      border-radius: 999px 999px 0 0;
+      cursor: pointer;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .pro-tab-active {
+      background: rgba(15, 23, 42, 0.98);
+      color: #e5e7eb;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      border-bottom-color: transparent;
+    }
+    .pro-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+    .pro-table th,
+    .pro-table td {
+      padding: 4px 6px;
+      text-align: right;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    }
+    .pro-table th:first-child,
+    .pro-table td:first-child {
+      text-align: left;
+    }
+    .pro-table-empty {
+      padding: 10px 0 4px;
+      color: #6b7280;
+      font-size: 11px;
+    }
     /* ====== TICKER BAR ====== */
     .ticker-shell {
       background: #020617;
@@ -655,7 +929,7 @@
           <button class="lang-btn" type="button" data-lang="ar">AR</button>
         </div>
         <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
-        <button class="connect-btn" type="button">Connect</button>
+        <button class="connect-btn" type="button" id="wallet-connect-btn">Connect</button>
       </div>
     </div>
   </div>
@@ -743,15 +1017,159 @@
     <!-- VIEW: PRO -->
     <div id="view-pro" class="view">
       <section class="panel">
-        <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
-        <div class="section-tag">Advanced routing · custom fees · multi-wallet</div>
-        <p class="section-text">
-          Pro-режим для активных трейдеров Solana: продвинутая конфигурация маршрутов,
-          собственные списки токенов, несколько кошельков и гибкая настройка реферальных
-          стратегий. Интерфейс будет построен на Ultra /quote, /order и /execute API
-          Jupiter.
-        </p>
+        <div class="pro-header-row">
+          <div class="pro-header-left">
+            <div class="pro-pair-line">
+              <span class="pro-pair-symbol" id="pro-pair-symbol">SOL / USDC</span>
+              <span class="pro-pair-tag" id="pro-pair-venue">OpenBook · Spot</span>
+            </div>
+            <div class="pro-header-stats">
+              <div class="pro-stat">
+                <span class="pro-stat-label">Last price</span>
+                <span class="pro-stat-value" id="pro-stat-last">—</span>
+              </div>
+              <div class="pro-stat">
+                <span class="pro-stat-label">24h change</span>
+                <span class="pro-stat-value" id="pro-stat-change">—</span>
+              </div>
+              <div class="pro-stat">
+                <span class="pro-stat-label">24h volume</span>
+                <span class="pro-stat-value" id="pro-stat-volume">—</span>
+              </div>
+              <div class="pro-stat">
+                <span class="pro-stat-label">Best route</span>
+                <span class="pro-stat-value" id="pro-stat-route">Jupiter</span>
+              </div>
+            </div>
+          </div>
+          <div class="pro-header-right">
+            <div class="pro-mode-toggle" aria-label="Trading mode">
+              <button type="button" class="pro-mode-active" id="pro-mode-spot-btn">Spot</button>
+              <button type="button" id="pro-mode-perps-btn">Perps</button>
+            </div>
+            <div class="pro-wallet-chip-row">
+              <div id="pro-wallet-status" class="wallet-chip wallet-chip-disconnected">
+                <span>Not connected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pro-wallet-grid">
+          <div>
+            <div class="section-tag">Wallet</div>
+            <div class="section-text" style="margin-top:4px;">
+              Use the global <b>Connect</b> button in the top-right corner to link your Solana wallet.
+              Once connected, your address and SOL balance will appear here.
+            </div>
+          </div>
+          <div>
+            <div class="section-tag">SOL balance</div>
+            <div id="pro-wallet-balance" class="wallet-balance-value">—</div>
+          </div>
+        </div>
+
+        <div class="pro-market">
+          <div class="section-tag">Markets</div>
+          <select id="pro-market-select">
+            <option value="SOL-USDC-OPENBOOK" selected>SOL / USDC — OpenBook</option>
+            <option value="JUP-USDC-RAYDIUM">JUP / USDC — Raydium</option>
+            <option value="BONK-SOL-RAYDIUM">BONK / SOL — Raydium</option>
+          </select>
+        </div>
+
+        <div class="pro-layout-main">
+          <!-- LEFT: chart + orderbook -->
+          <div class="pro-col">
+            <div class="pro-chart">
+              <div class="pro-chart-header">
+                <span>Price chart</span>
+                <span style="opacity:.7;font-size:10px;">Candles · 1m / 5m / 1h · Coming soon</span>
+              </div>
+              <div class="pro-chart-placeholder">
+                Chart integration (TV-style or lightweight JS charts) will be mounted here.
+                For now this is a visual placeholder imitating Jupiter Pro layout.
+              </div>
+            </div>
+
+            <div class="pro-orderbook" id="pro-orderbook">
+              <div class="pro-orderbook-header">
+                <span>Orderbook</span>
+                <span id="pro-orderbook-market-label">SOL/USDC (preview)</span>
+              </div>
+              <div class="pro-orderbook-placeholder">
+                Live on-chain orderbooks (OpenBook / Raydium / Mango) will appear here.
+                This is a visual shell ready to be wired to APIs.
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDDLE: recent trades / depth -->
+          <div class="pro-col">
+            <div class="pro-chart">
+              <div class="pro-chart-header">
+                <span>Recent trades</span>
+                <span style="opacity:.7;font-size:10px;">Stream · Live fills</span>
+              </div>
+              <div class="pro-chart-placeholder">
+                Stream of on-chain trades for the selected market will appear here. You can show size, price
+                and side (buy/sell) with color-coding.
+              </div>
+            </div>
+            <div class="pro-chart">
+              <div class="pro-chart-header">
+                <span>Market depth</span>
+                <span style="opacity:.7;font-size:10px;">Cumulative bids/asks</span>
+              </div>
+              <div class="pro-chart-placeholder">
+                Depth chart can be rendered here based on aggregated orderbook snapshots.
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: order tickets -->
+          <div class="pro-col">
+            <div class="pro-orders">
+              <h3>Spot orders</h3>
+              <form class="pro-order-form" onsubmit="event.preventDefault(); alert('Limit orders UI shell — on-chain integration will be wired next.');">
+                <label>Price (quote)</label>
+                <input type="number" step="0.0001" min="0" placeholder="e.g. 125.50" />
+                <label>Size (base)</label>
+                <input type="number" step="0.0001" min="0" placeholder="e.g. 0.5" />
+                <button type="submit" class="pro-order-btn pro-order-btn-buy">Place Buy (limit)</button>
+              </form>
+              <form class="pro-order-form" onsubmit="event.preventDefault(); alert('Limit orders UI shell — on-chain integration will be wired next.');">
+                <label>Price (quote)</label>
+                <input type="number" step="0.0001" min="0" placeholder="e.g. 125.50" />
+                <label>Size (base)</label>
+                <input type="number" step="0.0001" min="0" placeholder="e.g. 0.5" />
+                <button type="submit" class="pro-order-btn pro-order-btn-sell">Place Sell (limit)</button>
+              </form>
+            </div>
+            <div class="pro-orders">
+              <h3>Perps (preview)</h3>
+              <div class="pro-chart-placeholder">
+                Perpetual futures tickets (Mango / Drift) will be integrated here in the same style —
+                with cross/isolated margin and leverage controls.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pro-lower">
+          <div class="pro-tabs">
+            <div class="pro-tab pro-tab-active">Open orders</div>
+            <div class="pro-tab">Order history</div>
+            <div class="pro-tab">Fills</div>
+            <div class="pro-tab">Funding (perps)</div>
+          </div>
+          <div class="pro-table-empty">
+            Once on-chain integrations are live, this area will show your open orders and trade history
+            for the selected market. Layout mirrors Jupiter Pro but runs on JupLite.
+          </div>
+        </div>
       </section>
+    </div>
     </div>
 
     <!-- VIEW: PERPS -->
@@ -1062,6 +1480,93 @@
       setInterval(refresh, 10000);
     }
 
+    /* ===== Wallet connect (Phantom-style) ===== */
+    const JUPLITE_RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
+    const LAMPORTS_PER_SOL = 1000000000;
+
+    const jupLiteWallet = {
+      connected: false,
+      publicKey: null,
+    };
+
+    function jupLiteShortAddress(addr) {
+      if (!addr || addr.length < 8) return addr || "";
+      return addr.slice(0, 4) + "…" + addr.slice(-4);
+    }
+
+    function jupLiteUpdateWalletUI() {
+      const btn = document.getElementById("wallet-connect-btn");
+      const statusEl = document.getElementById("pro-wallet-status");
+      const balanceEl = document.getElementById("pro-wallet-balance");
+
+      if (!btn) return;
+
+      if (jupLiteWallet.connected && jupLiteWallet.publicKey) {
+        btn.textContent = "Connected";
+        btn.classList.add("connect-btn-connected");
+
+        if (statusEl) {
+          statusEl.classList.remove("wallet-chip-disconnected");
+          statusEl.classList.add("wallet-chip-connected");
+          statusEl.innerHTML = '<span>✓</span><span>' + jupLiteShortAddress(jupLiteWallet.publicKey) + '</span>';
+        }
+      } else {
+        btn.textContent = "Connect";
+        btn.classList.remove("connect-btn-connected");
+
+        if (statusEl) {
+          statusEl.classList.add("wallet-chip-disconnected");
+          statusEl.classList.remove("wallet-chip-connected");
+          statusEl.innerHTML = "<span>Not connected</span>";
+        }
+        if (balanceEl) {
+          balanceEl.textContent = "—";
+        }
+      }
+    }
+
+    async function jupLiteLoadBalance(pubkey) {
+      try {
+        const resp = await fetch(JUPLITE_RPC_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "getBalance",
+            params: [pubkey],
+          }),
+        });
+        const json = await resp.json();
+        const lamports = json?.result?.value ?? 0;
+        const sol = lamports / LAMPORTS_PER_SOL;
+        const balanceEl = document.getElementById("pro-wallet-balance");
+        if (balanceEl) {
+          balanceEl.textContent = sol.toFixed(4) + " SOL";
+        }
+      } catch (e) {
+        console.warn("Balance load failed", e);
+      }
+    }
+
+    async function jupLiteConnectWallet() {
+      if (!window.solana) {
+        alert("No Solana wallet found. Please install Phantom or another Solana wallet extension.");
+        return;
+      }
+      try {
+        const resp = await window.solana.connect();
+        const pk = (resp?.publicKey || window.solana.publicKey);
+        if (!pk) throw new Error("No publicKey");
+        jupLiteWallet.connected = true;
+        jupLiteWallet.publicKey = pk.toString();
+        jupLiteUpdateWalletUI();
+        jupLiteLoadBalance(jupLiteWallet.publicKey);
+      } catch (e) {
+        console.warn("Wallet connect rejected or failed", e);
+      }
+    }
+
     /* ===== Nav tabs (Swap / Pro / Perps / ...) ===== */
     function initNavViews() {
       const links = document.querySelectorAll(".nav a[data-view]");
@@ -1122,6 +1627,27 @@
 
 window.addEventListener("load", function () {
       initLangSwitcher();
+
+      const btn = document.getElementById("wallet-connect-btn");
+      if (btn) {
+        btn.addEventListener("click", jupLiteConnectWallet);
+      }
+      jupLiteUpdateWalletUI();
+
+      if (window.solana && window.solana.isPhantom) {
+        window.solana
+          .connect({ onlyIfTrusted: true })
+          .then(({ publicKey }) => {
+            if (publicKey) {
+              jupLiteWallet.connected = true;
+              jupLiteWallet.publicKey = publicKey.toString();
+              jupLiteUpdateWalletUI();
+              jupLiteLoadBalance(jupLiteWallet.publicKey);
+            }
+          })
+          .catch(() => {});
+      }
+
       if (window.Jupiter) {
         initJupiter();
       } else {
