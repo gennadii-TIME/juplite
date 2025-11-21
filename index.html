@@ -50,7 +50,7 @@
       min-height: 100vh;
     }
 
-    /* ====== TOPBAR (как у Jupiter) ====== */
+    /* ====== TOPBAR ====== */
     .topbar {
       height: var(--topbar-height);
       display: flex;
@@ -98,7 +98,6 @@
       cursor: pointer;
     }
 
-    /* Glow logo like Jupiter */
     .logo-circle {
       position: relative;
       width: 32px;
@@ -367,6 +366,15 @@
       backdrop-filter: blur(18px);
     }
 
+    /* левая панель: контент сверху, кнопки внизу справа */
+    .panel-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 26px;
+      min-height: 520px;
+    }
+
     .hero-title {
       font-size: 24px;
       font-weight: 650;
@@ -447,6 +455,56 @@
       word-break: break-all;
     }
 
+    /* download buttons внизу панели */
+    .download-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-end;
+      margin-top: 0;
+      flex-wrap: nowrap;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border-radius: 14px;
+      text-decoration: none;
+      color: #020617;
+      font-size: 13px;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
+      transition: 0.18s;
+      border: none;
+      min-width: 200px;
+    }
+
+    .store-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .store-icon-wrap {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .store-text span {
+      font-size: 10px;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .store-text strong {
+      font-size: 14px;
+      line-height: 1.1;
+    }
+
     .swap-wrapper {
       display: flex;
       flex-direction: column;
@@ -479,7 +537,6 @@
       background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
     }
 
-    /* Секции для Pro / Perps / Lend / Portfolio / Predict */
     .section-title {
       font-size: 20px;
       font-weight: 600;
@@ -564,6 +621,20 @@
       .hero-text, .section-text {
         max-width: none;
       }
+
+      .panel-left {
+        min-height: 580px;
+      }
+
+      .download-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .store-btn {
+        width: 100%;
+        max-width: 280px;
+      }
     }
 
     .lang-switch {
@@ -602,78 +673,12 @@
         display: none;
       }
     }
-
-    /* === Download buttons (App Store / Google Play) === */
-    .download-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    .store-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 18px;
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9); /* синеватый градиент */
-      border-radius: 14px;
-      text-decoration: none;
-      color: #020617;
-      font-size: 13px;
-      box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
-      transition: 0.18s;
-      border: none;
-    }
-
-    .store-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
-    .store-icon-wrap {
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .store-text span {
-      font-size: 10px;
-      display: block;
-      opacity: 0.9;
-    }
-
-    .store-text strong {
-      font-size: 14px;
-      line-height: 1.1;
-    }
-
-    /* Левая панель вытягиваем и прижимаем блоки вниз */
-    .panel-left {
-      justify-content: space-between;
-    }
-
-    @media (max-width: 600px) {
-      .download-buttons {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .store-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
   </style>
 
-  <!-- Jupiter Plugin -->
   <script src="https://plugin.jup.ag/plugin-v1.js"></script>
 </head>
 
 <body>
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-inner">
       <div class="topbar-left">
@@ -724,7 +729,6 @@
     </div>
   </div>
 
-  <!-- TICKER LINE -->
   <div class="ticker-shell">
     <div class="ticker">
       <div class="ticker-item">
@@ -754,12 +758,9 @@
     </div>
   </div>
 
-  <!-- MAIN CONTENT (views) -->
   <div class="page-main">
-    <!-- VIEW: SWAP (основная) -->
     <div id="view-swap" class="view view-active">
       <div class="layout">
-        <!-- ЛЕВАЯ ПАНЕЛЬ: текст / маркетинг -->
         <section class="panel panel-left">
           <div>
             <div class="hero-title">
@@ -775,14 +776,15 @@
               <div class="hero-pill">✓ Built-in referral rewards</div>
             </div>
             <div class="hero-footer">
-            <button class="cta-btn" type="button" onclick="scrollToSwap()">
-              <span>↻</span>
-              <span>Start swapping</span>
-            </button>
-            <div>
-              <div class="ref-label">Referral account</div>
-              <div class="ref-code">
-                DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+              <button class="cta-btn" type="button" onclick="scrollToSwap()">
+                <span>↻</span>
+                <span>Start swapping</span>
+              </button>
+              <div>
+                <div class="ref-label">Referral account</div>
+                <div class="ref-code">
+                  DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+                </div>
               </div>
             </div>
           </div>
@@ -790,7 +792,6 @@
           <div class="download-buttons">
             <a href="#" class="store-btn appstore-btn">
               <div class="store-icon-wrap">
-                <!-- Apple SVG -->
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                   <path d="M18.77 19.7c-.73 1.08-1.45 2.15-2.61 2.17-1.14.02-1.5-.7-2.8-.7-1.3 0-1.7.68-2.78.72-1.11.04-1.96-1.17-2.69-2.24C6.1 17.94 5.2 15.4 6.3 13.34c.76-1.39 2.13-2.27 3.6-2.3 1.12-.02 2.17.76 2.8.76.62 0 1.96-.93 3.3-.79.56.02 2.13.23 3.14 1.73-.08.05-1.87 1.1-1.85 3.26.02 2.57 2.28 3.44 2.3 3.45-.02.06-.36 1.27-1.35 2.25zM14.5 3.6c.48-.58.84-1.39.75-2.2-.72.03-1.58.47-2.09 1.05-.46.54-.87 1.37-.76 2.17.81.06 1.63-.41 2.1-1.02z"
                         fill="#020617"></path>
@@ -804,7 +805,6 @@
 
             <a href="#" class="store-btn googleplay-btn">
               <div class="store-icon-wrap">
-                <!-- Google Play SVG -->
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                   <path d="M3.3 2.4c-.2.3-.3.7-.3 1.2v16.8c0 .5.1.9.3 1.2l9.7-9.6L3.3 2.4z"
                         fill="#020617"></path>
@@ -822,10 +822,8 @@
               </div>
             </a>
           </div>
-
         </section>
 
-        <!-- ПРАВАЯ ПАНЕЛЬ: Jupiter Plugin -->
         <section class="panel">
           <div class="swap-wrapper">
             <div class="swap-header">
@@ -838,7 +836,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PRO -->
     <div id="view-pro" class="view">
       <section class="panel">
         <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
@@ -852,7 +849,6 @@
       </section>
     </div>
 
-    <!-- VIEW: PERPS -->
     <div id="view-perps" class="view">
       <section class="panel">
         <div class="section-title">Perps dashboard</div>
@@ -864,7 +860,6 @@
       </section>
     </div>
 
-    <!-- VIEW: LEND -->
     <div id="view-lend" class="view">
       <section class="panel">
         <div class="section-title">Lend & Earn</div>
@@ -877,7 +872,6 @@
       </section>
     </div>
 
-    <!-- VIEW: PORTFOLIO -->
     <div id="view-portfolio" class="view">
       <section class="panel">
         <div class="section-title">Portfolio</div>
@@ -889,7 +883,6 @@
       </section>
     </div>
 
-    <!-- VIEW: PREDICT -->
     <div id="view-predict" class="view">
       <section class="panel">
         <div class="section-title">Predict <span class="nav-badge-new">new</span></div>
@@ -938,11 +931,9 @@
       if (!JUPLITE_I18N[lang]) lang = "en";
       const dict = JUPLITE_I18N[lang];
 
-      // html lang + direction
       document.documentElement.lang = lang;
       document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
 
-      // <title> + description
       if (dict.title) {
         document.title = dict.title;
       }
@@ -951,13 +942,11 @@
         metaDesc.setAttribute("content", dict.description);
       }
 
-      // logo subtitle
       const logoSub = document.querySelector(".logo-text-sub");
       if (logoSub && dict.logoSub) {
         logoSub.textContent = dict.logoSub;
       }
 
-      // nav items
       if (dict.nav) {
         document.querySelectorAll(".nav a[data-view]").forEach((a) => {
           const key = a.dataset.view;
@@ -972,7 +961,6 @@
         });
       }
 
-      // hero title + highlight
       const heroTitle = document.querySelector(".hero-title");
       const heroHighlight = document.querySelector(".hero-highlight");
       if (heroTitle && heroHighlight && dict.heroTitleMain && dict.heroHighlight) {
@@ -982,13 +970,11 @@
         heroHighlight.textContent = dict.heroHighlight;
       }
 
-      // hero text
       const heroText = document.querySelector(".hero-text");
       if (heroText && dict.heroText) {
         heroText.textContent = dict.heroText;
       }
 
-      // hero pills
       const pills = document.querySelectorAll(".hero-pill");
       if (pills.length && Array.isArray(dict.heroPills)) {
         pills.forEach((pill, i) => {
@@ -998,7 +984,6 @@
         });
       }
 
-      // CTA button text
       const ctaBtn = document.querySelector(".cta-btn");
       if (ctaBtn && dict.cta) {
         const spans = ctaBtn.querySelectorAll("span");
@@ -1007,7 +992,6 @@
         }
       }
 
-      // swap badge
       const swapBadge = document.querySelector(".swap-badge");
       if (swapBadge && dict.swapBadge) {
         swapBadge.textContent = dict.swapBadge;
@@ -1034,7 +1018,6 @@
       });
     }
 
-    /* ===== Jupiter Plugin init ===== */
     function initJupiter() {
       if (!window.Jupiter) return;
 
@@ -1043,8 +1026,8 @@
         integratedTargetId: "jup-container",
         defaultExplorer: "Solscan",
         formProps: {
-          defaultInputMint:  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
-          defaultOutputMint: "So11111111111111111111111111111111111111112", // SOL (wSOL)
+          defaultInputMint:  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          defaultOutputMint: "So11111111111111111111111111111111111111112",
           referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
           referralFee: 50
         },
@@ -1061,7 +1044,6 @@
       el.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
-    /* ===== Live ticker via Jupiter Price API V3 ===== */
     const JUPLITE_TICKER_TOKENS = {
       KMNO: {
         mint: "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
@@ -1155,7 +1137,6 @@
       setInterval(refresh, 10000);
     }
 
-    /* ===== Nav tabs (Swap / Pro / Perps / ...) ===== */
     function initNavViews() {
       const links = document.querySelectorAll(".nav a[data-view]");
       const views = document.querySelectorAll(".view");
@@ -1191,8 +1172,6 @@
       });
     }
 
-
-    // ===== Small visitor counter =====
     function initVisitorCounter() {
       const el = document.getElementById("visitor-count");
       if (!el) return;
