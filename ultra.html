@@ -51,7 +51,7 @@
       padding: 14px 14px 16px;
     }
 
-    /* LEFT: GRAPH */
+    /* GRAPH */
     .chart-header {
       display: flex;
       justify-content: space-between;
@@ -75,9 +75,6 @@
       border: 1px solid rgba(148,163,184,0.5);
       font-size: 11px;
       color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .chart-frame {
@@ -93,17 +90,10 @@
       border: none;
     }
 
-    /* RIGHT: SWAP */
+    /* SWAP */
     .swap-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      text-align: left;
       margin-bottom: 6px;
-      gap: 8px;
-    }
-
-    .swap-title-block {
-      flex: 1 1 auto;
     }
 
     .swap-title {
@@ -114,87 +104,6 @@
     .swap-sub {
       font-size: 11px;
       color: var(--text-muted);
-    }
-
-    /* WATCHLIST */
-    .watchlist-wrapper {
-      flex: 0 0 auto;
-      position: relative;
-    }
-
-    .watchlist-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(55,65,81,0.9);
-      background: rgba(15,23,42,0.9);
-      color: var(--text-muted);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .watchlist-current {
-      font-weight: 500;
-      color: #e5e7eb;
-    }
-
-    .watchlist-icon {
-      font-size: 11px;
-      opacity: 0.85;
-    }
-
-    .watchlist-panel {
-      position: absolute;
-      right: 0;
-      top: 30px;
-      min-width: 170px;
-      background: rgba(15,23,42,0.98);
-      border-radius: 14px;
-      border: 1px solid rgba(55,65,81,0.95);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
-      padding: 6px;
-      z-index: 20;
-    }
-
-    .watchlist-panel.hidden {
-      display: none;
-    }
-
-    .watchlist-title {
-      font-size: 11px;
-      color: var(--text-muted);
-      padding: 4px 6px 6px;
-    }
-
-    .watchlist-item {
-      width: 100%;
-      text-align: left;
-      padding: 6px 8px;
-      border-radius: 10px;
-      border: none;
-      background: transparent;
-      color: var(--text-main);
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .watchlist-item span.symbol {
-      font-weight: 500;
-    }
-
-    .watchlist-item span.pair {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .watchlist-item:hover {
-      background: rgba(30,64,175,0.5);
     }
 
     /* TABS */
@@ -356,9 +265,7 @@
           <div class="pair-title">SOL / USDC</div>
           <div class="pair-sub">Ultra route · Jupiter</div>
         </div>
-        <div class="pill">
-          Chart preview
-        </div>
+        <div class="pill">Chart preview</div>
       </div>
       <div class="chart-frame">
         <iframe
@@ -371,47 +278,8 @@
     <!-- RIGHT: Swap -->
     <section class="card">
       <div class="swap-header">
-        <div class="swap-title-block">
-          <div class="swap-title">Ultra Swap (JupLite Pro)</div>
-          <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
-        </div>
-
-        <!-- WATCHLIST -->
-        <div class="watchlist-wrapper">
-          <button id="watchlistToggle" class="watchlist-btn" type="button">
-            <span class="watchlist-label">Watchlist</span>
-            <span class="watchlist-current" id="watchlistCurrent">KMNO / USDC</span>
-            <span class="watchlist-icon">▼</span>
-          </button>
-          <div id="watchlistPanel" class="watchlist-panel hidden">
-            <div class="watchlist-title">Pinned pairs</div>
-            <!-- кнопки вотчлиста -->
-            <button class="watchlist-item"
-                    data-base="So11111111111111111111111111111111111111112"
-                    data-quote="EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v">
-              <span class="symbol">SOL</span>
-              <span class="pair">SOL / USDC</span>
-            </button>
-            <button class="watchlist-item"
-                    data-base="JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB"
-                    data-quote="EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v">
-              <span class="symbol">JUP</span>
-              <span class="pair">JUP / USDC</span>
-            </button>
-            <button class="watchlist-item"
-                    data-base="DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
-                    data-quote="So11111111111111111111111111111111111111112">
-              <span class="symbol">BONK</span>
-              <span class="pair">BONK / SOL</span>
-            </button>
-            <button class="watchlist-item"
-                    data-base="KMNoXhHqPfNDf9Ych8bVFSxuyo6edS5E2xeJhgo244f"
-                    data-quote="EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v">
-              <span class="symbol">KMNO</span>
-              <span class="pair">KMNO / USDC</span>
-            </button>
-          </div>
-        </div>
+        <div class="swap-title">Ultra Swap (JupLite Pro)</div>
+        <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
       </div>
 
       <!-- Tabs -->
@@ -513,51 +381,6 @@ tabs.forEach(tab => {
   });
 });
 
-/* WATCHLIST LOGIC */
-const watchlistToggle = document.getElementById("watchlistToggle");
-const watchlistPanel = document.getElementById("watchlistPanel");
-const watchlistCurrent = document.getElementById("watchlistCurrent");
-
-watchlistToggle.addEventListener("click", (e) => {
-  e.stopPropagation();
-  watchlistPanel.classList.toggle("hidden");
-});
-
-document.addEventListener("click", () => {
-  watchlistPanel.classList.add("hidden");
-});
-
-watchlistPanel.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
-function setPairFromWatchlist(baseMint, quoteMint, labelText) {
-  const fromSel = document.getElementById("fromToken");
-  const toSel = document.getElementById("toToken");
-
-  // From = quote (что продаём), To = base (что покупаем)
-  if (fromSel && toSel) {
-    fromSel.value = quoteMint;
-    toSel.value = baseMint;
-  }
-
-  if (watchlistCurrent && labelText) {
-    watchlistCurrent.textContent = labelText;
-  }
-}
-
-document.querySelectorAll(".watchlist-item").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const base = btn.getAttribute("data-base");
-    const quote = btn.getAttribute("data-quote");
-    const symbol = btn.querySelector(".symbol")?.textContent || "";
-    const pair = btn.querySelector(".pair")?.textContent || "";
-
-    setPairFromWatchlist(base, quote, pair || symbol);
-    watchlistPanel.classList.add("hidden");
-  });
-});
-
 /* Load tokens */
 async function loadTokens() {
   const res = await fetch("https://cache.jup.ag/tokens");
@@ -578,9 +401,8 @@ async function loadTokens() {
     toSel.appendChild(o2);
   });
 
-  // default: KMNO / USDC как в вотчлисте
   fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v"; // USDC
-  toSel.value = "KMNoXhHqPfNDf9Ych8bVFSxuyo6edS5E2xeJhgo244f"; // KMNO
+  toSel.value = "So11111111111111111111111111111111111111112"; // SOL
 }
 loadTokens();
 
