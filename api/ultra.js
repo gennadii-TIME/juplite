@@ -3,7 +3,7 @@
 
 // Хост: на free-тарифе используем lite-api.
 // Если подключишь Pro (api.jup.ag) — достаточно поменять BASE_URL.
-const ULTRA_BASE_URL = 'https://lite-api.jup.ag/ultra/v1';
+const ULTRA_BASE_URL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1";
 
 /**
  * Получить Ultra-ордер (quote + транзакция).
