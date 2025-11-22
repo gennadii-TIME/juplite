@@ -243,45 +243,6 @@
       overflow-y: auto;
     }
 
-    .watchlist {
-      margin-top: 12px;
-      border-top: 1px solid rgba(75,85,99,0.6);
-      padding-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-    }
-
-    .watch-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .watch-symbol {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 500;
-      color: var(--text-main);
-    }
-
-    .watch-symbol span {
-      opacity: 0.9;
-    }
-
-    .watch-price {
-      font-variant-numeric: tabular-nums;
-      color: var(--text-main);
-    }
-
-    .watch-change {
-      font-size: 11px;
-      color: var(--accent-soft);
-    }
-
     @media (max-width: 900px) {
       .ultra-layout {
         grid-template-columns: minmax(0, 1fr);
@@ -366,18 +327,12 @@
       </div>
 
       <div class="log" id="log"></div>
-
-      <!-- Watchlist -->
-      <div class="watchlist" id="watchlist"></div>
     </section>
 
   </div>
 </div>
 
-<script type="module">
-import { getPrices } from "./api/price.js";
-import { searchTokens, getTokensByTag } from "./api/tokens.js";
-
+<script>
 /* Ultra endpoints */
 const ultraQuoteURL = "https://ultra-api.jup.ag/quote";
 const ultraOrderURL = "https://ultra-api.jup.ag/order";
@@ -426,68 +381,28 @@ tabs.forEach(tab => {
   });
 });
 
-/* Load tokens via Jupiter Tokens API */
+/* Load tokens */
 async function loadTokens() {
+  const res = await fetch("https://cache.jup.ag/tokens");
+  tokenList = await res.json();
+
   const fromSel = document.getElementById("fromToken");
   const toSel = document.getElementById("toToken");
 
-  try {
-    const raw = await getTokensByTag("verified");
-    const list = Array.isArray(raw) ? raw : (raw.tokens ?? []);
-    if (!Array.isArray(list) || !list.length) {
-      throw new Error("Empty tokens list from Tokens API");
-    }
+  tokenList.forEach(t => {
+    const o1 = document.createElement("option");
+    o1.value = t.address;
+    o1.textContent = t.symbol;
+    fromSel.appendChild(o1);
 
-    tokenList = list;
+    const o2 = document.createElement("option");
+    o2.value = t.address;
+    o2.textContent = t.symbol;
+    toSel.appendChild(o2);
+  });
 
-    fromSel.innerHTML = "";
-    toSel.innerHTML = "";
-
-    tokenList.forEach(t => {
-      const o1 = document.createElement("option");
-      o1.value = t.address;
-      o1.textContent = t.symbol;
-      fromSel.appendChild(o1);
-
-      const o2 = document.createElement("option");
-      o2.value = t.address;
-      o2.textContent = t.symbol;
-      toSel.appendChild(o2);
-    });
-
-    // Defaults: USDC -> SOL
-    const USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
-    const SOL  = "So11111111111111111111111111111111111111112";
-    if ([...fromSel.options].some(o => o.value === USDC)) {
-      fromSel.value = USDC;
-    }
-    if ([...toSel.options].some(o => o.value === SOL)) {
-      toSel.value = SOL;
-    }
-  } catch (e) {
-    console.error("loadTokens via Tokens API failed, fallback to cache.jup.ag:", e);
-    try {
-      const res = await fetch("https://cache.jup.ag/tokens");
-      tokenList = await res.json();
-
-      fromSel.innerHTML = "";
-      toSel.innerHTML = "";
-
-      tokenList.forEach(t => {
-        const o1 = document.createElement("option");
-        o1.value = t.address;
-        o1.textContent = t.symbol;
-        fromSel.appendChild(o1);
-
-        const o2 = document.createElement("option");
-        o2.value = t.address;
-        o2.textContent = t.symbol;
-        toSel.appendChild(o2);
-      });
-    } catch (e2) {
-      console.error("Fallback token load failed:", e2);
-    }
-  }
+  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v"; // USDC
+  toSel.value = "So11111111111111111111111111111111111111112"; // SOL
 }
 loadTokens();
 
@@ -599,98 +514,6 @@ document.getElementById("swapBtn").onclick = async () => {
     log("Swap error: " + e.message);
   }
 };
-
-
-/* Simple watchlist powered by Tokens + Price API */
-const WATCH_SYMBOLS = ["SOL", "JUP", "USDC", "USDT"];
-let watchTokens = [];
-
-async function initWatchlist() {
-  const container = document.getElementById("watchlist");
-  if (!container) return;
-
-  try {
-    const results = await Promise.all(
-      WATCH_SYMBOLS.map(sym => searchTokens(sym).catch(() => []))
-    );
-
-    watchTokens = WATCH_SYMBOLS.map((sym, idx) => {
-      const arr = Array.isArray(results[idx]) ? results[idx] : [];
-      const exact = arr.find(t => t.symbol === sym && (!t.chainId || t.chainId === 101));
-      const token = exact || arr[0];
-      if (!token) return null;
-      return {
-        symbol: token.symbol,
-        name: token.name,
-        address: token.address,
-        logoURI: token.logoURI || null,
-      };
-    }).filter(Boolean);
-
-    renderWatchlist(container, {}); // initial skeleton
-    await refreshWatchlistPrices(container);
-    setInterval(() => refreshWatchlistPrices(container), 30000);
-  } catch (e) {
-    console.error("initWatchlist error:", e);
-  }
-}
-
-function renderWatchlist(container, prices) {
-  container.innerHTML = "";
-  if (!watchTokens.length) {
-    const empty = document.createElement("div");
-    empty.textContent = "Watchlist loading…";
-    empty.style.fontSize = "11px";
-    empty.style.color = "var(--text-muted)";
-    container.appendChild(empty);
-    return;
-  }
-
-  watchTokens.forEach(t => {
-    const row = document.createElement("div");
-    row.className = "watch-row";
-    row.dataset.mint = t.address;
-
-    const left = document.createElement("div");
-    left.className = "watch-symbol";
-
-    if (t.logoURI) {
-      const img = document.createElement("img");
-      img.src = t.logoURI;
-      img.alt = t.symbol;
-      img.width = 16;
-      img.height = 16;
-      img.style.borderRadius = "999px";
-      left.appendChild(img);
-    }
-
-    const label = document.createElement("span");
-    label.textContent = t.symbol;
-    left.appendChild(label);
-
-    const right = document.createElement("div");
-    right.className = "watch-price";
-    const price = prices[t.address]?.price ?? null;
-    right.textContent = price ? "$" + price.toFixed(4) : "—";
-
-    row.appendChild(left);
-    row.appendChild(right);
-    container.appendChild(row);
-  });
-}
-
-async function refreshWatchlistPrices(container) {
-  if (!watchTokens.length) return;
-  const mints = watchTokens.map(t => t.address);
-  try {
-    const priceMap = await getPrices(mints);
-    renderWatchlist(container, priceMap);
-  } catch (e) {
-    console.error("refreshWatchlistPrices error:", e);
-  }
-}
-
-initWatchlist();
 
 function log(t) {
   document.getElementById("log").textContent = t;

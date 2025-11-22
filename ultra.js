@@ -123,8 +123,8 @@ export async function ultraSearchToken(query) {
 export async function ultraGetHoldings(owner) {
   if (!owner) throw new Error('ultraGetHoldings: owner обязателен');
 
-  const params = new URLSearchParams({ owner });
-  const url = `${ULTRA_BASE_URL}/holdings?${params.toString()}`;
+  // Актуальный формат Ultra API: /holdings/{owner}
+  const url = `${ULTRA_BASE_URL}/holdings/${owner}`;
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -133,5 +133,26 @@ export async function ultraGetHoldings(owner) {
   }
 
   return res.json();
+}
+
+/**
+ * Пример удобного вызова нормального ордера на 0.1 SOL -> USDC.
+ * Можно вызывать из консоли браузера на странице /pro:
+ *
+ *   import { exampleUltraOrder } from '/api/ultra.js';
+ *   const order = await exampleUltraOrder('ВАШ_АДРЕС_КОШЕЛЬКА');
+ *   console.log(order);
+ */
+export async function exampleUltraOrder(takerPubkey) {
+  if (!takerPubkey) {
+    throw new Error('exampleUltraOrder: нужно передать takerPubkey (публичный ключ кошелька)');
+  }
+
+  return getUltraOrder({
+    inputMint: 'So11111111111111111111111111111111111111112', // SOL
+    outputMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+    amount: '100000000', // 0.1 SOL (для Ultra этого достаточно)
+    taker: takerPubkey,
+  });
 }
 
