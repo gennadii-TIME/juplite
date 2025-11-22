@@ -2,7 +2,7 @@
 // Обёртка над Jupiter Tokens API V2 (search / tag / category / recent)
 // Docs: https://dev.jup.ag/docs/tokens/v2
 
-const TOKENS_BASE_URL = 'https://lite-api.jup.ag/tokens/v2';
+const TOKENS_BASE_URL = "https://juplite-worker.videomessagetofuture.workers.dev/tokens/v2";
 
 /**
  * Поиск токена по имени, символу или mint.
