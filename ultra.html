@@ -251,54 +251,7 @@
         height: 260px;
       }
     }
-  
-    .history-list {
-      font-size: 12px;
-      color: #e5e7eb;
-      max-height: 180px;
-      overflow-y: auto;
-      border-radius: 10px;
-      border: 1px solid rgba(148,163,184,0.25);
-      padding: 10px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
-    }
-    .history-item {
-      display: flex;
-      flex-direction: column;
-      padding: 6px 0;
-      border-bottom: 1px dashed rgba(148,163,184,0.25);
-    }
-    .history-item:last-child {
-      border-bottom: none;
-    }
-    .history-main {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .history-pair {
-      font-weight: 600;
-    }
-    .history-amounts {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-    .history-meta {
-      font-size: 11px;
-      color: #9ca3af;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .history-link a {
-      color: #38bdf8;
-      text-decoration: none;
-    }
-    .history-link a:hover {
-      text-decoration: underline;
-    }
-
-</style>
+  </style>
 </head>
 
 <body>
@@ -374,14 +327,6 @@
       </div>
 
       <div class="log" id="log"></div>
-      <div class="card" style="margin-top: 16px;">
-        <div class="card-header">
-          <div class="card-title">Recent swaps (JupLite Ultra)</div>
-          <div class="card-subtitle">Local history — only swaps made via this page on this device</div>
-        </div>
-        <div class="history-list" id="swap-history"></div>
-      </div>
-
     </section>
 
   </div>
@@ -389,9 +334,9 @@
 
 <script>
 /* Ultra endpoints */
-const ultraQuoteURL = "https://ultra-api.jup.ag/quote";
-const ultraOrderURL = "https://ultra-api.jup.ag/order";
-const ultraExecuteURL = "https://ultra-api.jup.ag/execute";
+const ultraQuoteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/quote";
+const ultraOrderURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/order";
+const ultraExecuteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/execute";
 
 /* Referral 0.50% */
 const REFERRAL = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b";
@@ -561,15 +506,6 @@ document.getElementById("swapBtn").onclick = async () => {
 
     if (out.txid) {
       log("SUCCESS:\nhttps://solscan.io/tx/" + out.txid);
-      try {
-        addSwapToHistory({
-          inAmount: lastQuote.inAmount,
-          outAmount: lastQuote.outAmount,
-          inputMint: lastQuote.inputMint || document.getElementById("fromToken").value,
-          outputMint: lastQuote.outputMint || document.getElementById("toToken").value,
-          signature: out.txid
-        });
-      } catch (_) {}
     } else {
       log("Exec error:\n" + JSON.stringify(out, null, 2));
     }
@@ -578,75 +514,6 @@ document.getElementById("swapBtn").onclick = async () => {
     log("Swap error: " + e.message);
   }
 };
-
-
-const HISTORY_KEY = "juplite-ultra-swap-history-v1";
-
-function loadHistory() {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveHistory(list) {
-  try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(-20)));
-  } catch {}
-}
-
-function addSwapToHistory(entry) {
-  const list = loadHistory();
-  const withTs = { ...entry, ts: Date.now() };
-  list.push(withTs);
-  saveHistory(list);
-  renderHistory(list);
-}
-
-function renderHistory(list) {
-  const box = document.getElementById("swap-history");
-  if (!box) return;
-  if (!list.length) {
-    box.textContent = "No swaps yet. Complete a swap to see them here.";
-    return;
-  }
-  const rows = list
-    .slice()
-    .reverse()
-    .map(item => {
-      const date = new Date(item.ts);
-      const timeStr = date.toLocaleString();
-      const inStr = Number(item.inAmount || 0) / 1e9;
-      const outStr = Number(item.outAmount || 0) / 1e6;
-      const inFmt = inStr ? inStr.toFixed(4) : "0";
-      const outFmt = outStr ? outStr.toFixed(4) : "0";
-      const sig = item.signature || "";
-      const pair = (item.inputMint || "IN").slice(0,4) + "…/" + (item.outputMint || "OUT").slice(0,4) + "…";
-      const link = sig ? `https://solscan.io/tx/${sig}` : "";
-      return [
-        '<div class="history-item">',
-          '<div class="history-main">',
-            `<div class="history-pair">${pair}</div>`,
-            `<div class="history-amounts">${inFmt} → ${outFmt}</div>`,
-          '</div>',
-          '<div class="history-meta">',
-            `<div class="history-time">${timeStr}</div>`,
-            link ? `<div class="history-link"><a href="${link}" target="_blank" rel="noopener noreferrer">View</a></div>` : '<div></div>',
-          '</div>',
-        '</div>'
-      ].join("");
-    })
-    .join("");
-  box.innerHTML = rows;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderHistory(loadHistory());
-});
 
 function log(t) {
   document.getElementById("log").textContent = t;
