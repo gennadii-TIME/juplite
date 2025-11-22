@@ -28,16 +28,12 @@
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       color: var(--text-main);
-      /* было: background: transparent; */
-      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-      min-height: 100vh;
+      background: transparent;
     }
 
     .ultra-shell {
       width: 100%;
-      max-width: 1180px;
-      padding: 18px;
-      margin: 24px auto 32px;
+      padding: 12px;
     }
 
     .ultra-layout {
@@ -254,10 +250,6 @@
       .chart-frame {
         height: 260px;
       }
-      .ultra-shell {
-        padding: 12px;
-        margin: 12px auto 20px;
-      }
     }
   </style>
 </head>
@@ -323,8 +315,8 @@
         </div>
 
         <div class="fee-note">
-          10x better trading
-        </div>
+  10x better trading
+</div>
       </div>
 
       <!-- Coming Soon Tabs -->
@@ -409,9 +401,8 @@ async function loadTokens() {
     toSel.appendChild(o2);
   });
 
-  // фикс: правильный mint USDC
-  fromSel.value = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"; // USDC
-  toSel.value  = "So11111111111111111111111111111111111111112";    // SOL
+  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v"; // USDC
+  toSel.value = "So11111111111111111111111111111111111111112"; // SOL
 }
 loadTokens();
 
