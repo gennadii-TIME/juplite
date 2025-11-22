@@ -1,1 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JupLite Ultra — Dev Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+        content="JupLite Ultra — experimental swap interface on top of Jupiter Ultra API (quote only, no execution)." />
+  <link rel="icon" type="image/png" href="/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    /* Небольшие доработки именно для ultra.html */
+    body {
+      min-height: 100vh;
+    }
+    .ultra-wrapper {
+      max-width: 960px;
+      margin: 80px auto 40px;
+      padding: 24px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .ultra-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .ultra-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .ultra-pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      background: rgba(15,23,42,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: .9;
+    }
+    .ultra-pill span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34,197,94,0.9);
+    }
+    .ultra-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .ultra-wrapper {
+        margin: 72px 16px 32px;
+        padding: 18px;
+      }
+      .ultra-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+    .ultra-card {
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 16px 16px 14px;
+    }
+    .ultra-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .ultra-label {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .ultra-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .ultra-input {
+      flex: 1;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.95);
+      color: #e5e7eb;
+      padding: 9px 11px;
+      font-size: 14px;
+      outline: none;
+    }
+    .ultra-input::placeholder {
+      color: rgba(148,163,184,0.75);
+    }
+    .ultra-select {
+      width: 120px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.98);
+      color: #e5e7eb;
+      padding: 8px 10px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+    .ultra-button {
+      width: 100%;
+      margin-top: 8px;
+      border-radius: 999px;
+      border: none;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background-image: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      box-shadow: 0 14px 35px rgba(8, 47, 73, 0.9);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+    }
+    .ultra-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 10px 26px rgba(8, 47, 73, 0.9);
+    }
+    .ultra-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+    .ultra-meta strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+    .ultra-status {
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: #cbd5f5;
+    }
+    .ultra-status.error {
+      color: #fca5a5;
+    }
+    .ultra-kv {
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .ultra-kv span.key {
+      color: #9ca3af;
+      margin-right: 4px;
+    }
+    .ultra-kv span.value {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+    .ultra-json {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 10px 12px;
+      max-height: 260px;
+      overflow: auto;
+      white-space: pre;
+    }
+    .ultra-tag-badge {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: #9ca3af;
+      gap: 4px;
+      align-items: center;
+    }
+    .ultra-tag-badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+    .ultra-links {
+      margin-top: 16px;
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ultra-links a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    .ultra-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Можно переиспользовать твой топбар/хедер, сейчас делаю локальный для независимой страницы -->
+  <header class="topbar" style="position: fixed; top: 0; left: 0; right: 0; z-index: 40;">
+    <div class="topbar-inner" style="max-width: 1180px; margin: 0 auto; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="./index.html" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
+          <img src="./icon-192.png" alt="JupLite" style="width:26px; height:26px; border-radius:9px;">
+          <span style="font-weight:600; font-size:15px;">JupLite</span>
+        </a>
+        <span style="font-size:11px; opacity:.7;">Ultra · Dev Range</span>
+      </div>
+      <nav style="display:flex; gap:10px; font-size:12px; align-items:center;">
+        <a href="./index.html" style="opacity:.8; text-decoration:none; color:#e5e7eb;">Swap</a>
+        <span style="opacity:.35;">•</span>
+        <span style="opacity:1; font-weight:500;">Ultra</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="ultra-wrapper">
+    <div class="ultra-header">
+      <div>
+        <div class="ultra-title">Ultra Swap (dev)</div>
+        <div style="font-size:12px; color:#9ca3af; margin-top:2px;">
+          Experimental quote UI on top of Jupiter Ultra API. No execution, quotes only.
+        </div>
+      </div>
+      <div class="ultra-pill">
+        <span class="dot"></span>
+        <span>Connected to Jupiter Ultra</span>
+      </div>
+    </div>
+
+    <div class="ultra-grid">
+      <!-- Левая карточка: ввод параметров свопа -->
+      <section class="ultra-card">
+        <div class="ultra-card-header">
+          <span>Swap parameters</span>
+          <span class="ultra-tag-badge">
+            <span class="dot"></span>
+            Quote-only
+          </span>
+        </div>
+
+        <div>
+          <div class="ultra-label">From</div>
+          <div class="ultra-row">
+            <input id="ultra-input-amount" class="ultra-input" type="number" min="0" step="any"
+                   placeholder="0.00" />
+            <select id="ultra-input-token" class="ultra-select">
+              <option value="SOL" selected>SOL</option>
+              <option value="USDC">USDC</option>
+              <option value="JUP">JUP</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin:6px 0 8px; font-size:11px; opacity:.75;">
+          ↓
+        </div>
+
+        <div>
+          <div class="ultra-label">To</div>
+          <div class="ultra-row">
+            <div class="ultra-input" style="opacity:.7; cursor:not-allowed;" id="ultra-output-placeholder">
+              Auto from Ultra quote
+            </div>
+            <select id="ultra-output-token" class="ultra-select">
+              <option value="USDC" selected>USDC</option>
+              <option value="SOL">SOL</option>
+              <option value="JUP">JUP</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="ultra-get-quote" class="ultra-button">
+          Get Ultra quote
+        </button>
+
+        <div class="ultra-meta">
+          <div>• This page <strong>does not execute swaps</strong> — only reads quotes from Ultra API.</div>
+          <div>• Later можно будет привязать к реальному кошельку и кнопке Swap внутри JupLite.</div>
+        </div>
+      </section>
+
+      <!-- Правая карточка: результаты -->
+      <section class="ultra-card">
+        <div class="ultra-card-header">
+          <span>Quote details</span>
+          <span style="font-size:11px; opacity:.75;" id="ultra-quote-timestamp">waiting…</span>
+        </div>
+
+        <div id="ultra-status" class="ultra-status">
+          Waiting for parameters…
+        </div>
+
+        <div class="ultra-kv">
+          <span class="key">In amount:</span>
+          <span class="value" id="ultra-in-amount-ui">—</span>
+        </div>
+        <div class="ultra-kv">
+          <span class="key">Out amount:</span>
+          <span class="value" id="ultra-out-amount-ui">—</span>
+        </div>
+        <div class="ultra-kv">
+          <span class="key">Implied price:</span>
+          <span class="value" id="ultra-price-ui">—</span>
+        </div>
+
+        <div class="ultra-kv" style="margin-top:6px;">
+          <span class="key">Raw Ultra response:</span>
+        </div>
+        <pre id="ultra-raw-json" class="ultra-json">// Ultra quote JSON will appear here</pre>
+
+        <div class="ultra-links">
+          <span>Built on top of <a href="https://dev.jup.ag/api-reference" target="_blank" rel="noreferrer">Jupiter Ultra API</a>.</span>
+          <a href="./index.html">← Back to main JupLite Swap</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Модульный скрипт: используем твой ultra.js / price.js / tokens.js -->
+  <script type="module">
+    import { getUltraOrder } from './api/ultra.js';
+    import { getPrices } from './api/price.js';
+
+    // Базовая конфигурация токенов (можем расширять)
+    const TOKENS = {
+      SOL: {
+        symbol: 'SOL',
+        mint: 'So11111111111111111111111111111111111111112',
+        decimals: 9,
+      },
+      USDC: {
+        symbol: 'USDC',
+        mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        decimals: 6,
+      },
+      JUP: {
+        symbol: 'JUP',
+        mint: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
+        decimals: 6,
+      },
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    const inputAmountEl = $('ultra-input-amount');
+    const inputTokenEl  = $('ultra-input-token');
+    const outputTokenEl = $('ultra-output-token');
+    const getQuoteBtn   = $('ultra-get-quote');
+
+    const statusEl      = $('ultra-status');
+    const inAmountUiEl  = $('ultra-in-amount-ui');
+    const outAmountUiEl = $('ultra-out-amount-ui');
+    const priceUiEl     = $('ultra-price-ui');
+    const rawJsonEl     = $('ultra-raw-json');
+    const tsEl          = $('ultra-quote-timestamp');
+
+    function formatTime(d = new Date()) {
+      const hh = d.getHours().toString().padStart(2, '0');
+      const mm = d.getMinutes().toString().padStart(2, '0');
+      const ss = d.getSeconds().toString().padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    function resetOutput(message = 'Waiting for parameters…') {
+      statusEl.textContent = message;
+      statusEl.classList.remove('error');
+      inAmountUiEl.textContent  = '—';
+      outAmountUiEl.textContent = '—';
+      priceUiEl.textContent     = '—';
+      rawJsonEl.textContent     = '// Ultra quote JSON will appear here';
+      tsEl.textContent          = 'waiting…';
+    }
+
+    resetOutput();
+
+    async function handleGetQuote() {
+      const inputSymbol  = inputTokenEl.value;
+      const outputSymbol = outputTokenEl.value;
+
+      if (inputSymbol === outputSymbol) {
+        statusEl.textContent = 'Choose different tokens for input and output.';
+        statusEl.classList.add('error');
+        return;
+      }
+
+      const inputCfg  = TOKENS[inputSymbol];
+      const outputCfg = TOKENS[outputSymbol];
+
+      let uiAmount = parseFloat(inputAmountEl.value);
+      if (!isFinite(uiAmount) || uiAmount <= 0) {
+        statusEl.textContent = 'Enter a valid positive input amount.';
+        statusEl.classList.add('error');
+        return;
+      }
+
+      // Переводим в минимальные единицы
+      const amount = Math.round(uiAmount * 10 ** inputCfg.decimals);
+
+      statusEl.textContent = 'Requesting Ultra quote…';
+      statusEl.classList.remove('error');
+      rawJsonEl.textContent = '// Loading…';
+
+      try {
+        const order = await getUltraOrder({
+          inputMint:  inputCfg.mint,
+          outputMint: outputCfg.mint,
+          amount,
+        });
+
+        console.log('Ultra order (dev ultra.html):', order);
+
+        // Пытаемся прочитать inAmount / outAmount
+        const inAmountRaw  = Number(order.inAmount ?? amount);
+        const outAmountRaw = Number(order.outAmount ?? 0);
+
+        const inAmountUi  = inAmountRaw  / 10 ** inputCfg.decimals;
+        const outAmountUi = outAmountRaw / 10 ** outputCfg.decimals;
+
+        inAmountUiEl.textContent  = `${inAmountUi.toFixed(6)} ${inputCfg.symbol}`;
+        outAmountUiEl.textContent = outAmountUi > 0
+          ? `${outAmountUi.toFixed(6)} ${outputCfg.symbol}`
+          : '—';
+
+        // Имплицитный курс (без гарантий точности, чисто для ориентировки)
+        if (outAmountUi > 0) {
+          const implied = outAmountUi / inAmountUi;
+          priceUiEl.textContent = `1 ${inputCfg.symbol} ≈ ${implied.toFixed(6)} ${outputCfg.symbol}`;
+        } else {
+          priceUiEl.textContent = '—';
+        }
+
+        statusEl.textContent = 'Ultra quote loaded (no execution).';
+        statusEl.classList.remove('error');
+        tsEl.textContent = `Updated at ${formatTime()}`;
+
+        rawJsonEl.textContent = JSON.stringify(order, null, 2);
+      } catch (err) {
+        console.error('Ultra quote error:', err);
+        statusEl.textContent = 'Error fetching Ultra quote. See console for details.';
+        statusEl.classList.add('error');
+        tsEl.textContent = `Last error at ${formatTime()}`;
+        rawJsonEl.textContent = (err && err.message)
+          ? `Error: ${err.message}`
+          : String(err);
+      }
+    }
+
+    getQuoteBtn.addEventListener('click', handleGetQuote);
+
+    // Лёгкий auto-fill: при смене токенов сбрасываем вывод
+    inputTokenEl.addEventListener('change', () => resetOutput('Waiting for parameters…'));
+    outputTokenEl.addEventListener('change', () => resetOutput('Waiting for parameters…'));
+
+    // Дополнительно: можно подтянуть текущую цену, чтобы подсказать пример
+    window.addEventListener('load', async () => {
+      try {
+        const priceData = await getPrices([TOKENS.SOL.mint]);
+        const solPrice = priceData[TOKENS.SOL.mint]?.price;
+        if (typeof solPrice === 'number' && !isNaN(solPrice)) {
+          if (!inputAmountEl.value) {
+            inputAmountEl.placeholder = `e.g. 0.1 (${(0.1 * solPrice).toFixed(2)} USD)`;
+          }
+        }
+      } catch {
+        // тихо игнорим, это просто улучшайзер
+      }
+    });
+  </script>
+</body>
+</html>
 
