@@ -414,14 +414,8 @@ document.getElementById("connectBtn").onclick = async () => {
 
     await provider.connect();
     wallet = provider;
-    log("Connected: " + wallet.publicKey.toString());
-  } catch (e) {
-    log("Wallet error: " + e.message);
-  }
-};
-
-/* Quote */
-let lastQuote = null;
+    log("Connected: " + wallet.publicKey.toString())/* Quote (Ultra Get Order) */
+let lastOrder = null;
 
 document.getElementById("quoteBtn").onclick = async () => {
   if (!wallet) return alert("Connect wallet first");
@@ -435,74 +429,105 @@ document.getElementById("quoteBtn").onclick = async () => {
   const decimalsIn = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
   const raw = Math.round(amount * 10 ** decimalsIn);
 
-  const url =
-    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
-    `&amount=${raw}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
-    `&platformFeeAccount=${REFERRAL}`;
+  const params = new URLSearchParams({
+    inputMint,
+    outputMint,
+    amount: String(raw),
+    taker: wallet.publicKey.toString(),
+    referralAccount: REFERRAL,
+    referralFee: String(REFERRAL_BPS),
+  });
 
   try {
-    const res = await fetch(url);
-    lastQuote = await res.json();
+    const res = await fetch(`${ULTRA_BASE_URL}/order?${params.toString()}`);
+    lastOrder = await res.json();
 
-    if (!lastQuote.route) {
-      log("No route");
+    if (!lastOrder.transaction) {
+      log("No transaction in Ultra order:\n" + JSON.stringify(lastOrder, null, 2));
       return;
     }
 
-    log("Route:\n" + JSON.stringify(lastQuote.route, null, 2));
-    document.getElementById("swapBtn").disabled = false;
+    const inAmount = Number(lastOrder.inAmount || raw);
+    const outAmount = Number(lastOrder.outAmount || 0);
 
+    log(
+      "Ultra order quote:\n" +
+      JSON.stringify(
+        {
+          inAmount,
+          outAmount,
+          slippageBps: lastOrder.slippageBps,
+          swapType: lastOrder.swapType,
+        },
+        null,
+        2
+      )
+    );
+
+    document.getElementById("swapBtn").disabled = false;
   } catch (e) {
     log("Quote error: " + e.message);
   }
 };
+   document.getElementById("swapBtn").disabled = false/* Helpers for base64 <-> bytes */
+function base64ToUint8Array(str) {
+  const binary = atob(str);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+function uint8ArrayToBase64(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
 
 /* Swap */
 document.getElementById("swapBtn").onclick = async () => {
-  if (!lastQuote) return;
-
-  log("Creating Ultra order…");
-
-  const payload = {
-    route: lastQuote.route,
-    userPublicKey: wallet.publicKey.toString(),
-
-    platformFeeBps: REFERRAL_BPS,
-    platformFeeAccount: REFERRAL,
-
-    extraFee: {
-      feeBps: EXTRA_FEE_BPS,
-      feeAccount: EXTRA_FEE_WALLET
-    }
-  };
+  if (!wallet) return alert("Connect wallet first");
+  if (!lastOrder || !lastOrder.transaction || !lastOrder.requestId) {
+    return alert("Get quote first");
+  }
 
   try {
-    const res = await fetch(ultraOrderURL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(payload)
-    });
+    log("Signing Ultra transaction…");
 
-    const order = await res.json();
+    const txBytes = base64ToUint8Array(lastOrder.transaction);
+    const tx = solanaWeb3.VersionedTransaction.deserialize(txBytes);
 
-    if (!order.transaction) {
-      log("Order error:\n" + JSON.stringify(order, null, 2));
-      return;
-    }
-
-    log("Order OK. Signing…");
-
-    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
     const signed = await wallet.signTransaction(tx);
-    const raw = signed.serialize().toString("base64");
+    const signedBase64 = uint8ArrayToBase64(signed.serialize());
 
-    const exec = await fetch(ultraExecuteURL, {
+    log("Sending to Jupiter Execute…");
+
+    const exec = await fetch(`${ULTRA_BASE_URL}/execute`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ signedTx: raw })
+      body: JSON.stringify({
+        signedTransaction: signedBase64,
+        requestId: lastOrder.requestId,
+      }),
     });
 
     const out = await exec.json();
+
+    if (out.signature) {
+      log("SUCCESS:\nhttps://solscan.io/tx/" + out.signature);
+    } else {
+      log("Exec error:\n" + JSON.stringify(out, null, 2));
+    }
+
+  } catch (e) {
+    log("Swap error: " + e.message);
+  }
+};
+ exec.json();
 
     if (out.txid) {
       log("SUCCESS:\nhttps://solscan.io/tx/" + out.txid);
