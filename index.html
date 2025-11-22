@@ -1216,47 +1216,46 @@
       initNavViews();
       initVisitorCounter();
     });
-  </script>  <script>
-    const JUPLITE_I18N = { /* как было */ };
-    // ...весь твой текущий код initLangSwitcher, initJupiter и т.д.
   </script>
 
-  <!-- 🔽 НОВЫЙ СКРИПТ (только логика, без изменений дизайна) -->
+  <!-- 🔽 НОВЫЙ МОДУЛЬНЫЙ СКРИПТ: логика Ultra + Price + Tokens -->
   <script type="module">
     import { getPrices } from './api/price.js';
     import { searchTokens } from './api/tokens.js';
     import { getUltraOrder } from './api/ultra.js';
 
-    // Пробный тест, который можно запускать из консоли
+    // Тестовый запуск из консоли браузера:
+    // jupLiteTestApis()
     window.jupLiteTestApis = async function () {
       try {
         console.log('▶ JupLite API test started');
 
-        // 1) Проверяем Price API — SOL и JUP
+        // 1) Price API (SOL и JUP)
         const prices = await getPrices([
-          'So11111111111111111111111111111111111111112', // SOL
-          'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', // JUP
+          'So11111111111111111111111111111111111111112',   // SOL
+          'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'    // JUP
         ]);
         console.log('💰 Prices:', prices);
 
-        // 2) Проверяем Tokens API — поиск SOL
+        // 2) Tokens API
         const tokens = await searchTokens('SOL');
-        console.log('🔎 Tokens search "SOL":', tokens.slice(0, 3));
+        console.log('🔎 Tokens search:', tokens.slice(0, 3));
 
-        // 3) Проверяем Ultra /order (пока без подписания, просто ответ)
+        // 3) Ultra Order API
         const order = await getUltraOrder({
-          inputMint: 'So11111111111111111111111111111111111111112', // SOL
+          inputMint: 'So11111111111111111111111111111111111111112',   // SOL
           outputMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
-          amount: 1000000, // 0.001 SOL при 9 decimals
-          // taker пока можно не указывать -> придёт только quote-инфа
+          amount: 1000000   // 0.001 SOL в минимальных единицах
         });
-        console.log('🧠 Ultra order:', order);
 
+        console.log('🧠 Ultra order:', order);
         console.log('✅ JupLite API test finished');
       } catch (err) {
         console.error('❌ JupLite API test error:', err);
       }
     };
   </script>
+  <!-- 🔼 КОНЕЦ НОВОГО БЛОКА -->
+
 </body>
 </html>
