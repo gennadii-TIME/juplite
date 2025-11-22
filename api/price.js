@@ -5,7 +5,7 @@
  * Хост: lite-api — free-тариф. Для Pro можно переключиться на https://api.jup.ag.
  * Docs: https://dev.jup.ag/docs/price/v3
  */
-const PRICE_BASE_URL = 'https://lite-api.jup.ag/price/v3';
+const PRICE_BASE_URL = "https://juplite-worker.videomessagetofuture.workers.dev/price/v3";
 
 /**
  * Получить цены токенов.
