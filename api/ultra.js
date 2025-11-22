@@ -121,10 +121,9 @@ export async function ultraSearchToken(query) {
  * @param {string} owner - адрес кошелька
  */
 export async function ultraGetHoldings(owner) {
-  if (!owner) throw new Error('ultraGetHoldings: owner обязателен');
+  if (!owner) throw new Error('ultraGetHoldings: owner обязательный');
 
-  const params = new URLSearchParams({ owner });
-  const url = `${ULTRA_BASE_URL}/holdings?${params.toString()}`;
+  const url = `${ULTRA_BASE_URL}/holdings/${owner}`;
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -134,4 +133,3 @@ export async function ultraGetHoldings(owner) {
 
   return res.json();
 }
-
