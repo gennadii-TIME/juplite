@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<title>JupLite — Fast Solana Exchange</title>
+  <!-- OpenGraph + Twitter large preview -->
+  <meta property="og:title" content="JupLite — Fast Solana Exchange" />
+ <meta property="og:description"
+      content="10x better trading on Solana. Fast swaps with ultra-low fees, powered by Jupiter." />
+  <meta property="og:image" content="https://juplite.com/og-banner.png" />
+  <meta property="og:url" content="https://juplite.com" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JupLite — Fast Solana Exchange" />
+  <meta name="twitter:description" content="Fast swaps on Solana with ultra-low fees." />
+  <meta name="twitter:image" content="https://juplite.com/og-banner.png" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description"
+      content="JupLite is a 10x better Solana trading interface with ultra-low fees and best-route swaps powered by Jupiter." />
+  <meta name="theme-color" content="#020617" />
+
+  <!-- Icons / manifest -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --max-width: 1180px;
+      --topbar-height: 52px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    /* ====== TOPBAR ====== */
+    .topbar {
+      height: var(--topbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top left, #020617, #020617 55%, #000 100%);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-home {
+      cursor: pointer;
+    }
+
+    .logo-circle {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(6px);
+      opacity: 0.9;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      position: relative;
+      z-index: 2;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.4),
+        0 8px 18px rgba(15, 23, 42, 0.7);
+      display: block;
+    }
+
+    .logo-text-main {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 999px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav a.nav-active {
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .nav a:hover {
+      color: #e5e7eb;
+    }
+
+    .nav-badge-new {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      background: #22c55e;
+      color: #020617;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    .search {
+      position: relative;
+      min-width: 0;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 6px 26px 6px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .search-hotkey {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #6b7280;
+      border-radius: 4px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 1px 4px;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .icon-btn:hover {
+      border-color: rgba(75, 85, 99, 0.9);
+      color: var(--text-main);
+    }
+
+    .connect-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+      white-space: nowrap;
+    }
+
+    .connect-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    /* ====== TICKER BAR ====== */
+    .ticker-shell {
+      background: #020617;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .ticker {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ticker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    @keyframes ticker-flash-up {
+      0%   { background-color: rgba(34, 197, 94, 0.25); }
+      100% { background-color: transparent; }
+    }
+
+    @keyframes ticker-flash-down {
+      0%   { background-color: rgba(248, 113, 113, 0.3); }
+      100% { background-color: transparent; }
+    }
+
+    .ticker-item.flash-up {
+      animation: ticker-flash-up 0.35s ease-out;
+    }
+
+    .ticker-item.flash-down {
+      animation: ticker-flash-down 0.35s ease-out;
+    }
+
+    .ticker-token-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .ticker-symbol {
+      font-weight: 500;
+    }
+
+    .ticker-price {
+      color: #e5e7eb;
+    }
+
+    .ticker-change-up {
+      color: #4ade80;
+    }
+
+    .ticker-change-down {
+      color: #f97373;
+    }
+
+    /* ====== MAIN / VIEWS ====== */
+    .page-main {
+      max-width: var(--max-width);
+      margin: 12px auto 0;
+      padding: 0 12px 24px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view-active {
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.99));
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(18px);
+    }
+
+    /* левая панель: контент сверху, кнопки внизу справа */
+    .panel-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 26px;
+      min-height: 520px;
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-highlight {
+      background: radial-gradient(circle at 0 0, #38bdf8, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 440px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-pill {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.14), transparent 60%);
+    }
+
+    .hero-footer {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .cta-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.5);
+      text-decoration: none;
+    }
+
+    .cta-btn span {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .ref-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .ref-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      word-break: break-all;
+    }
+
+    /* download buttons внизу панели */
+    .download-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-end;
+      margin-top: 0;
+      flex-wrap: nowrap;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border-radius: 14px;
+      text-decoration: none;
+      color: #020617;
+      font-size: 13px;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
+      transition: 0.18s;
+      border: none;
+      min-width: 200px;
+    }
+
+    .store-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .store-icon-wrap {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .store-text span {
+      font-size: 10px;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .store-text strong {
+      font-size: 14px;
+      line-height: 1.1;
+    }
+
+    .swap-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .swap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .swap-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    #jup-container {
+      flex: 1;
+      min-height: 480px;
+      max-height: 640px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .section-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 6px auto 0;
+      padding: 0 12px 18px;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      opacity: 0.85;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== MOBILE ====== */
+    @media (max-width: 900px) {
+      .topbar-inner {
+        padding-inline: 8px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .search {
+        max-width: 180px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel {
+        padding: 14px 12px 16px;
+      }
+
+      .hero-title {
+        font-size: 20px;
+      }
+
+      #jup-container {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo-text-sub {
+        display: none;
+      }
+
+      .hero-text, .section-text {
+        max-width: none;
+      }
+
+      .panel-left {
+        min-height: 580px;
+      }
+
+      .download-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .store-btn {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 10px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      padding: 2px 6px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    .lang-btn.lang-active {
+      background: rgba(56, 189, 248, 0.16);
+      color: #e5e7eb;
+    }
+
+    .lang-btn:hover {
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .lang-switch {
+        display: none;
+      }
+    }
+  </style>
+
+  <script src="https://plugin.jup.ag/plugin-v1.js"></script>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <div class="logo-wrap logo-home"
+             role="button"
+             tabindex="0"
+             onclick="window.location.href='/index.html'"
+             onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
+          <div class="logo-circle">
+            <div class="logo-glow"></div>
+            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
+          </div>
+          <div>
+            <div class="logo-text-main">JupLite</div>
+            <div class="logo-text-sub">Swap · Router · Solana</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-active" data-view="swap">Swap</a>
+          <a href="/pro.html" class="nav-active-ultra">Ultra</a>
+          <a href="#" data-view="perps">Perps</a>
+          <a href="#" data-view="lend">Lend</a>
+          <a href="#" data-view="portfolio">Portfolio</a>
+          <a href="#" data-view="predict">
+            Predict
+            <span class="nav-badge-new">new</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search token, wallet or feature" />
+          <span class="search-hotkey">/</span>
+        </div>
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn lang-active" type="button" data-lang="en">EN</button>
+          <button class="lang-btn" type="button" data-lang="ru">RU</button>
+          <button class="lang-btn" type="button" data-lang="es">ES</button>
+          <button class="lang-btn" type="button" data-lang="hi">HI</button>
+          <button class="lang-btn" type="button" data-lang="ar">AR</button>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
+        <button class="connect-btn" type="button">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker-shell">
+    <div class="ticker">
+      <div class="ticker-item">
+        <div class="ticker-token-icon">K</div>
+        <span class="ticker-symbol">KMNO</span>
+        <span class="ticker-price">$0.0515</span>
+        <span class="ticker-change-down">-2.9%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">M</div>
+        <span class="ticker-symbol">MET</span>
+        <span class="ticker-price">$0.3408</span>
+        <span class="ticker-change-down">-3.0%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">J</div>
+        <span class="ticker-symbol">JUP</span>
+        <span class="ticker-price">$0.2544</span>
+        <span class="ticker-change-up">+1.1%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">S</div>
+        <span class="ticker-symbol">SOL</span>
+        <span class="ticker-price">$132.41</span>
+        <span class="ticker-change-down">-0.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-main">
+    <div id="view-swap" class="view view-active">
+      <div class="layout">
+        <section class="panel panel-left">
+          <div>
+            <div class="hero-title">
+              Fast swaps on Solana,
+              <span class="hero-highlight">Jupiter engine</span>.
+            </div>
+            <p class="hero-text">
+              JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.
+            </p>
+            <div class="hero-meta">
+              <div class="hero-pill">✓ Aggregated liquidity across Solana DEXes</div>
+              <div class="hero-pill">✓ Non-custodial, wallet-native</div>
+              <div class="hero-pill">✓ Built-in referral rewards</div>
+            </div>
+            <div class="hero-footer">
+              <button class="cta-btn" type="button" onclick="scrollToSwap()">
+                <span>↻</span>
+                <span>Start swapping</span>
+              </button>
+              <div>
+                <div class="ref-label">Referral account</div>
+                <div class="ref-code">
+                  DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="download-buttons">
+            <a href="#" class="store-btn appstore-btn">
+              <div class="store-icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path d="M18.77 19.7c-.73 1.08-1.45 2.15-2.61 2.17-1.14.02-1.5-.7-2.8-.7-1.3 0-1.7.68-2.78.72-1.11.04-1.96-1.17-2.69-2.24C6.1 17.94 5.2 15.4 6.3 13.34c.76-1.39 2.13-2.27 3.6-2.3 1.12-.02 2.17.76 2.8.76.62 0 1.96-.93 3.3-.79.56.02 2.13.23 3.14 1.73-.08.05-1.87 1.1-1.85 3.26.02 2.57 2.28 3.44 2.3 3.45-.02.06-.36 1.27-1.35 2.25zM14.5 3.6c.48-.58.84-1.39.75-2.2-.72.03-1.58.47-2.09 1.05-.46.54-.87 1.37-.76 2.17.81.06 1.63-.41 2.1-1.02z"
+                        fill="#020617"></path>
+                </svg>
+              </div>
+              <div class="store-text">
+                <span>Download on</span>
+                <strong>App Store</strong>
+              </div>
+            </a>
+
+            <a href="#" class="store-btn googleplay-btn">
+              <div class="store-icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path d="M3.3 2.4c-.2.3-.3.7-.3 1.2v16.8c0 .5.1.9.3 1.2l9.7-9.6L3.3 2.4z"
+                        fill="#020617"></path>
+                  <path d="M20.6 10.1 15 6.8 13.1 8.7l2.9 2.9-2.9 2.9 1.9 1.9 5.6-3.3c.9-.5.9-1.8 0-2.3z"
+                        fill="#020617"></path>
+                  <path d="M3.3 21.6c.3.4.8.5 1.4.2l8.4-4.8-1.9-1.9-7.9 6.5z"
+                        fill="#020617"></path>
+                  <path d="M3.3 2.4 11.7 8 13.6 6 4.7 1.1c-.6-.3-1.1-.2-1.4.3z"
+                        fill="#020617"></path>
+                </svg>
+              </div>
+              <div class="store-text">
+                <span>Download on</span>
+                <strong>Google Play</strong>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="swap-wrapper">
+            <div class="swap-header">
+              <div>Swap</div>
+              <div class="swap-badge">Routed by Jupiter Plugin</div>
+            </div>
+            <div id="jup-container"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-pro" class="view">
+      <section class="panel">
+        <div class="section-title">JupLite Pro <span style="opacity:.7;">(coming soon)</span></div>
+        <div class="section-tag">Advanced routing · custom fees · multi-wallet</div>
+        <p class="section-text">
+          Pro-режим для активных трейдеров Solana: продвинутая конфигурация маршрутов,
+          собственные списки токенов, несколько кошельков и гибкая настройка реферальных
+          стратегий. Интерфейс будет построен на Ultra /quote, /order и /execute API
+          Jupiter.
+        </p>
+      </section>
+    </div>
+
+    <div id="view-perps" class="view">
+      <section class="panel">
+        <div class="section-title">Perps dashboard</div>
+        <div class="section-tag">Perpetuals aggregation · risk tools</div>
+        <p class="section-text">
+          Здесь появится агрегатор перпетуальных контрактов на Solana с единым интерфейсом
+          управления риском, маржей и PnL. Пока раздел в разработке.
+        </p>
+      </section>
+    </div>
+
+    <div id="view-lend" class="view">
+      <section class="panel">
+        <div class="section-title">Lend & Earn</div>
+        <div class="section-tag">Lending markets · yield strategies</div>
+        <p class="section-text">
+          Раздел JupLite Lend будет собирать лучшие лендинг-рынки Solana в одном окне:
+          депозиты, заём, health-factor и автоматические стратегии доходности поверх
+          Jupiter Lend API.
+        </p>
+      </section>
+    </div>
+
+    <div id="view-portfolio" class="view">
+      <section class="panel">
+        <div class="section-title">Portfolio</div>
+        <div class="section-tag">Wallet overview · PnL tracking</div>
+        <p class="section-text">
+          Здесь будет живой дэшборд по твоему Solana-портфелю: токены, позиции в пулах,
+          история свопов через JupLite и доход от реферальных комиссий.
+        </p>
+      </section>
+    </div>
+
+    <div id="view-predict" class="view">
+      <section class="panel">
+        <div class="section-title">Predict <span class="nav-badge-new">new</span></div>
+        <div class="section-tag">Simple prediction markets · social layer</div>
+        <p class="section-text">
+          Раздел лёгких предикшен-рынков поверх Solana: быстрые рынки «выше/ниже» и
+          социальные пулы. Интерфейс будет интегрирован с Jupiter и сторонними
+          протоколами. Сейчас это превью будущего функционала.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
+    <div>
+      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
+      <span class="visit-counter">· visitors: <span id="visitor-count">—</span></span>
+    </div>
+  </footer>
+
+  <!-- 🔧 Dev panel for JupLite API testing -->
+  <div id="juplite-dev-panel"
+       style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;
+              background: rgba(15,23,42,0.95); border: 1px solid rgba(148,163,184,0.4);
+              border-radius: 999px; padding: 6px 10px; display: flex; gap: 6px;
+              align-items: center; font-family: system-ui, sans-serif;
+              font-size: 11px; color: #e5e7eb; box-shadow: 0 10px 30px rgba(15,23,42,0.8);">
+    <span style="opacity: .75;">Dev:</span>
+    <button type="button"
+            onclick="window.jupLiteTestApis && window.jupLiteTestApis()"
+            style="border: none; border-radius: 999px; padding: 5px 10px;
+                   font-size: 11px; cursor: pointer;
+                   background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+                   color: #020617;">
+      Test Ultra APIs
+    </button>
+  </div>
+
+
+  <script>
+    const JUPLITE_I18N = {"en": {"title": "JupLite — Solana Swap Router", "description": "JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards.", "logoSub": "Swap · Router · Solana", "heroTitleMain": "Fast swaps on Solana,", "heroHighlight": "Jupiter engine", "heroText": "JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.", "heroPills": ["✓ Aggregated liquidity across Solana DEXes", "✓ Non-custodial, wallet-native", "✓ Built-in referral rewards"], "cta": "Start swapping", "swapBadge": "Routed by Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Lend", "portfolio": "Portfolio", "predict": "Predict"}}, "ru": {"title": "JupLite — быстрый обмен токенов Solana", "description": "JupLite — лёгкий интерфейс обмена токенов в сети Solana на базе Jupiter с лучшим маршрутом, низкими комиссиями и реферальными наградами.", "logoSub": "Своп · Маршрутизатор · Solana", "heroTitleMain": "Быстрые обмены в сети Solana,", "heroHighlight": "движок Jupiter", "heroText": "JupLite — №1 среди Solana-свопов. Уникальность платформы — минимально возможные комиссии. Официальный агрегатор Jupiter подбирает лучший курс и обеспечивает самую глубокую ликвидность. JupLite выбирают профессионалы: обмены проходят безопасно, прозрачно и без передачи ключей третьим лицам.", "heroPills": ["✓ Ликвидность со всех DEX в Solana", "✓ Некостодиальный кошелёк — только вы", "✓ Встроенные реферальные награды"], "cta": "Начать обмен", "swapBadge": "Маршрутизация через Jupiter Plugin", "nav": {"swap": "Своп", "pro": "Про", "perps": "Перпетуалы", "lend": "Лендинг", "portfolio": "Портфель", "predict": "Прогнозы"}}, "es": {"title": "JupLite — Intercambios rápidos en Solana", "description": "JupLite es una interfaz ligera de intercambio en Solana impulsada por Jupiter, con mejor ruta, bajas comisiones y recompensas por referidos.", "logoSub": "Swap · Enrutador · Solana", "heroTitleMain": "Swaps rápidos en Solana con", "heroHighlight": "motor de Jupiter", "heroText": "JupLite es la plataforma de swaps #1 en Solana. Su singularidad son las comisiones mínimas posibles. El agregador oficial Jupiter encuentra la mejor ruta y la liquidez más profunda. Los profesionales eligen JupLite por intercambios seguros y transparentes sin entregar sus claves a terceros.", "heroPills": ["✓ Liquidez agregada de los DEX de Solana", "✓ No custodial, control total de tu wallet", "✓ Recompensas integradas por referidos"], "cta": "Empezar a intercambiar", "swapBadge": "Ruteado por Jupiter Plugin", "nav": {"swap": "Swap", "pro": "Pro", "perps": "Perps", "lend": "Préstamos", "portfolio": "Portafolio", "predict": "Predicciones"}}, "hi": {"title": "JupLite — Solana पर तेज़ टोकन स्वैप", "description": "JupLite एक हल्का Solana स्वैप इंटरफ़ेस है जो Jupiter पर आधारित है, जो बेहतर रूट, कम फ़ीस और रेफरल रिवॉर्ड्स देता है।", "logoSub": "स्वैप · राउटर · Solana", "heroTitleMain": "Solana पर तेज़ स्वैप,", "heroHighlight": "Jupiter इंजन के साथ", "heroText": "JupLite Solana स्वैप के लिए नंबर 1 प्लेटफ़ॉर्म है। इसकी खासियत है कि फ़ीस लगभग न्यूनतम रहती है। आधिकारिक Jupiter एग्रीगेटर सबसे अच्छा रूट और सबसे गहरी लिक्विडिटी चुनता है। प्रोफेशनल ट्रेडर्स JupLite को सुरक्षित और पारदर्शी स्वैप के लिए चुनते हैं — बिना किसी थर्ड पार्टी को चाबियाँ दिए।", "heroPills": ["✓ Solana DEX से एग्रीगेटेड लिक्विडिटी", "✓ नॉन-कस्टोडियल, आपका अपना वॉलेट", "✓ इनबिल्ट रेफरल रिवॉर्ड्स"], "cta": "स्वैप शुरू करें", "swapBadge": "Jupiter Plugin द्वारा रूटेड", "nav": {"swap": "स्वैप", "pro": "प्रो", "perps": "परपेचुअल", "lend": "लेंड", "portfolio": "पोर्टफोलियो", "predict": "प्रिडिक्ट"}}, "ar": {"title": "JupLite — تبادل سريع للتوكنات على Solana", "description": "JupLite هو واجهة خفيفة لتبديل التوكنات على شبكة Solana تعمل بمحرك Jupiter مع أفضل مسار وعمولات منخفضة ومكافآت إحالة.", "logoSub": "سواب · موجه · Solana", "heroTitleMain": "تبديلات سريعة على Solana مع", "heroHighlight": "محرك Jupiter", "heroText": "JupLite هي المنصّة رقم 1 لمقايضات Solana. تميّزها هو الرسوم المنخفضة إلى الحد الأدنى الممكن. مجمّع Jupiter الرسمي يختار أفضل مسار ويوفّر أعمق سيولة. يختار المحترفون JupLite لإجراء مقايضات آمنة وشفافة من دون تسليم المفاتيح لطرف ثالث.", "heroPills": ["✓ سيولة مجمّعة من منصات DEX على Solana", "✓ غير وصائي — التحكم الكامل في محفظتك", "✓ مكافآت إحالة مدمجة"], "cta": "ابدأ التبديل", "swapBadge": "مُوجَّه بواسطة Jupiter Plugin", "nav": {"swap": "سواب", "pro": "برو", "perps": "عقود دائمة", "lend": "إقراض", "portfolio": "محفظة", "predict": "توقعات"}}};
+
+    function jupLiteDetectInitialLang() {
+      const saved = localStorage.getItem("jupLiteLang");
+      if (saved && JUPLITE_I18N[saved]) return saved;
+
+      const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+      if (nav.startsWith("ru")) return "ru";
+      if (nav.startsWith("es")) return "es";
+      if (nav.startsWith("hi")) return "hi";
+      if (nav.startsWith("ar")) return "ar";
+      return "en";
+    }
+
+    function jupLiteSetLangActiveButton(lang) {
+      const buttons = document.querySelectorAll(".lang-btn");
+      buttons.forEach((btn) => {
+        const code = btn.getAttribute("data-lang");
+        btn.classList.toggle("lang-active", code === lang);
+      });
+    }
+
+    function jupLiteApplyLanguage(lang) {
+      if (!JUPLITE_I18N[lang]) lang = "en";
+      const dict = JUPLITE_I18N[lang];
+
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
+
+      if (dict.title) {
+        document.title = dict.title;
+      }
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.description) {
+        metaDesc.setAttribute("content", dict.description);
+      }
+
+      const logoSub = document.querySelector(".logo-text-sub");
+      if (logoSub && dict.logoSub) {
+        logoSub.textContent = dict.logoSub;
+      }
+
+      if (dict.nav) {
+        document.querySelectorAll(".nav a[data-view]").forEach((a) => {
+          const key = a.dataset.view;
+          if (dict.nav[key]) {
+            const badge = a.querySelector(".nav-badge-new");
+            a.textContent = dict.nav[key];
+            if (badge) {
+              a.appendChild(document.createTextNode(" "));
+              a.appendChild(badge);
+            }
+          }
+        });
+      }
+
+      const heroTitle = document.querySelector(".hero-title");
+      const heroHighlight = document.querySelector(".hero-highlight");
+      if (heroTitle && heroHighlight && dict.heroTitleMain && dict.heroHighlight) {
+        if (heroTitle.firstChild && heroTitle.firstChild.nodeType === Node.TEXT_NODE) {
+          heroTitle.firstChild.nodeValue = dict.heroTitleMain + " ";
+        }
+        heroHighlight.textContent = dict.heroHighlight;
+      }
+
+      const heroText = document.querySelector(".hero-text");
+      if (heroText && dict.heroText) {
+        heroText.textContent = dict.heroText;
+      }
+
+      const pills = document.querySelectorAll(".hero-pill");
+      if (pills.length && Array.isArray(dict.heroPills)) {
+        pills.forEach((pill, i) => {
+          if (dict.heroPills[i]) {
+            pill.textContent = dict.heroPills[i];
+          }
+        });
+      }
+
+      const ctaBtn = document.querySelector(".cta-btn");
+      if (ctaBtn && dict.cta) {
+        const spans = ctaBtn.querySelectorAll("span");
+        if (spans.length > 1) {
+          spans[1].textContent = dict.cta;
+        }
+      }
+
+      const swapBadge = document.querySelector(".swap-badge");
+      if (swapBadge && dict.swapBadge) {
+        swapBadge.textContent = dict.swapBadge;
+      }
+
+      jupLiteSetLangActiveButton(lang);
+      try {
+        localStorage.setItem("jupLiteLang", lang);
+      } catch (e) {}
+    }
+
+    function initLangSwitcher() {
+      const initialLang = jupLiteDetectInitialLang();
+      jupLiteApplyLanguage(initialLang);
+
+      const buttons = document.querySelectorAll(".lang-btn");
+      if (!buttons.length) return;
+
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.getAttribute("data-lang");
+          jupLiteApplyLanguage(lang);
+        });
+      });
+    }
+
+    function initJupiter() {
+      if (!window.Jupiter) return;
+
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "jup-container",
+        defaultExplorer: "Solscan",
+        formProps: {
+          defaultInputMint:  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          defaultOutputMint: "So11111111111111111111111111111111111111112",
+          referralAccount: "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b",
+          referralFee: 50
+        },
+        branding: {
+          name: "JupLite",
+          logoUri: "https://juplite.com/icon-192.png"
+        }
+      });
+    }
+
+    function scrollToSwap() {
+      const el = document.getElementById("jup-container");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    const JUPLITE_TICKER_TOKENS = {
+      KMNO: {
+        mint: "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
+        decimals: 4,
+      },
+      MET: {
+        mint: "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+        decimals: 4,
+      },
+      JUP: {
+        mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+        decimals: 4,
+      },
+      SOL: {
+        mint: "So11111111111111111111111111111111111111112",
+        decimals: 2,
+      },
+    };
+
+    async function fetchJupiterPrices() {
+      const ids = Object.values(JUPLITE_TICKER_TOKENS)
+        .map((t) => t.mint)
+        .join(",");
+      const url = "https://lite-api.jup.ag/price/v3?ids=" + encodeURIComponent(ids);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Price API error");
+      return res.json();
+    }
+
+    function initLiveTicker() {
+      const items = Array.from(document.querySelectorAll(".ticker-item"));
+      if (!items.length) return;
+
+      const bindings = items.map((item) => {
+        const symbolEl = item.querySelector(".ticker-symbol");
+        const priceEl = item.querySelector(".ticker-price");
+        const changeEl =
+          item.querySelector(".ticker-change-up") ||
+          item.querySelector(".ticker-change-down");
+
+        if (!symbolEl || !priceEl || !changeEl) return null;
+
+        const symbol = symbolEl.textContent.trim().toUpperCase();
+        const cfg = JUPLITE_TICKER_TOKENS[symbol];
+        if (!cfg) return null;
+
+        return { item, symbol, priceEl, changeEl, cfg };
+      }).filter(Boolean);
+
+      if (!bindings.length) return;
+
+      async function refresh() {
+        try {
+          const data = await fetchJupiterPrices();
+
+          bindings.forEach(({ item, priceEl, changeEl, cfg }) => {
+            const tokenData = data[cfg.mint];
+            if (!tokenData) return;
+
+            const price = tokenData.usdPrice;
+            const change24 = tokenData.priceChange24h ?? 0;
+
+            const oldPrice = parseFloat(
+              priceEl.textContent.replace(/[^\d.]/g, "") || "0"
+            );
+
+            const decimals = cfg.decimals ?? 4;
+            priceEl.textContent =
+              "$" +
+              (decimals === 2 ? price.toFixed(2) : price.toFixed(decimals));
+
+            const isUp = change24 >= 0;
+            const sign = isUp ? "+" : "";
+            changeEl.textContent = sign + change24.toFixed(1) + "%";
+            changeEl.classList.toggle("ticker-change-up", isUp);
+            changeEl.classList.toggle("ticker-change-down", !isUp);
+
+            if (oldPrice) {
+              const goingUp = price >= oldPrice;
+              item.classList.remove("flash-up", "flash-down");
+              void item.offsetWidth;
+              item.classList.add(goingUp ? "flash-up" : "flash-down");
+            }
+          });
+        } catch (e) {
+          console.warn("Ticker error", e);
+        }
+      }
+
+      refresh();
+      setInterval(refresh, 10000);
+    }
+
+    function initNavViews() {
+      const links = document.querySelectorAll(".nav a[data-view]");
+      const views = document.querySelectorAll(".view");
+
+      if (!links.length || !views.length) return;
+
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = link.dataset.view;
+          if (!target) return;
+
+          links.forEach((l) =>
+            l.classList.toggle("nav-active", l === link)
+          );
+
+          views.forEach((v) =>
+            v.classList.toggle("view-active", v.id === "view-" + target)
+          );
+
+          if (target === "swap") {
+            scrollToSwap();
+          } else {
+            const main = document.querySelector(".page-main");
+            if (main) {
+              window.scrollTo({
+                top: main.offsetTop - 16,
+                behavior: "smooth"
+              });
+            }
+          }
+        });
+      });
+    }
+
+    function initVisitorCounter() {
+      const el = document.getElementById("visitor-count");
+      if (!el) return;
+
+      const url = "https://api.countapi.xyz/hit/juplite.com/mainpage";
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.value === "number") {
+            el.textContent = data.value.toLocaleString("en-US");
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(() => {
+          el.textContent = "—";
+        });
+    }
+
+    window.addEventListener("load", function () {
+      initLangSwitcher();
+      if (window.Jupiter) {
+        initJupiter();
+      } else {
+        setTimeout(initJupiter, 800);
+      }
+
+      initLiveTicker();
+      initNavViews();
+      initVisitorCounter();
+    });
+  </script><!-- 🔽 НОВЫЙ МОДУЛЬНЫЙ СКРИПТ: Ultra + Price + Tokens -->
+<script type="module">
+  import { getPrices } from './api/price.js';
+  import { searchTokens } from './api/tokens.js';
+  import { getUltraOrder } from './api/ultra.js';
+
+  // === ТЕСТОВАЯ КНОПКА ===
+  window.jupLiteTestApis = async function () {
+    try {
+      console.log('▶ JupLite API test started');
+
+      // 1) Price API (SOL + JUP)
+      const prices = await getPrices([
+        'So11111111111111111111111111111111111111112',   // SOL
+        'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'    // JUP
+      ]);
+      console.log('💰 Prices:', prices);
+
+      // 2) Tokens API
+      const tokens = await searchTokens('SOL');
+      console.log('🔎 Tokens search SOL:', tokens.slice(0, 3));
+
+      // 3) Ultra Order API (без подписи, просто quote)
+      const order = await getUltraOrder({
+        inputMint: 'So11111111111111111111111111111111111111112',   // SOL
+        outputMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+        amount: 1000000  // 0.001 SOL в минимальных единицах
+      });
+      console.log('🧠 Ultra order:', order);
+
+      console.log('✅ JupLite API test finished');
+    } catch (err) {
+      console.error('❌ JupLite API test error:', err);
+    }
+  };
+
+  // === LIVE PRICE TICKER ===
+  const JUPLITE_TICKER_TOKENS = [
+    { symbol: 'SOL', mint: 'So11111111111111111111111111111111111111112' },
+    { symbol: 'JUP', mint: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN' },
+    { symbol: 'USDC', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' }
+  ];
+
+  async function jupLiteUpdateTickerPrices() {
+    try {
+      const mints = JUPLITE_TICKER_TOKENS.map(t => t.mint);
+      const priceData = await getPrices(mints);
+
+      const items = document.querySelectorAll('.ticker-item');
+      items.forEach((item, index) => {
+        const cfg = JUPLITE_TICKER_TOKENS[index];
+        if (!cfg) return;
+
+        const data = priceData[cfg.mint];
+        if (!data || typeof data.price !== 'number') return;
+
+        const priceSpan = item.querySelector('.ticker-price');
+        const symbolSpan = item.querySelector('.ticker-symbol');
+
+        if (symbolSpan) symbolSpan.textContent = cfg.symbol;
+        if (priceSpan) priceSpan.textContent = '$' + data.price.toFixed(3);
+      });
+
+      console.log('JupLite ticker updated:', priceData);
+    } catch (e) {
+      console.error('Ticker error:', e);
+    }
+  }
+
+  window.addEventListener('load', () => {
+    jupLiteUpdateTickerPrices();
+    setInterval(jupLiteUpdateTickerPrices, 15000);
+  });
+</script>
+<!-- 🔼 КОНЕЦ МОДУЛЯ -->
+
+</body>
+</html>
