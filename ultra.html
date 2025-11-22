@@ -96,24 +96,24 @@
     }
 
     .chart-fullscreen-toggle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 20;
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      background: radial-gradient(circle at 0 0, rgba(15,23,42,0.95), #020617);
-      color: #e5e7eb;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(8px);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-    }
+  position: absolute;
+  top: 10px;
+  right: 32px; /* было 10px — сдвиг левее ~5 мм */
+  z-index: 20;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px; /* более квадратная, как у камеры */
+  border: 1px solid rgba(148,163,184,0.9);
+  background: rgba(15,23,42,0.95); /* тёмный прямоугольник как у фотика */
+  color: #e5e7eb;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
 
     .chart-fullscreen-toggle:hover {
       transform: translateY(-1px);
