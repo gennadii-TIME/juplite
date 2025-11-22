@@ -171,9 +171,29 @@
   </header>
 
   <main class="terminal-wrapper">
-    <!-- ВСТРАИВАЕМ ТВОЙ ULTRA UI -->
-    <iframe src="/ultra.html"></iframe>
+    <!-- Лёгкая обёртка: сначала скелет, потом подгружаем Ultra -->
+    <div id="ultra-skeleton" style="width:100%;height:320px;border-radius:18px;background:radial-gradient(circle at top,#020617,#020617);display:flex;align-items:center;justify-content:center;color:#64748b;font-size:13px;border:1px solid rgba(31,41,55,0.9);box-shadow:0 20px 50px rgba(15,23,42,0.9);">
+      Loading JupLite Ultra…
+    </div>
+    <iframe id="ultra-frame" title="JupLite Ultra" style="width:100%;height:720px;border:none;border-radius:18px;overflow:hidden;display:none;"></iframe>
   </main>
+  <script>
+    // Ленивое подключение тяжёлой Ultra-страницы после загрузки оболочки
+    window.addEventListener('DOMContentLoaded', function () {
+      const frame = document.getElementById('ultra-frame');
+      const skeleton = document.getElementById('ultra-skeleton');
+
+      // Небольшая задержка, чтобы сначала отрисовать шапку/оболочку
+      setTimeout(function () {
+        frame.src = '/ultra.html';
+      }, 150);
+
+      frame.addEventListener('load', function () {
+        skeleton.style.display = 'none';
+        frame.style.display = 'block';
+      });
+    });
+  </script>
 
 </div>
 
