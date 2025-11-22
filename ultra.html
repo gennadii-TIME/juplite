@@ -251,7 +251,54 @@
         height: 260px;
       }
     }
-  </style>
+  
+    .history-list {
+      font-size: 12px;
+      color: #e5e7eb;
+      max-height: 180px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.25);
+      padding: 10px;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
+    }
+    .history-item {
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(148,163,184,0.25);
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .history-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-pair {
+      font-weight: 600;
+    }
+    .history-amounts {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .history-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .history-link a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    .history-link a:hover {
+      text-decoration: underline;
+    }
+
+</style>
 </head>
 
 <body>
@@ -327,6 +374,14 @@
       </div>
 
       <div class="log" id="log"></div>
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Recent swaps (JupLite Ultra)</div>
+          <div class="card-subtitle">Local history — only swaps made via this page on this device</div>
+        </div>
+        <div class="history-list" id="swap-history"></div>
+      </div>
+
     </section>
 
   </div>
@@ -414,8 +469,14 @@ document.getElementById("connectBtn").onclick = async () => {
 
     await provider.connect();
     wallet = provider;
-    log("Connected: " + wallet.publicKey.toString())/* Quote (Ultra Get Order) */
-let lastOrder = null;
+    log("Connected: " + wallet.publicKey.toString());
+  } catch (e) {
+    log("Wallet error: " + e.message);
+  }
+};
+
+/* Quote */
+let lastQuote = null;
 
 document.getElementById("quoteBtn").onclick = async () => {
   if (!wallet) return alert("Connect wallet first");
@@ -429,108 +490,86 @@ document.getElementById("quoteBtn").onclick = async () => {
   const decimalsIn = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
   const raw = Math.round(amount * 10 ** decimalsIn);
 
-  const params = new URLSearchParams({
-    inputMint,
-    outputMint,
-    amount: String(raw),
-    taker: wallet.publicKey.toString(),
-    referralAccount: REFERRAL,
-    referralFee: String(REFERRAL_BPS),
-  });
+  const url =
+    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
+    `&amount=${raw}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
+    `&platformFeeAccount=${REFERRAL}`;
 
   try {
-    const res = await fetch(`${ULTRA_BASE_URL}/order?${params.toString()}`);
-    lastOrder = await res.json();
+    const res = await fetch(url);
+    lastQuote = await res.json();
 
-    if (!lastOrder.transaction) {
-      log("No transaction in Ultra order:\n" + JSON.stringify(lastOrder, null, 2));
+    if (!lastQuote.route) {
+      log("No route");
       return;
     }
 
-    const inAmount = Number(lastOrder.inAmount || raw);
-    const outAmount = Number(lastOrder.outAmount || 0);
-
-    log(
-      "Ultra order quote:\n" +
-      JSON.stringify(
-        {
-          inAmount,
-          outAmount,
-          slippageBps: lastOrder.slippageBps,
-          swapType: lastOrder.swapType,
-        },
-        null,
-        2
-      )
-    );
-
+    log("Route:\n" + JSON.stringify(lastQuote.route, null, 2));
     document.getElementById("swapBtn").disabled = false;
+
   } catch (e) {
     log("Quote error: " + e.message);
   }
 };
-   document.getElementById("swapBtn").disabled = false/* Helpers for base64 <-> bytes */
-function base64ToUint8Array(str) {
-  const binary = atob(str);
-  const len = binary.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-}
-
-function uint8ArrayToBase64(bytes) {
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
 
 /* Swap */
 document.getElementById("swapBtn").onclick = async () => {
-  if (!wallet) return alert("Connect wallet first");
-  if (!lastOrder || !lastOrder.transaction || !lastOrder.requestId) {
-    return alert("Get quote first");
-  }
+  if (!lastQuote) return;
+
+  log("Creating Ultra order…");
+
+  const payload = {
+    route: lastQuote.route,
+    userPublicKey: wallet.publicKey.toString(),
+
+    platformFeeBps: REFERRAL_BPS,
+    platformFeeAccount: REFERRAL,
+
+    extraFee: {
+      feeBps: EXTRA_FEE_BPS,
+      feeAccount: EXTRA_FEE_WALLET
+    }
+  };
 
   try {
-    log("Signing Ultra transaction…");
-
-    const txBytes = base64ToUint8Array(lastOrder.transaction);
-    const tx = solanaWeb3.VersionedTransaction.deserialize(txBytes);
-
-    const signed = await wallet.signTransaction(tx);
-    const signedBase64 = uint8ArrayToBase64(signed.serialize());
-
-    log("Sending to Jupiter Execute…");
-
-    const exec = await fetch(`${ULTRA_BASE_URL}/execute`, {
+    const res = await fetch(ultraOrderURL, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        signedTransaction: signedBase64,
-        requestId: lastOrder.requestId,
-      }),
+      body: JSON.stringify(payload)
+    });
+
+    const order = await res.json();
+
+    if (!order.transaction) {
+      log("Order error:\n" + JSON.stringify(order, null, 2));
+      return;
+    }
+
+    log("Order OK. Signing…");
+
+    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
+    const signed = await wallet.signTransaction(tx);
+    const raw = signed.serialize().toString("base64");
+
+    const exec = await fetch(ultraExecuteURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ signedTx: raw })
     });
 
     const out = await exec.json();
 
-    if (out.signature) {
-      log("SUCCESS:\nhttps://solscan.io/tx/" + out.signature);
-    } else {
-      log("Exec error:\n" + JSON.stringify(out, null, 2));
-    }
-
-  } catch (e) {
-    log("Swap error: " + e.message);
-  }
-};
- exec.json();
-
     if (out.txid) {
       log("SUCCESS:\nhttps://solscan.io/tx/" + out.txid);
+      try {
+        addSwapToHistory({
+          inAmount: lastQuote.inAmount,
+          outAmount: lastQuote.outAmount,
+          inputMint: lastQuote.inputMint || document.getElementById("fromToken").value,
+          outputMint: lastQuote.outputMint || document.getElementById("toToken").value,
+          signature: out.txid
+        });
+      } catch (_) {}
     } else {
       log("Exec error:\n" + JSON.stringify(out, null, 2));
     }
@@ -539,6 +578,75 @@ document.getElementById("swapBtn").onclick = async () => {
     log("Swap error: " + e.message);
   }
 };
+
+
+const HISTORY_KEY = "juplite-ultra-swap-history-v1";
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(list) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(-20)));
+  } catch {}
+}
+
+function addSwapToHistory(entry) {
+  const list = loadHistory();
+  const withTs = { ...entry, ts: Date.now() };
+  list.push(withTs);
+  saveHistory(list);
+  renderHistory(list);
+}
+
+function renderHistory(list) {
+  const box = document.getElementById("swap-history");
+  if (!box) return;
+  if (!list.length) {
+    box.textContent = "No swaps yet. Complete a swap to see them here.";
+    return;
+  }
+  const rows = list
+    .slice()
+    .reverse()
+    .map(item => {
+      const date = new Date(item.ts);
+      const timeStr = date.toLocaleString();
+      const inStr = Number(item.inAmount || 0) / 1e9;
+      const outStr = Number(item.outAmount || 0) / 1e6;
+      const inFmt = inStr ? inStr.toFixed(4) : "0";
+      const outFmt = outStr ? outStr.toFixed(4) : "0";
+      const sig = item.signature || "";
+      const pair = (item.inputMint || "IN").slice(0,4) + "…/" + (item.outputMint || "OUT").slice(0,4) + "…";
+      const link = sig ? `https://solscan.io/tx/${sig}` : "";
+      return [
+        '<div class="history-item">',
+          '<div class="history-main">',
+            `<div class="history-pair">${pair}</div>`,
+            `<div class="history-amounts">${inFmt} → ${outFmt}</div>`,
+          '</div>',
+          '<div class="history-meta">',
+            `<div class="history-time">${timeStr}</div>`,
+            link ? `<div class="history-link"><a href="${link}" target="_blank" rel="noopener noreferrer">View</a></div>` : '<div></div>',
+          '</div>',
+        '</div>'
+      ].join("");
+    })
+    .join("");
+  box.innerHTML = rows;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderHistory(loadHistory());
+});
 
 function log(t) {
   document.getElementById("log").textContent = t;
