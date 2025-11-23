@@ -243,73 +243,6 @@
       overflow-y: auto;
     }
 
-    
-    .quote-info {
-      margin-top: 8px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(148,163,184,0.35);
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
-      font-size: 11px;
-      color: #e5e7eb;
-    }
-    .quote-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 2px 0;
-    }
-    .quote-row span:first-child {
-      color: #9ca3af;
-    }
-
-    .history-list {
-      font-size: 12px;
-      color: #e5e7eb;
-      max-height: 180px;
-      overflow-y: auto;
-      border-radius: 10px;
-      border: 1px solid rgba(148,163,184,0.25);
-      padding: 10px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
-    }
-    .history-item {
-      display: flex;
-      flex-direction: column;
-      padding: 6px 0;
-      border-bottom: 1px dashed rgba(148,163,184,0.25);
-    }
-    .history-item:last-child {
-      border-bottom: none;
-    }
-    .history-main {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .history-pair {
-      font-weight: 600;
-    }
-    .history-amounts {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-    .history-meta {
-      font-size: 11px;
-      color: #9ca3af;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .history-link a {
-      color: #38bdf8;
-      text-decoration: none;
-    }
-    .history-link a:hover {
-      text-decoration: underline;
-    }
-
     @media (max-width: 900px) {
       .ultra-layout {
         grid-template-columns: minmax(0, 1fr);
@@ -381,21 +314,6 @@
           <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
         </div>
 
-        <div class="quote-info" id="quote-info">
-          <div class="quote-row">
-            <span>Min received</span>
-            <span id="quote-min">—</span>
-          </div>
-          <div class="quote-row">
-            <span>Price impact</span>
-            <span id="quote-impact">—</span>
-          </div>
-          <div class="quote-row">
-            <span>Fees</span>
-            <span id="quote-fees">0.50% referral + 0.50% service</span>
-          </div>
-        </div>
-
         <div class="fee-note">
   10x better trading
 </div>
@@ -409,14 +327,6 @@
       </div>
 
       <div class="log" id="log"></div>
-
-      <div class="card" style="margin-top: 16px;">
-        <div class="card-header">
-          <div class="card-title">Recent swaps (JupLite Ultra)</div>
-          <div class="card-subtitle">Local history — only swaps made via this page on this device</div>
-        </div>
-        <div class="history-list" id="swap-history"></div>
-      </div>
     </section>
 
   </div>
@@ -539,31 +449,6 @@ document.getElementById("quoteBtn").onclick = async () => {
       return;
     }
 
-    // Обновляем UI котировки: min received, impact, fees
-    try {
-      const outMint = document.getElementById("toToken").value;
-      const outToken = tokenList.find(t => t.address === outMint);
-      const outDecimals = outToken?.decimals ?? 6;
-
-      const outRaw = Number(lastQuote.outAmount || 0);
-      if (outRaw > 0) {
-        const outUi = outRaw / 10 ** outDecimals;
-        const slippage = Number(lastQuote.slippageBps ?? 100);
-        const minReceived = outUi * (1 - slippage / 10000);
-
-        const minEl = document.getElementById("quote-min");
-        if (minEl) minEl.textContent = minReceived.toFixed(6) + " " + (outToken?.symbol || "");
-
-        const impactEl = document.getElementById("quote-impact");
-        const impact = typeof lastQuote.priceImpactPct === "number" ? lastQuote.priceImpactPct : null;
-        if (impactEl) impactEl.textContent = impact !== null ? impact.toFixed(2) + "%" : "—";
-
-        const feesEl = document.getElementById("quote-fees");
-        const totalFeePct = (REFERRAL_BPS + EXTRA_FEE_BPS) / 100;
-        if (feesEl) feesEl.textContent = totalFeePct.toFixed(2) + "% total (0.50% referral + 0.50% service)";
-      }
-    } catch (_) {}
-
     log("Route:\n" + JSON.stringify(lastQuote.route, null, 2));
     document.getElementById("swapBtn").disabled = false;
 
@@ -575,12 +460,6 @@ document.getElementById("quoteBtn").onclick = async () => {
 /* Swap */
 document.getElementById("swapBtn").onclick = async () => {
   if (!lastQuote) return;
-
-  const swapBtn = document.getElementById("swapBtn");
-  if (swapBtn) {
-    swapBtn.disabled = true;
-    swapBtn.textContent = "Swapping…";
-  }
 
   log("Creating Ultra order…");
 
@@ -627,107 +506,14 @@ document.getElementById("swapBtn").onclick = async () => {
 
     if (out.txid) {
       log("SUCCESS:\nhttps://solscan.io/tx/" + out.txid);
-      try {
-        const inputMint = document.getElementById("fromToken").value;
-        const outputMint = document.getElementById("toToken").value;
-        const amountUi = parseFloat(document.getElementById("amount").value || "0");
-
-        const outToken = tokenList.find(t => t.address === outputMint);
-        const outDecimals = outToken?.decimals ?? 6;
-        let outUi = null;
-        if (lastQuote && lastQuote.outAmount) {
-          outUi = Number(lastQuote.outAmount) / 10 ** outDecimals;
-        }
-
-        addSwapToHistory({
-          inputMint,
-          outputMint,
-          inUi: amountUi ? amountUi.toFixed(6) + " " : "",
-          outUi: outUi !== null ? outUi.toFixed(6) + " " + (outToken?.symbol || "") : "",
-          signature: out.txid
-        });
-      } catch (_) {}
     } else {
       log("Exec error:\n" + JSON.stringify(out, null, 2));
     }
 
   } catch (e) {
     log("Swap error: " + e.message);
-  } finally {
-    const swapBtn = document.getElementById("swapBtn");
-    if (swapBtn) {
-      swapBtn.disabled = false;
-      swapBtn.textContent = "Swap";
-    }
   }
 };
-
-
-const HISTORY_KEY = "juplite-ultra-swap-history-v1";
-
-function loadHistory() {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveHistory(list) {
-  try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(-20)));
-  } catch {}
-}
-
-function addSwapToHistory(entry) {
-  const list = loadHistory();
-  const withTs = { ...entry, ts: Date.now() };
-  list.push(withTs);
-  saveHistory(list);
-  renderHistory(list);
-}
-
-function renderHistory(list) {
-  const box = document.getElementById("swap-history");
-  if (!box) return;
-  if (!list.length) {
-    box.textContent = "No swaps yet. Complete a swap to see them here.";
-    return;
-  }
-  const rows = list
-    .slice()
-    .reverse()
-    .map(item => {
-      const date = new Date(item.ts);
-      const timeStr = date.toLocaleString();
-      const inFmt = item.inUi ?? "";
-      const outFmt = item.outUi ?? "";
-      const sig = item.signature || "";
-      const pair = (item.inputMint || "IN").slice(0,4) + "…/" + (item.outputMint || "OUT").slice(0,4) + "…";
-      const link = sig ? `https://solscan.io/tx/${sig}` : "";
-      return [
-        '<div class="history-item">',
-          '<div class="history-main">',
-            `<div class="history-pair">${pair}</div>`,
-            `<div class="history-amounts">${inFmt} → ${outFmt}</div>`,
-          '</div>',
-          '<div class="history-meta">',
-            `<div class="history-time">${timeStr}</div>`,
-            link ? `<div class="history-link"><a href="${link}" target="_blank" rel="noopener noreferrer">View</a></div>` : '<div></div>',
-          '</div>',
-        '</div>'
-      ].join("");
-    })
-    .join("");
-  box.innerHTML = rows;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderHistory(loadHistory());
-});
 
 function log(t) {
   document.getElementById("log").textContent = t;

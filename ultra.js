@@ -3,7 +3,7 @@
 
 // Хост: на free-тарифе используем lite-api.
 // Если подключишь Pro (api.jup.ag) — достаточно поменять BASE_URL.
-const ULTRA_BASE_URL = 'https://lite-api.jup.ag/ultra/v1';
+const ULTRA_BASE_URL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1";
 
 /**
  * Получить Ultra-ордер (quote + транзакция).
@@ -121,10 +121,9 @@ export async function ultraSearchToken(query) {
  * @param {string} owner - адрес кошелька
  */
 export async function ultraGetHoldings(owner) {
-  if (!owner) throw new Error('ultraGetHoldings: owner обязателен');
+  if (!owner) throw new Error('ultraGetHoldings: owner обязательный');
 
-  const params = new URLSearchParams({ owner });
-  const url = `${ULTRA_BASE_URL}/holdings?${params.toString()}`;
+  const url = `${ULTRA_BASE_URL}/holdings/${owner}`;
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -134,4 +133,3 @@ export async function ultraGetHoldings(owner) {
 
   return res.json();
 }
-
