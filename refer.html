@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JupLite — Refer &amp; Earn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Refer friends to JupLite and earn passive income on every swap." />
+  <link rel="icon" href="/icon-192.png" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.18);
+      --accent-strong: rgba(56, 189, 248, 0.65);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+      --success: #4ade80;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1120 0, #020617 55%, #000 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Header */
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), rgba(2, 6, 23, 0.75), transparent);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-logo {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #020617 100%);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.7);
+    }
+
+    .brand-text-main {
+      font-size: 16px;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .nav-link {
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      border-color: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .nav-link.active {
+      color: #0f172a;
+      background: radial-gradient(circle at top left, var(--accent) 0, #0ea5e9 40%, #0369a1 100%);
+      border-color: rgba(56, 189, 248, 0.8);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+      font-weight: 600;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-pill {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+    }
+
+    .wallet-btn {
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wallet-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+    }
+
+    /* Layout */
+
+    main {
+      flex: 1;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--accent-soft);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        align-items: flex-start;
+      }
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.98));
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 16px 18px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .field {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .field input {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      min-width: 0;
+    }
+
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: 1px solid var(--accent);
+      background: radial-gradient(circle at top left, var(--accent) 0, #0369a1 40%, #0b1120 100%);
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stat-value {
+      margin-top: 4px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .stat-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .badge strong {
+      color: var(--accent);
+    }
+
+    .table {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    thead {
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    th {
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    .vip-bar {
+      margin-top: 10px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), transparent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-size: 12px;
+    }
+
+    .vip-bar strong {
+      color: var(--accent);
+    }
+
+    .withdraw-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+
+    .withdraw-footer span {
+      color: var(--muted);
+    }
+
+    .withdraw-footer span strong {
+      color: var(--accent);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(74, 222, 128, 0.9);
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      padding: 14px 16px 20px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header>
+      <div class="header-inner">
+        <a href="/index.html" class="brand">
+          <div class="brand-logo"></div>
+          <div>
+            <div class="brand-text-main">JupLite</div>
+            <div class="brand-text-sub">Solana trading layer</div>
+          </div>
+        </a>
+
+        <nav>
+          <a href="/index.html" class="nav-link">Lite</a>
+          <a href="/pro.html" class="nav-link">Pro</a>
+          <a href="/ultra.html" class="nav-link">Ultra</a>
+          <a href="/refer.html" class="nav-link active">Refer &amp; Earn</a>
+        </nav>
+
+        <div class="nav-right">
+          <div class="nav-pill">0.5% JupLite fee · 20% to ref</div>
+          <button class="wallet-btn" type="button">
+            <span class="wallet-dot"></span>
+            <span>Connect wallet</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="page">
+        <div class="tag">
+          <span>Refer &amp; Earn</span>
+          <span>Passive income on every swap</span>
+        </div>
+
+        <h1>Refer &amp; Earn with JupLite</h1>
+        <p class="subtitle">
+          Share your JupLite terminal, invite friends and earn passive income every time they swap.
+          Your friend pays the same fee, but part of it returns to both of you.
+        </p>
+
+        <div class="grid">
+          <!-- Левая колонка: ссылка + основные метрики -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">My referral link</div>
+              <div class="pill"><span class="status-dot"></span>live tracking</div>
+            </div>
+
+            <label class="field-label">Share this link with your friends</label>
+            <div class="field">
+              <input id="ref-link-input" readonly value="https://juplite.com/?ref=..." />
+              <button id="ref-link-copy" class="btn" type="button">Copy</button>
+            </div>
+
+            <div class="row">
+              <div class="stat">
+                <div class="stat-label">Invited users</div>
+                <div class="stat-value" id="stat-invited">0</div>
+                <div class="stat-hint">number of connected wallets</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Total volume</div>
+                <div class="stat-value" id="stat-volume">0 USDC</div>
+                <div class="stat-hint">aggregate swaps of your referrals</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Earned</div>
+                <div class="stat-value" id="stat-earned">0.00 USDC</div>
+                <div class="stat-hint">passive income from JupLite fees</div>
+              </div>
+            </div>
+
+            <div class="badge-row">
+              <div class="badge"><strong>20%</strong> of JupLite fee from Level 1</div>
+              <div class="badge"><strong>5%</strong> of JupLite fee from Level 2</div>
+              <div class="badge"><strong>5%</strong> cashback to your friend</div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: VIP + баланс/вывод -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Balance &amp; VIP level</div>
+              <div class="pill" id="vip-pill">VIP 0 — 0 invited</div>
+            </div>
+
+            <div class="row">
+              <div class="stat">
+                <div class="stat-label">Balance</div>
+                <div class="stat-value" id="stat-balance">0.00 USDC</div>
+                <div class="stat-hint">minimum withdrawal 1 USDC</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Paid out</div>
+                <div class="stat-value" id="stat-paid">0.00 USDC</div>
+                <div class="stat-hint">withdrawals to your wallet</div>
+              </div>
+            </div>
+
+            <div class="vip-bar" id="vip-bar">
+              Invite <strong>1 friend</strong> to unlock <strong>VIP 1</strong> and get
+              <strong>15% of JupLite fee</strong> from their swaps.
+            </div>
+
+            <div class="withdraw-footer">
+              <span>Withdraw in USDC. Withdrawal fee: <strong>0.1 USDC</strong> (to cover tx).</span>
+              <button class="btn secondary" id="btn-withdraw" type="button" disabled>Withdraw to wallet</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Таблица рефералов -->
+        <div class="card" style="margin-top: 20px;">
+          <div class="card-header">
+            <div class="card-title">My referrals</div>
+            <div class="pill">Level 1 &amp; Level 2</div>
+          </div>
+
+          <div class="table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Level</th>
+                  <th>Wallet</th>
+                  <th>Swap volume</th>
+                  <th>Earned</th>
+                </tr>
+              </thead>
+              <tbody id="ref-table-body">
+                <!-- JS вставит строки -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>© JupLite. Built on Jupiter · Solana DeFi.</span>
+        <span>Refer &amp; Earn program: 20% L1 · 5% L2 · 5% cashback.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // === 1. Сохраняем ref, если пришёл по ссылке ?ref= ===
+    (function handleIncomingRef() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get("ref");
+        if (ref) {
+          const existing = localStorage.getItem("jupLite_parent_ref");
+          if (!existing) {
+            localStorage.setItem("jupLite_parent_ref", ref);
+          }
+        }
+      } catch (e) {
+        console.warn("referral param error", e);
+      }
+    })();
+
+    // === 2. Генерим мой ref-код (кошелёк или локальный JL-XXXX) ===
+    function getMyRefCode() {
+      let code = null;
+      try {
+        code = localStorage.getItem("jupLite_my_ref");
+      } catch (_) {}
+
+      if (!code) {
+        // пробуем взять кошелёк, если уже подключен
+        const walletPubkey =
+          (window.solana && window.solana.publicKey && window.solana.publicKey.toString && window.solana.publicKey.toString()) ||
+          (typeof window.JUPLITE_WALLET_PUBKEY === "string" ? window.JUPLITE_WALLET_PUBKEY : null);
+
+        if (walletPubkey) {
+          code = walletPubkey;
+        } else {
+          // fallback — локальный код
+          const rand = (crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()))
+            .replace(/-/g, "")
+            .slice(0, 8);
+          code = "JL-" + rand;
+        }
+
+        try {
+          localStorage.setItem("jupLite_my_ref", code);
+        } catch (_) {}
+      }
+
+      return code;
+    }
+
+    // === 3. Строим ссылку вида https://juplite.com/?ref=XXX ===
+    function buildMyRefLink() {
+      const myCode = getMyRefCode();
+      const origin = window.location.origin || "https://juplite.com";
+      return origin + "/?ref=" + encodeURIComponent(myCode);
+    }
+
+    // === 4. VIP логика (по количеству приглашённых) ===
+    function getVipPercent(invitedCount) {
+      if (invitedCount >= 100) return 30;
+      if (invitedCount >= 20) return 25;
+      if (invitedCount >= 5)  return 20;
+      if (invitedCount >= 1)  return 15;
+      return 0;
+    }
+
+    // === 5. Заглушка данных (пока без бэкенда) ===
+    function mockLoadStats() {
+      const key = "jupLite_demo_stats";
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (_) {}
+
+      const initial = {
+        invitedCount: 0,
+        volumeUsdc: 0,
+        earnedUsdc: 0,
+        balanceUsdc: 0,
+        paidOutUsdc: 0,
+        refs: [] // [{ level:1|2, wallet, volume, earned }]
+      };
+
+      try {
+        localStorage.setItem(key, JSON.stringify(initial));
+      } catch (_) {}
+
+      return initial;
+    }
+
+    function loadReferralStats() {
+      const data = mockLoadStats();
+
+      const invitedEl  = document.getElementById("stat-invited");
+      const volumeEl   = document.getElementById("stat-volume");
+      const earnedEl   = document.getElementById("stat-earned");
+      const balanceEl  = document.getElementById("stat-balance");
+      const paidEl     = document.getElementById("stat-paid");
+      const vipPill    = document.getElementById("vip-pill");
+      const vipBar     = document.getElementById("vip-bar");
+      const withdrawBtn = document.getElementById("btn-withdraw");
+      const tbody      = document.getElementById("ref-table-body");
+
+      if (invitedEl) invitedEl.textContent = String(data.invitedCount);
+      if (volumeEl)  volumeEl.textContent  = data.volumeUsdc.toFixed(2) + " USDC";
+      if (earnedEl)  earnedEl.textContent  = data.earnedUsdc.toFixed(2) + " USDC";
+      if (balanceEl) balanceEl.textContent = data.balanceUsdc.toFixed(2) + " USDC";
+      if (paidEl)    paidEl.textContent    = data.paidOutUsdc.toFixed(2) + " USDC";
+
+      const vipPercent = getVipPercent(data.invitedCount);
+
+      if (vipPill) {
+        vipPill.textContent = "VIP " + (vipPercent > 0 ? vipPercent : 0) +
+          " — " + data.invitedCount + " invited";
+      }
+
+      if (vipBar) {
+        if (vipPercent === 0) {
+          vipBar.innerHTML =
+            'Invite <strong>1 friend</strong> to unlock <strong>VIP 1</strong> ' +
+            'and get <strong>15% of JupLite fee</strong> from their swaps.';
+        } else {
+          vipBar.innerHTML =
+            'Your current level: <strong>VIP ' + vipPercent + '</strong>. ' +
+            'The more active referrals you have, the higher % from their fees.';
+        }
+      }
+
+      if (withdrawBtn) {
+        const canWithdraw = data.balanceUsdc >= 1.0;
+        withdrawBtn.disabled = !canWithdraw;
+        withdrawBtn.addEventListener("click", function () {
+          if (!canWithdraw) return;
+          alert("On-chain withdrawal will be implemented here. For now this is a demo.");
+        });
+      }
+
+      if (tbody) {
+        tbody.innerHTML = "";
+        if (!data.refs || !data.refs.length) {
+          const tr = document.createElement("tr");
+          const td = document.createElement("td");
+          td.colSpan = 4;
+          td.textContent = "No referrals yet. Share your link and track all stats here.";
+          td.style.color = "#9ca3af";
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        } else {
+          data.refs.forEach(function (r) {
+            const tr = document.createElement("tr");
+
+            const tdLevel = document.createElement("td");
+            tdLevel.textContent = r.level === 1 ? "Level 1" : "Level 2";
+
+            const tdWallet = document.createElement("td");
+            const w = r.wallet || "";
+            tdWallet.textContent = w.length > 12 ? w.slice(0, 4) + "..." + w.slice(-4) : w;
+
+            const tdVol = document.createElement("td");
+            tdVol.textContent = r.volume.toFixed(2) + " USDC";
+
+            const tdEarn = document.createElement("td");
+            tdEarn.textContent = r.earned.toFixed(2) + " USDC";
+
+            tr.appendChild(tdLevel);
+            tr.appendChild(tdWallet);
+            tr.appendChild(tdVol);
+            tr.appendChild(tdEarn);
+            tbody.appendChild(tr);
+          });
+        }
+      }
+    }
+
+    function initReferralUI() {
+      const input = document.getElementById("ref-link-input");
+      const copyBtn = document.getElementById("ref-link-copy");
+
+      if (input) {
+        input.value = buildMyRefLink();
+      }
+
+      if (copyBtn && input) {
+        copyBtn.addEventListener("click", function () {
+          navigator.clipboard.writeText(input.value).then(function () {
+            const prev = copyBtn.textContent;
+            copyBtn.textContent = "Copied!";
+            setTimeout(function () {
+              copyBtn.textContent = prev;
+            }, 1500);
+          }).catch(function () {});
+        });
+      }
+
+      loadReferralStats();
+    }
+
+    document.addEventListener("DOMContentLoaded", initReferralUI);
+  </script>
+</body>
+</html>
+
