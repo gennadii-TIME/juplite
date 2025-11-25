@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>JupLite — Fast Solana Exchange</title>
+<title>JupLite — Fast Solana Exchange</title>
   <!-- OpenGraph + Twitter large preview -->
   <meta property="og:title" content="JupLite — Fast Solana Exchange" />
-  <meta property="og:description"
-        content="10x better trading on Solana. Fast swaps with ultra-low fees, powered by Jupiter." />
+ <meta property="og:description"
+      content="10x better trading on Solana. Fast swaps with ultra-low fees, powered by Jupiter." />
   <meta property="og:image" content="https://juplite.com/og-banner.png" />
   <meta property="og:url" content="https://juplite.com" />
   <meta property="og:type" content="website" />
@@ -18,7 +18,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description"
-        content="JupLite is a 10x better Solana trading interface with ultra-low fees and best-route swaps powered by Jupiter." />
+      content="JupLite is a 10x better Solana trading interface with ultra-low fees and best-route swaps powered by Jupiter." />
   <meta name="theme-color" content="#020617" />
 
   <!-- Icons / manifest -->
@@ -378,6 +378,7 @@
       backdrop-filter: blur(18px);
     }
 
+    /* левая панель: контент сверху, кнопки внизу справа */
     .panel-left {
       display: flex;
       flex-direction: column;
@@ -466,6 +467,7 @@
       word-break: break-all;
     }
 
+    /* download buttons внизу панели */
     .download-buttons {
       display: flex;
       gap: 14px;
@@ -710,10 +712,13 @@
         <nav class="nav">
           <a href="#" class="nav-active" data-view="swap">Swap</a>
           <a href="/pro.html" class="nav-active-ultra">Ultra</a>
-          <a href="#" data-view="pools">Pools</a>
+          <a href="/pools.html">Pools</a>
           <a href="#" data-view="lend">Lend</a>
           <a href="#" data-view="portfolio">Portfolio</a>
-          <a href="/refer.html">Refer &amp; Earn <span class="nav-badge-new">new</span></a>
+          <a href="/refer.html">
+            Refer &amp; Earn
+            <span class="nav-badge-new">new</span>
+          </a>
         </nav>
       </div>
 
@@ -856,15 +861,13 @@
       </section>
     </div>
 
-    <div id="view-pools" class="view">
+    <div id="view-perps" class="view">
       <section class="panel">
-        <div class="section-title">Yield Pools</div>
-        <div class="section-tag">Kamino · Meteora · Raydium LPs</div>
+        <div class="section-title">Perps dashboard</div>
+        <div class="section-tag">Perpetuals aggregation · risk tools</div>
         <p class="section-text">
-          Здесь появится раздел доходных пулов Solana с привязкой к вашей JupLite-рефке:
-          лучшие LP-пулы, фарм, авто-ребаланс и стратегии, где вы зарабатываете не только
-          на доходности пула, но и на комиссии JupLite от свопов ваших рефералов.
-          Один дэшборд — и все пулы под контролем.
+          Здесь появится агрегатор перпетуальных контрактов на Solana с единым интерфейсом
+          управления риском, маржей и PnL. Пока раздел в разработке.
         </p>
       </section>
     </div>
@@ -913,124 +916,11 @@
     </div>
   </footer>
 
+  
+
+
   <script>
-    const JUPLITE_I18N = {
-      "en": {
-        "title": "JupLite — Solana Swap Router",
-        "description": "JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards.",
-        "logoSub": "Swap · Router · Solana",
-        "heroTitleMain": "Fast swaps on Solana,",
-        "heroHighlight": "Jupiter engine",
-        "heroText": "JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.",
-        "heroPills": [
-          "✓ Aggregated liquidity across Solana DEXes",
-          "✓ Non-custodial, wallet-native",
-          "✓ Built-in referral rewards"
-        ],
-        "cta": "Start swapping",
-        "swapBadge": "Routed by Jupiter Plugin",
-        "nav": {
-          "swap": "Swap",
-          "pro": "Pro",
-          "pools": "Pools",
-          "lend": "Lend",
-          "portfolio": "Portfolio",
-          "predict": "Predict"
-        }
-      },
-      "ru": {
-        "title": "JupLite — быстрый обмен токенов Solana",
-        "description": "JupLite — лёгкий интерфейс обмена токенов в сети Solana на базе Jupiter с лучшим маршрутом, низкими комиссиями и реферальными наградами.",
-        "logoSub": "Своп · Маршрутизатор · Solana",
-        "heroTitleMain": "Быстрые обмены в сети Solana,",
-        "heroHighlight": "движок Jupiter",
-        "heroText": "JupLite — №1 среди Solana-свопов. Уникальность платформы — минимально возможные комиссии. Официальный агрегатор Jupiter подбирает лучший курс и обеспечивает самую глубокую ликвидность. JupLite выбирают профессионалы: обмены проходят безопасно, прозрачно и без передачи ключей третьим лицам.",
-        "heroPills": [
-          "✓ Ликвидность со всех DEX в Solana",
-          "✓ Некостодиальный кошелёк — только вы",
-          "✓ Встроенные реферальные награды"
-        ],
-        "cta": "Начать обмен",
-        "swapBadge": "Маршрутизация через Jupiter Plugin",
-        "nav": {
-          "swap": "Своп",
-          "pro": "Про",
-          "pools": "Пулы",
-          "lend": "Лендинг",
-          "portfolio": "Портфель",
-          "predict": "Прогнозы"
-        }
-      },
-      "es": {
-        "title": "JupLite — Intercambios rápidos en Solana",
-        "description": "JupLite es una interfaz ligera de intercambio en Solana impulsada por Jupiter, con mejor ruta, bajas comisiones y recompensas por referidos.",
-        "logoSub": "Swap · Enrutador · Solana",
-        "heroTitleMain": "Swaps rápidos en Solana con",
-        "heroHighlight": "motor de Jupiter",
-        "heroText": "JupLite es la plataforma de swaps #1 en Solana. Su singularidad son las comisiones mínimas posibles. El agregador oficial Jupiter encuentra la mejor ruta y la liquidez más profunda. Los profesionales eligen JupLite por intercambios seguros y transparentes sin entregar sus claves a terceros.",
-        "heroPills": [
-          "✓ Liquidez agregada de los DEX de Solana",
-          "✓ No custodial, control total de tu wallet",
-          "✓ Recompensas integradas por referidos"
-        ],
-        "cta": "Empezar a intercambiar",
-        "swapBadge": "Ruteado por Jupiter Plugin",
-        "nav": {
-          "swap": "Swap",
-          "pro": "Pro",
-          "pools": "Pools",
-          "lend": "Préstamos",
-          "portfolio": "Portafolio",
-          "predict": "Predicciones"
-        }
-      },
-      "hi": {
-        "title": "JupLite — Solana पर तेज़ टोकन स्वैप",
-        "description": "JupLite एक हल्का Solana स्वैप इंटरफ़ेस है जो Jupiter पर आधारित है, जो बेहतर रूट, कम फ़ीस और रेफरल रिवॉर्ड्स देता है।",
-        "logoSub": "स्वैप · राउटर · Solana",
-        "heroTitleMain": "Solana पर तेज़ स्वैप,",
-        "heroHighlight": "Jupiter इंजन के साथ",
-        "heroText": "JupLite Solana स्वैप के लिए नंबर 1 प्लेटफ़ॉर्म है। इसकी खासियत है कि फ़ीस लगभग न्यूनतम रहती है। आधिकारिक Jupiter एग्रीगेटर सबसे अच्छा रूट और सबसे गहरी लिक्विडिटी चुनता है। प्रोफेशनल ट्रेडर्स JupLite को सुरक्षित और पारदर्शी स्वैप के लिए चुनते हैं — बिना किसी थर्ड पार्टी को चाबियाँ दिए।",
-        "heroPills": [
-          "✓ Solana DEX से एग्रीगेटेड लिक्विडिटी",
-          "✓ नॉन-कस्टोडियल, आपका अपना वॉलेट",
-          "✓ इनबिल्ट रेफरल रिवॉर्ड्स"
-        ],
-        "cta": "स्वैप शुरू करें",
-        "swapBadge": "Jupiter Plugin द्वारा रूटेड",
-        "nav": {
-          "swap": "स्वैप",
-          "pro": "प्रो",
-          "pools": "पूल्स",
-          "lend": "लेंड",
-          "portfolio": "पोर्टफोलियो",
-          "predict": "प्रिडिक्ट"
-        }
-      },
-      "ar": {
-        "title": "JupLite — تبادل سريع للتوكنات على Solana",
-        "description": "JupLite هو واجهة خفيفة لتبديل التوكنات على شبكة Solana تعمل بمحرك Jupiter مع أفضل مسار وعمولات منخفضة ومكافآت إحالة.",
-        "logoSub": "سواب · موجه · Solana",
-        "heroTitleMain": "تبديلات سريعة على Solana مع",
-        "heroHighlight": "محرك Jupiter",
-        "heroText": "JupLite هي المنصّة رقم 1 لمقايضات Solana. تميّزها هو الرسوم المنخفضة إلى الحد الأدنى الممكن. مجمّع Jupiter الرسمي يختار أفضل مسار ويوفّر أعمق سيولة. يختار المحترفون JupLite لإجراء مقايضات آمنة وشفافة من دون تسليم المفاتيح لطرف ثالث.",
-        "heroPills": [
-          "✓ سيولة مجمّعة من منصات DEX على Solana",
-          "✓ غير وصائي — التحكم الكامل في محفظتك",
-          "✓ مكافآت إحالة مدمجة"
-        ],
-        "cta": "ابدأ التبديل",
-        "swapBadge": "مُوجَّه بواسطة Jupiter Plugin",
-        "nav": {
-          "swap": "سواب",
-          "pro": "برو",
-          "pools": "مجمعات",
-          "lend": "إقراض",
-          "portfolio": "محفظة",
-          "predict": "توقعات"
-        }
-      }
-    };
+    const JUPLITE_I18N = {"en":{"title":"JupLite — Solana Swap Router","description":"JupLite is a lightweight Solana swap interface powered by Jupiter, with best-route aggregation and referral rewards.","logoSub":"Swap · Router · Solana","heroTitleMain":"Fast swaps on Solana,","heroHighlight":"Jupiter engine","heroText":"JupLite is the #1 Solana swap platform. Its uniqueness is ultra-low fees. The official Jupiter aggregator finds the best route and the deepest liquidity. Professionals choose JupLite for safe, transparent swaps without ever handing private keys to third parties.","heroPills":["✓ Aggregated liquidity across Solana DEXes","✓ Non-custodial, wallet-native","✓ Built-in referral rewards"],"cta":"Start swapping","swapBadge":"Routed by Jupiter Plugin","nav":{"swap":"Swap","pro":"Ultra","perps":"Pools","lend":"Lend","portfolio":"Portfolio","predict":"Predict"}},"ru":{"title":"JupLite — быстрый обмен токенов Solana","description":"JupLite — лёгкий интерфейс обмена токенов в сети Solana на базе Jupiter с лучшим маршрутом, низкими комиссиями и реферальными наградами.","logoSub":"Своп · Маршрутизатор · Solana","heroTitleMain":"Быстрые обмены в сети Solana,","heroHighlight":"движок Jupiter","heroText":"JupLite — №1 среди Solana-свопов. Уникальность платформы — минимально возможные комиссии. Официальный агрегатор Jupiter подбирает лучший курс и обеспечивает самую глубокую ликвидность. JupLite выбирают профессионалы: обмены проходят безопасно, прозрачно и без передачи ключей третьим лицам.","heroPills":["✓ Ликвидность со всех DEX в Solana","✓ Некостодиальный кошелёк — только вы","✓ Встроенные реферальные награды"],"cta":"Начать обмен","swapBadge":"Маршрутизация через Jupiter Plugin","nav":{"swap":"Своп","pro":"Ультра","perps":"Пулы","lend":"Лендинг","portfolio":"Портфель","predict":"Прогнозы"}},"es":{"title":"JupLite — Intercambios rápidos en Solana","description":"JupLite es una interfaz ligera de intercambio en Solana impulsada por Jupiter, con mejor ruta, bajas comisiones y recompensas por referidos.","logoSub":"Swap · Enrutador · Solana","heroTitleMain":"Swaps rápidos en Solana con","heroHighlight":"motor de Jupiter","heroText":"JupLite es la plataforma de swaps #1 en Solana. Su singularidad son las comisiones mínimas posibles. El agregador oficial Jupiter encuentra la mejor ruta y la liquidez más profunda. Los profesionales eligen JupLite por intercambios seguros y transparentes sin entregar sus claves a terceros.","heroPills":["✓ Liquidez agregada de los DEX de Solana","✓ No custodial, control total de tu wallet","✓ Recompensas integradas por referidos"],"cta":"Empezar a intercambiar","swapBadge":"Ruteado por Jupiter Plugin","nav":{"swap":"Swap","pro":"Ultra","perps":"Pools","lend":"Préstamos","portfolio":"Portafolio","predict":"Predicciones"}},"hi":{"title":"JupLite — Solana पर तेज़ टोकन स्वैप","description":"JupLite एक हल्का Solana स्वैप इंटरफ़ेस है जो Jupiter पर आधारित है, जो बेहतर रूट, कम फ़ीस और रेफरल रिवॉर्ड्स देता है।","logoSub":"स्वैप · राउटर · Solana","heroTitleMain":"Solana पर तेज़ स्वैप,","heroHighlight":"Jupiter इंजन के साथ","heroText":"JupLite Solana स्वैप के लिए नंबर 1 प्लेटफ़ॉर्म है। इसकी खासियत है कि फ़ीस लगभग न्यूनतम रहती है। आधिकारिक Jupiter एग्रीगेटर सबसे अच्छा रूट और सबसे गहरी लिक्विडिटी चुनता है। प्रोफेशनल ट्रेडर्स JupLite को सुरक्षित और पारदर्शी स्वैप के लिए चुनते हैं — बिना किसी थर्ड पार्टी को चाबियाँ दिए।","heroPills":["✓ Solana DEX से एग्रीगेटेड लिक्विडिटी","✓ नॉन-कस्टोडियल, आपका अपना वॉलेट","✓ इनबिल्ट रेफरल रिवॉर्ड्स"],"cta":"स्वैप शुरू करें","swapBadge":"Jupiter Plugin द्वारा रूटेड","nav":{"swap":"स्वैप","pro":"Ultra","perps":"पूल्स","lend":"लेंड","portfolio":"पोर्टफोलियो","predict":"प्रिडिक्ट"}},"ar":{"title":"JupLite — تبادل سريع للتوكنات على Solana","description":"JupLite هو واجهة خفيفة لتبديل التوكنات على شبكة Solana تعمل بمحرك Jupiter مع أفضل مسار وعمولات منخفضة ومكافآت إحالة.","logoSub":"سواب · موجه · Solana","heroTitleMain":"تبديلات سريعة على Solana مع","heroHighlight":"محرك Jupiter","heroText":"JupLite هي المنصّة رقم 1 لمقايضات Solana. تميّزها هو الرسوم المنخفضة إلى الحد الأدنى الممكن. مجمّع Jupiter الرسمي يختار أفضل مسار ويوفّر أعمق سيولة. يختار المحترفون JupLite لإجراء مقايضات آمنة وشفافة من دون تسليم المفاتيح لطرف ثالث.","heroPills":["✓ سيولة مجمّعة من منصات DEX على Solana","✓ غير وصائي — التحكم الكامل في محفظتك","✓ مكافآت إحالة مدمجة"],"cta":"ابدأ التبديل","swapBadge":"مُوجَّه بواسطة Jupiter Plugin","nav":{"swap":"سواب","pro":"ألترا","perps":"مجمعات","lend":"إقراض","portfolio":"محفظة","predict":"توقعات"}}};
 
     function jupLiteDetectInitialLang() {
       const saved = localStorage.getItem("jupLiteLang");
@@ -1330,5 +1220,7 @@
       initVisitorCounter();
     });
   </script>
+<!-- 🔼 КОНЕЦ МОДУЛЯ -->
+
 </body>
 </html>
