@@ -2,727 +2,735 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>JupLite — Ultra</title>
+  <title>JupLite Ultra Pro — Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="JupLite Ultra — advanced trading interface on top of Jupiter.">
-  <meta name="theme-color" content="#020617" />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon-32.png" />
+
+  <!-- Solana Web3 (для Phantom) -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
   <style>
     :root {
-      --bg: #020617;
-      --bg-elevated: #020617;
-      --border-subtle: rgba(148, 163, 184, 0.35);
+      --bg-card: rgba(15,23,42,0.96);
+      --border: rgba(148,163,184,0.35);
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
       --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.15);
       --radius-lg: 18px;
       --radius-full: 999px;
-      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
-      --max-width: 1180px;
-      --topbar-height: 52px;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      color: var(--text-main);
-      background:
-        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-    }
+    * { box-sizing: border-box; }
 
     body {
-      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--text-main);
+      background: transparent;
     }
 
-    /* ===== TOPBAR ===== */
-    .topbar {
-      height: var(--topbar-height);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-      background: radial-gradient(circle at top left, #020617, #020617 55%, #000 100%);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .topbar-inner {
+    .ultra-shell {
       width: 100%;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 12px;
+      padding: 12px;
+    }
+
+    .ultra-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      padding: 14px 14px 16px;
+    }
+
+    /* GRAPH */
+    .chart-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 16px;
-    }
-
-    .topbar-left {
-      display: flex;
       align-items: center;
-      gap: 16px;
-      min-width: 0;
+      margin-bottom: 8px;
     }
 
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-home {
-      cursor: pointer;
-    }
-
-    .logo-circle {
-      position: relative;
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    .logo-glow {
-      position: absolute;
-      inset: -6px;
-      border-radius: 999px;
-      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
-      filter: blur(6px);
-      opacity: 0.9;
-    }
-
-    .logo-img {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      position: relative;
-      z-index: 2;
-      box-shadow:
-        0 0 0 1px rgba(56, 189, 248, 0.35),
-        0 0 12px rgba(56, 189, 248, 0.4),
-        0 8px 18px rgba(15, 23, 42, 0.7);
-      display: block;
-    }
-
-    .logo-text-main {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .logo-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-    }
-
-    .nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 4px 10px;
-      border-radius: 999px;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .nav a.nav-active {
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .nav a:hover {
-      color: #e5e7eb;
-    }
-
-    .nav-badge-new {
-      font-size: 9px;
-      padding: 2px 5px;
-      border-radius: 999px;
-      background: #22c55e;
-      color: #020617;
-      margin-left: 4px;
-      text-transform: uppercase;
-    }
-
-    .search {
-      position: relative;
-      min-width: 0;
-      flex: 1;
-      max-width: 260px;
-    }
-
-    .search input {
-      width: 100%;
-      padding: 6px 26px 6px 26px;
-      border-radius: 999px;
-      border: 1px solid rgba(30, 64, 175, 0.8);
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
-      color: var(--text-main);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .search input::placeholder {
-      color: #6b7280;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .search-hotkey {
-      position: absolute;
-      right: 7px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 10px;
-      color: #6b7280;
-      border-radius: 4px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 1px 4px;
-    }
-
-    .icon-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      color: #9ca3af;
-    }
-
-    .icon-btn:hover {
-      border-color: rgba(75, 85, 99, 0.9);
-      color: var(--text-main);
-    }
-
-    .connect-btn {
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg, #22c55e, #4ade80);
-      color: #022c22;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
-      white-space: nowrap;
-    }
-
-    .connect-btn:hover {
-      filter: brightness(1.05);
-    }
-
-    /* ====== TICKER ====== */
-    .ticker-shell {
-      background: #020617;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-    }
-
-    .ticker {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .ticker::-webkit-scrollbar {
-      display: none;
-    }
-
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), #020617);
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .ticker-token-icon {
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #38bdf8, #0f172a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .ticker-symbol {
+    .pair-title {
+      font-size: 14px;
       font-weight: 500;
     }
 
-    .ticker-price {
-      color: #e5e7eb;
-    }
-
-    .ticker-change-up {
-      color: #4ade80;
-    }
-
-    .ticker-change-down {
-      color: #f97373;
-    }
-
-    /* ====== MAIN ====== */
-    .page-main {
-      max-width: var(--max-width);
-      margin: 12px auto 0;
-      padding: 0 12px 24px;
-    }
-
-    .panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-subtle);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.99));
-      box-shadow: var(--shadow-soft);
-      padding: 18px 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      backdrop-filter: blur(18px);
-    }
-
-    .section-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .section-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px dashed rgba(148, 163, 184, 0.5);
+    .pair-sub {
       font-size: 11px;
       color: var(--text-muted);
     }
 
-    .section-text {
-      font-size: 13px;
+    .pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 11px;
       color: var(--text-muted);
-      max-width: 520px;
-      line-height: 1.6;
     }
 
-    footer {
-      max-width: var(--max-width);
-      margin: 6px auto 0;
-      padding: 0 12px 18px;
+    .chart-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,0.9);
+      height: 320px;
+    }
+
+    .chart-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* SWAP */
+    .swap-header {
+      text-align: left;
+      margin-bottom: 6px;
+    }
+
+    .swap-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .swap-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* TABS */
+    .tabs {
+      display: inline-flex;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      padding: 3px;
+      margin: 10px 0 14px;
+      border: 1px solid rgba(31,41,55,0.9);
+      gap: 3px;
+    }
+
+    .tab {
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab-active {
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      font-weight: 600;
+    }
+
+    .tab-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.85);
+      color: var(--text-muted);
+    }
+
+    .tab-disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .connect-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: var(--radius-full);
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+      color: var(--text-main);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    input::placeholder {
+      color: #6b7280;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .primary-btn, .secondary-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 14px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+    }
+
+    .secondary-btn {
+      background: rgba(15,23,42,0.85);
+      color: var(--text-main);
+      border: 1px solid rgba(55,65,81,0.9);
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .fee-note {
+      margin-top: 6px;
       font-size: 10px;
       color: var(--text-muted);
+    }
+
+    .soon-box {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.8);
+    }
+
+    .log {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: pre-line;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+
+    .quote-info {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.35);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+    .quote-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 0;
+    }
+    .quote-row span:first-child {
+      color: #9ca3af;
+    }
+
+    .history-list {
+      font-size: 12px;
+      color: #e5e7eb;
+      max-height: 180px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.25);
+      padding: 10px;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.06), transparent 55%);
+    }
+    .history-item {
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(148,163,184,0.25);
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .history-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-pair {
+      font-weight: 600;
+    }
+    .history-amounts {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .history-meta {
+      font-size: 11px;
+      color: #9ca3af;
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      opacity: 0.85;
     }
-
-    footer a {
-      color: var(--accent);
+    .history-link a {
+      color: #38bdf8;
       text-decoration: none;
     }
-
-    footer a:hover {
+    .history-link a:hover {
       text-decoration: underline;
     }
 
-    /* ====== LANG SWITCH ====== */
-    .lang-switch {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 0 6px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      font-size: 10px;
-    }
-
-    .lang-btn {
-      border: none;
-      background: transparent;
-      color: #9ca3af;
-      padding: 2px 6px;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 10px;
-      line-height: 1.2;
-    }
-
-    .lang-btn.lang-active {
-      background: rgba(56, 189, 248, 0.16);
-      color: #e5e7eb;
-    }
-
-    .lang-btn:hover {
-      color: #e5e7eb;
-    }
-
-    /* ===== ULTRA WRAPPER ===== */
-    .terminal-wrapper {
-      border-radius: 22px;
-      border: 1px solid rgba(31,41,55,0.95);
-      background: radial-gradient(circle at top, rgba(15,23,42,0.98), #020617);
-      box-shadow: var(--shadow-soft);
-      padding: 12px;
-      min-height: 600px;
-    }
-
-    #ultra-skeleton {
-      width: 100%;
-      height: 320px;
-      border-radius: 18px;
-      background: radial-gradient(circle at top,#020617,#020617);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#64748b;
-      font-size:13px;
-      border:1px solid rgba(31,41,55,0.9);
-      box-shadow:0 20px 50px rgba(15,23,42,0.9);
-    }
-
-    #ultra-frame {
-      width:100%;
-      height:720px;
-      border:none;
-      border-radius:18px;
-      overflow:hidden;
-      display:none;
-    }
-
     @media (max-width: 900px) {
-      .topbar-inner { padding-inline: 8px; }
-      .nav { display: none; }
-      .search { max-width: 180px; }
-      .panel { padding: 14px 12px 16px; }
-      #ultra-frame { height: 900px; }
-    }
-
-    @media (max-width: 600px) {
-      .logo-text-sub { display: none; }
-      .section-text { max-width: none; }
-      #ultra-frame { height: 1100px; }
-    }
-
-    @media (max-width: 900px) {
-      .lang-switch { display: none; }
+      .ultra-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .chart-frame {
+        height: 260px;
+      }
     }
   </style>
 </head>
+
 <body>
+<div class="ultra-shell">
+  <div class="ultra-layout">
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="topbar-left">
-        <div class="logo-wrap logo-home"
-             role="button"
-             tabindex="0"
-             onclick="window.location.href='/index.html'"
-             onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
-          <div class="logo-circle">
-            <div class="logo-glow"></div>
-            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
-          </div>
-          <div>
-            <div class="logo-text-main">JupLite</div>
-            <div class="logo-text-sub">Swap · Router · Solana</div>
-          </div>
+    <!-- LEFT: Chart -->
+    <section class="card">
+      <div class="chart-header">
+        <div>
+          <div class="pair-title">SOL / USDC</div>
+          <div class="pair-sub">Ultra route · Jupiter</div>
         </div>
-
-        <nav class="nav">
-          <a href="/index.html" data-view="swap">Swap</a>
-          <a href="/pro.html" class="nav-active" data-nav="ultra">Ultra</a>
-          <a href="#" data-view="perps">Perps</a>
-          <a href="#" data-view="lend">Lend</a>
-          <a href="#" data-view="portfolio">Portfolio</a>
-          <a href="/refer.html" data-nav="refer">
-            Refer &amp; Earn <span class="nav-badge-new">new</span>
-          </a>
-        </nav>
+        <div class="pill">Chart preview</div>
       </div>
-
-      <div class="topbar-right">
-        <div class="search">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Search token, wallet or feature" />
-          <span class="search-hotkey">/</span>
-        </div>
-        <div class="lang-switch" aria-label="Language switcher">
-          <button class="lang-btn lang-active" type="button" data-lang="en">EN</button>
-          <button class="lang-btn" type="button" data-lang="ru">RU</button>
-          <button class="lang-btn" type="button" data-lang="es">ES</button>
-          <button class="lang-btn" type="button" data-lang="hi">HI</button>
-          <button class="lang-btn" type="button" data-lang="ar">AR</button>
-        </div>
-        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
-        <button class="connect-btn" type="button">Connect</button>
+      <div class="chart-frame">
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=0&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en"
+          loading="lazy">
+        </iframe>
       </div>
-    </div>
-  </div>
-
-  <!-- TICKER -->
-  <div class="ticker-shell">
-    <div class="ticker">
-      <div class="ticker-item">
-        <div class="ticker-token-icon">K</div>
-        <span class="ticker-symbol">KMNO</span>
-        <span class="ticker-price">$0.0515</span>
-        <span class="ticker-change-down">-2.9%</span>
-      </div>
-      <div class="ticker-item">
-        <div class="ticker-token-icon">M</div>
-        <span class="ticker-symbol">MET</span>
-        <span class="ticker-price">$0.3408</span>
-        <span class="ticker-change-down">-3.0%</span>
-      </div>
-      <div class="ticker-item">
-        <div class="ticker-token-icon">J</div>
-        <span class="ticker-symbol">JUP</span>
-        <span class="ticker-price">$0.2544</span>
-        <span class="ticker-change-up">+1.1%</span>
-      </div>
-      <div class="ticker-item">
-        <div class="ticker-token-icon">S</div>
-        <span class="ticker-symbol">SOL</span>
-        <span class="ticker-price">$132.41</span>
-        <span class="ticker-change-down">-0.6%</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="page-main">
-    <section class="panel">
-      <div class="section-title" id="ultra-title">JupLite Ultra</div>
-      <div class="section-tag" id="ultra-tag">
-        Ultra terminal · Advanced routing · Referral + service fee
-      </div>
-      <p class="section-text" id="ultra-lead">
-        Ultra mode uses advanced Jupiter routing and your JupLite referral logic on top.
-        This page is a dedicated Ultra terminal: all swaps here go through the Ultra engine
-        and apply your referral and extra service fees.
-      </p>
-
-      <main class="terminal-wrapper">
-        <div id="ultra-skeleton">
-          Loading JupLite Ultra…
-        </div>
-        <iframe id="ultra-frame" title="JupLite Ultra"></iframe>
-      </main>
     </section>
+
+    <!-- RIGHT: Swap -->
+    <section class="card">
+      <div class="swap-header">
+        <div class="swap-title">Ultra Swap (JupLite Pro)</div>
+        <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab tab-active" data-tab="market">Market</button>
+        <button class="tab tab-disabled" data-tab="limit">
+          Limit <span class="tab-badge">soon</span>
+        </button>
+        <button class="tab tab-disabled" data-tab="dca">
+          DCA <span class="tab-badge">soon</span>
+        </button>
+        <button class="tab tab-disabled" data-tab="twap">
+          TWAP <span class="tab-badge">soon</span>
+        </button>
+      </div>
+
+      <!-- Market Panel -->
+      <div id="market-panel">
+        <button id="connectBtn" class="connect-btn">Connect Wallet</button>
+
+        <label>From:</label>
+        <select id="fromToken"></select>
+
+        <label>To:</label>
+        <select id="toToken"></select>
+
+        <label>Amount:</label>
+        <input id="amount" placeholder="0.0" />
+
+        <div class="btn-row">
+          <button id="quoteBtn" class="primary-btn">Get Quote</button>
+          <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
+        </div>
+
+        <div class="quote-info" id="quote-info">
+          <div class="quote-row">
+            <span>Min received</span>
+            <span id="quote-min">—</span>
+          </div>
+          <div class="quote-row">
+            <span>Price impact</span>
+            <span id="quote-impact">—</span>
+          </div>
+          <div class="quote-row">
+            <span>Fees</span>
+            <span id="quote-fees">10x better trading</span>
+          </div>
+        </div>
+
+        <div class="fee-note">
+          10x better trading
+        </div>
+      </div>
+
+      <!-- Coming Soon Tabs -->
+      <div id="coming-soon-panel" style="display:none;">
+        <div class="soon-box" id="soon-text">
+          Coming soon…
+        </div>
+      </div>
+
+      <div class="log" id="log"></div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Recent swaps (JupLite Ultra)</div>
+          <div class="card-subtitle">Local history — only swaps made via this page on this device</div>
+        </div>
+        <div class="history-list" id="swap-history"></div>
+      </div>
+    </section>
+
   </div>
+</div>
 
-  <footer>
-    <div>JupLite is an independent interface built on top of Jupiter.</div>
-    <div>
-      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
-      <span class="visit-counter">· visitors: <span id="visitor-count">—</span></span>
-    </div>
-  </footer>
+<script>
+/* Ultra endpoints */
+const ultraQuoteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/quote";
+const ultraOrderURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/order";
+const ultraExecuteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/execute";
 
-  <script>
-    /* ===== I18N для Ultra ===== */
-    const JUPLITE_I18N_ULTRA = {
-      en: {
-        logoSub: "Swap · Router · Solana",
-        nav: { swap: "Swap", perps: "Perps", lend: "Lend", portfolio: "Portfolio", refer: "Refer & Earn", ultra: "Ultra" },
-        ultraTitle: "JupLite Ultra",
-        ultraTag: "Ultra terminal · Advanced routing · Referral + service fee",
-        ultraLead:
-          "Ultra mode uses advanced Jupiter routing and your JupLite referral logic on top. All swaps here go through the Ultra engine with referral and extra service fees.",
-      },
-      ru: {
-        logoSub: "Своп · Маршрутизатор · Solana",
-        nav: { swap: "Своп", perps: "Перпетуалы", lend: "Лендинг", portfolio: "Портфель", refer: "Рефералы", ultra: "Ультра" },
-        ultraTitle: "JupLite Ultra",
-        ultraTag: "Ultra-терминал · Маршрутизация · Реферал + сервис",
-        ultraLead:
-          "Режим Ultra использует продвинутый роутинг Jupiter и вашу реферальную логику JupLite. Все свопы на этой странице проходят через Ultra-движок с реферальной и дополнительной комиссией.",
-      },
-      es: {
-        logoSub: "Swap · Enrutador · Solana",
-        nav: { swap: "Swap", perps: "Perps", lend: "Préstamos", portfolio: "Portafolio", refer: "Referidos", ultra: "Ultra" },
-        ultraTitle: "JupLite Ultra",
-        ultraTag: "Terminal Ultra · Enrutamiento avanzado · Comisión + referidos",
-        ultraLead:
-          "Ultra usa el enrutamiento avanzado de Jupiter junto con tu lógica de referidos de JupLite. Todos los swaps aquí pasan por el motor Ultra con comisión de servicio y referidos.",
-      },
-      hi: {
-        logoSub: "स्वैप · राउटर · Solana",
-        nav: { swap: "स्वैप", perps: "परपेचुअल", lend: "लेंड", portfolio: "पोर्टफोलियो", refer: "रेफरल", ultra: "Ultra" },
-        ultraTitle: "JupLite Ultra",
-        ultraTag: "Ultra टर्मिनल · एडवांस रूटिंग · रेफरल + सर्विस फ़ीस",
-        ultraLead:
-          "Ultra मोड Jupiter का एडवांस रूटिंग और आपकी JupLite रेफरल लॉजिक इस्तेमाल करता है. इस पेज पर सारे स्वैप Ultra इंजन से गुजरते हैं, रेफरल और एक्स्ट्रा सर्विस फ़ीस के साथ.",
-      },
-      ar: {
-        logoSub: "سواب · موجه · Solana",
-        nav: { swap: "سواب", perps: "عقود دائمة", lend: "إقراض", portfolio: "محفظة", refer: "الإحالات", ultra: "ألترا" },
-        ultraTitle: "JupLite Ultra",
-        ultraTag: "منصة Ultra · توجيه متقدم · عمولة وخدمة",
-        ultraLead:
-          "وضع Ultra يستخدم توجيه Jupiter المتقدم مع منطق الإحالات في JupLite. جميع المبادلات هنا تمر عبر محرك Ultra مع عمولة خدمة وعمولة إحالة.",
+/* Referral 0.50% */
+const REFERRAL = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b";
+const REFERRAL_BPS = 50;
+
+/* Extra Fee 0.50% */
+const EXTRA_FEE_BPS = 50;
+const EXTRA_FEE_WALLET = REFERRAL;
+
+/* Blockchain */
+let wallet = null;
+let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
+let tokenList = [];
+
+/* Tabs */
+const tabs = document.querySelectorAll(".tab");
+const marketPanel = document.getElementById("market-panel");
+const comingPanel = document.getElementById("coming-soon-panel");
+const soonText = document.getElementById("soon-text");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    const t = tab.dataset.tab;
+
+    if (t === "market") {
+      tabs.forEach(x => x.classList.remove("tab-active"));
+      tab.classList.add("tab-active");
+      comingPanel.style.display = "none";
+      marketPanel.style.display = "block";
+      return;
+    }
+
+    tabs.forEach(x => x.classList.remove("tab-active"));
+    tab.classList.add("tab-active");
+
+    marketPanel.style.display = "none";
+    comingPanel.style.display = "block";
+
+    if (t === "limit") soonText.textContent = "Limit orders coming soon.";
+    if (t === "dca") soonText.textContent = "DCA strategy coming soon.";
+    if (t === "twap") soonText.textContent = "TWAP execution coming soon.";
+  });
+});
+
+/* Load tokens */
+async function loadTokens() {
+  const res = await fetch("https://cache.jup.ag/tokens");
+  tokenList = await res.json();
+
+  const fromSel = document.getElementById("fromToken");
+  const toSel = document.getElementById("toToken");
+
+  tokenList.forEach(t => {
+    const o1 = document.createElement("option");
+    o1.value = t.address;
+    o1.textContent = t.symbol;
+    fromSel.appendChild(o1);
+
+    const o2 = document.createElement("option");
+    o2.value = t.address;
+    o2.textContent = t.symbol;
+    toSel.appendChild(o2);
+  });
+
+  fromSel.value = "EPjFWdd5AufqSSqeM2q1xzybapC8G4wEGGkZwyTDt1v"; // USDC
+  toSel.value = "So11111111111111111111111111111111111111112"; // SOL
+}
+loadTokens();
+
+/* Connect Wallet */
+document.getElementById("connectBtn").onclick = async () => {
+  try {
+    const provider = window.solana;
+    if (!provider) return alert("Phantom wallet not found");
+
+    await provider.connect();
+    wallet = provider;
+    log("Connected: " + wallet.publicKey.toString());
+  } catch (e) {
+    log("Wallet error: " + e.message);
+  }
+};
+
+/* Quote */
+let lastQuote = null;
+
+document.getElementById("quoteBtn").onclick = async () => {
+  if (!wallet) return alert("Connect wallet first");
+
+  const inputMint = document.getElementById("fromToken").value;
+  const outputMint = document.getElementById("toToken").value;
+  const amount = parseFloat(document.getElementById("amount").value || "0");
+
+  if (!amount) return alert("Enter amount");
+
+  const decimalsIn = tokenList.find(t => t.address === inputMint)?.decimals ?? 6;
+  const raw = Math.round(amount * 10 ** decimalsIn);
+
+  const url =
+    `${ultraQuoteURL}?inputMint=${inputMint}&outputMint=${outputMint}` +
+    `&amount=${raw}&slippageBps=100&platformFeeBps=${REFERRAL_BPS}` +
+    `&platformFeeAccount=${REFERRAL}`;
+
+  try {
+    const res = await fetch(url);
+    lastQuote = await res.json();
+
+    if (!lastQuote.route) {
+      log("No route");
+      return;
+    }
+
+    // Обновляем UI котировки: min received, impact, fees
+    try {
+      const outMint = document.getElementById("toToken").value;
+      const outToken = tokenList.find(t => t.address === outMint);
+      const outDecimals = outToken?.decimals ?? 6;
+
+      const outRaw = Number(lastQuote.outAmount || 0);
+      if (outRaw > 0) {
+        const outUi = outRaw / 10 ** outDecimals;
+        const slippage = Number(lastQuote.slippageBps ?? 100);
+        const minReceived = outUi * (1 - slippage / 10000);
+
+        const minEl = document.getElementById("quote-min");
+        if (minEl) minEl.textContent = minReceived.toFixed(6) + " " + (outToken?.symbol || "");
+
+        const impactEl = document.getElementById("quote-impact");
+        const impact = typeof lastQuote.priceImpactPct === "number" ? lastQuote.priceImpactPct : null;
+        if (impactEl) impactEl.textContent = impact !== null ? impact.toFixed(2) + "%" : "—";
+
+        const feesEl = document.getElementById("quote-fees");
+        if (feesEl) feesEl.textContent = "10x better trading";
       }
-    };
+    } catch (_) {}
 
-    function detectLang() {
-      const saved = localStorage.getItem("jupLiteLang");
-      if (saved && JUPLITE_I18N_ULTRA[saved]) return saved;
-      const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
-      if (nav.startsWith("ru")) return "ru";
-      if (nav.startsWith("es")) return "es";
-      if (nav.startsWith("hi")) return "hi";
-      if (nav.startsWith("ar")) return "ar";
-      return "en";
+    log("Route:\n" + JSON.stringify(lastQuote.route, null, 2));
+    document.getElementById("swapBtn").disabled = false;
+
+  } catch (e) {
+    log("Quote error: " + e.message);
+  }
+};
+
+/* Swap */
+document.getElementById("swapBtn").onclick = async () => {
+  if (!lastQuote) return;
+
+  const swapBtn = document.getElementById("swapBtn");
+  if (swapBtn) {
+    swapBtn.disabled = true;
+    swapBtn.textContent = "Swapping…";
+  }
+
+  log("Creating Ultra order…");
+
+  const payload = {
+    route: lastQuote.route,
+    userPublicKey: wallet.publicKey.toString(),
+
+    platformFeeBps: REFERRAL_BPS,
+    platformFeeAccount: REFERRAL,
+
+    extraFee: {
+      feeBps: EXTRA_FEE_BPS,
+      feeAccount: EXTRA_FEE_WALLET
     }
+  };
 
-    function setLangButtons(lang) {
-      document.querySelectorAll(".lang-btn").forEach((btn) => {
-        const c = btn.getAttribute("data-lang");
-        btn.classList.toggle("lang-active", c === lang);
-      });
-    }
-
-    function applyLang(lang) {
-      if (!JUPLITE_I18N_ULTRA[lang]) lang = "en";
-      const d = JUPLITE_I18N_ULTRA[lang];
-
-      document.documentElement.lang = lang;
-      document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
-
-      const logoSub = document.querySelector(".logo-text-sub");
-      if (logoSub && d.logoSub) logoSub.textContent = d.logoSub;
-
-      if (d.nav) {
-        document.querySelectorAll(".nav a").forEach((a) => {
-          if (a.dataset.view === "swap" && d.nav.swap) a.textContent = d.nav.swap;
-          if (a.dataset.view === "perps" && d.nav.perps) a.textContent = d.nav.perps;
-          if (a.dataset.view === "lend" && d.nav.lend) a.textContent = d.nav.lend;
-          if (a.dataset.view === "portfolio" && d.nav.portfolio) a.textContent = d.nav.portfolio;
-          if (a.getAttribute("data-nav") === "refer" && d.nav.refer) {
-            a.innerHTML = d.nav.refer + ' <span class="nav-badge-new">new</span>';
-          }
-          if (a.getAttribute("data-nav") === "ultra" && d.nav.ultra) {
-            a.textContent = d.nav.ultra;
-          }
-        });
-      }
-
-      const t = document.getElementById("ultra-title");
-      const tag = document.getElementById("ultra-tag");
-      const lead = document.getElementById("ultra-lead");
-      if (t && d.ultraTitle) t.textContent = d.ultraTitle;
-      if (tag && d.ultraTag) tag.textContent = d.ultraTag;
-      if (lead && d.ultraLead) lead.textContent = d.ultraLead;
-
-      setLangButtons(lang);
-      try { localStorage.setItem("jupLiteLang", lang); } catch (e) {}
-    }
-
-    function initLangSwitcher() {
-      const lang = detectLang();
-      applyLang(lang);
-      document.querySelectorAll(".lang-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const l = btn.getAttribute("data-lang");
-          applyLang(l);
-        });
-      });
-    }
-
-    function initVisitorCounter() {
-      const el = document.getElementById("visitor-count");
-      if (!el) return;
-      const url = "https://api.countapi.xyz/hit/juplite.com/mainpage";
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          if (typeof data.value === "number") {
-            el.textContent = data.value.toLocaleString("en-US");
-          } else {
-            el.textContent = "—";
-          }
-        })
-        .catch(() => { el.textContent = "—"; });
-    }
-
-    function initTicker() {
-      // пока статичный — как на других страницах
-    }
-
-    function initUltraFrame() {
-      const frame = document.getElementById("ultra-frame");
-      const skeleton = document.getElementById("ultra-skeleton");
-      if (!frame || !skeleton) return;
-
-      setTimeout(function () {
-        frame.src = "/ultra.html";
-      }, 150);
-
-      frame.addEventListener("load", function () {
-        skeleton.style.display = "none";
-        frame.style.display = "block";
-      });
-    }
-
-    window.addEventListener("load", function () {
-      initLangSwitcher();
-      initTicker();
-      initVisitorCounter();
-      initUltraFrame();
+  try {
+    const res = await fetch(ultraOrderURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
     });
-  </script>
+
+    const order = await res.json();
+
+    if (!order.transaction) {
+      log("Order error:\n" + JSON.stringify(order, null, 2));
+      return;
+    }
+
+    log("Order OK. Signing…");
+
+    const tx = solanaWeb3.Transaction.from(Buffer.from(order.transaction, "base64"));
+    const signed = await wallet.signTransaction(tx);
+    const raw = signed.serialize().toString("base64");
+
+    const exec = await fetch(ultraExecuteURL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ signedTx: raw })
+    });
+
+    const out = await exec.json();
+
+    if (out.txid) {
+      log("SUCCESS:\nhttps://solscan.io/tx/" + out.txid);
+      try {
+        const inputMint = document.getElementById("fromToken").value;
+        const outputMint = document.getElementById("toToken").value;
+        const amountUi = parseFloat(document.getElementById("amount").value || "0");
+
+        const outToken = tokenList.find(t => t.address === outputMint);
+        const outDecimals = outToken?.decimals ?? 6;
+        let outUi = null;
+        if (lastQuote && lastQuote.outAmount) {
+          outUi = Number(lastQuote.outAmount) / 10 ** outDecimals;
+        }
+
+        addSwapToHistory({
+          inputMint,
+          outputMint,
+          inUi: amountUi ? amountUi.toFixed(6) + " " : "",
+          outUi: outUi !== null ? outUi.toFixed(6) + " " + (outToken?.symbol || "") : "",
+          signature: out.txid
+        });
+      } catch (_) {}
+    } else {
+      log("Exec error:\n" + JSON.stringify(out, null, 2));
+    }
+
+  } catch (e) {
+    log("Swap error: " + e.message);
+  } finally {
+    const swapBtn = document.getElementById("swapBtn");
+    if (swapBtn) {
+      swapBtn.disabled = false;
+      swapBtn.textContent = "Swap";
+    }
+  }
+};
+
+
+const HISTORY_KEY = "juplite-ultra-swap-history-v1";
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(list) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(-20)));
+  } catch {}
+}
+
+function addSwapToHistory(entry) {
+  const list = loadHistory();
+  const withTs = { ...entry, ts: Date.now() };
+  list.push(withTs);
+  saveHistory(list);
+  renderHistory(list);
+}
+
+function renderHistory(list) {
+  const box = document.getElementById("swap-history");
+  if (!box) return;
+  if (!list.length) {
+    box.textContent = "No swaps yet. Complete a swap to see them here.";
+    return;
+  }
+  const rows = list
+    .slice()
+    .reverse()
+    .map(item => {
+      const date = new Date(item.ts);
+      const timeStr = date.toLocaleString();
+      const inFmt = item.inUi ?? "";
+      const outFmt = item.outUi ?? "";
+      const sig = item.signature || "";
+      const pair = (item.inputMint || "IN").slice(0,4) + "…/" + (item.outputMint || "OUT").slice(0,4) + "…";
+      const link = sig ? `https://solscan.io/tx/${sig}` : "";
+      return [
+        '<div class="history-item">',
+          '<div class="history-main">',
+            `<div class="history-pair">${pair}</div>`,
+            `<div class="history-amounts">${inFmt} → ${outFmt}</div>`,
+          '</div>',
+          '<div class="history-meta">',
+            `<div class="history-time">${timeStr}</div>`,
+            link ? `<div class="history-link"><a href="${link}" target="_blank" rel="noopener noreferrer">View</a></div>` : '<div></div>',
+          '</div>',
+        '</div>'
+      ].join("");
+    })
+    .join("");
+  box.innerHTML = rows;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderHistory(loadHistory());
+});
+
+function log(t) {
+  document.getElementById("log").textContent = t;
+}
+</script>
+
 </body>
 </html>
