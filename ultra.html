@@ -5,53 +5,432 @@
   <title>JupLite Ultra Pro — Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <link rel="icon" href="/favicon-32.png" />
+  <meta name="description" content="JupLite Ultra — advanced trading interface on top of Jupiter.">
+  <meta name="theme-color" content="#020617" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
 
   <!-- Solana Web3 (для Phantom) -->
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
   <style>
     :root {
-      --bg-card: rgba(15,23,42,0.96);
-      --border: rgba(148,163,184,0.35);
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.35);
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
       --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
       --radius-lg: 18px;
       --radius-full: 999px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.85);
+      --max-width: 1180px;
+      --topbar-height: 52px;
+
+      --bg-card: rgba(15,23,42,0.96);
+      --border: rgba(148,163,184,0.35);
     }
 
-    * { box-sizing: border-box; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
       color: var(--text-main);
-      background: transparent;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
     }
 
-    .ultra-shell {
+    body {
+      min-height: 100vh;
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+      height: var(--topbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top left, #020617, #020617 55%, #000 100%);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
       width: 100%;
-      padding: 12px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
 
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-home {
+      cursor: pointer;
+    }
+
+    .logo-circle {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #6366f1, #22c55e);
+      filter: blur(6px);
+      opacity: 0.9;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      position: relative;
+      z-index: 2;
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.4),
+        0 8px 18px rgba(15, 23, 42, 0.7);
+      display: block;
+    }
+
+    .logo-text-main {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 999px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav a.nav-active {
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .nav a:hover {
+      color: #e5e7eb;
+    }
+
+    .nav-badge-new {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      background: #22c55e;
+      color: #020617;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    .search {
+      position: relative;
+      min-width: 0;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 6px 26px 6px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .search-hotkey {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #6b7280;
+      border-radius: 4px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 1px 4px;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .icon-btn:hover {
+      border-color: rgba(75, 85, 99, 0.9);
+      color: var(--text-main);
+    }
+
+    .connect-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+      white-space: nowrap;
+    }
+
+    .connect-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    /* ====== TICKER ====== */
+    .ticker-shell {
+      background: #020617;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .ticker {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ticker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .ticker-token-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .ticker-symbol {
+      font-weight: 500;
+    }
+
+    .ticker-price {
+      color: #e5e7eb;
+    }
+
+    .ticker-change-up {
+      color: #4ade80;
+    }
+
+    .ticker-change-down {
+      color: #f97373;
+    }
+
+    /* ====== MAIN LAYOUT ====== */
+    .page-main {
+      max-width: var(--max-width);
+      margin: 12px auto 0;
+      padding: 0 12px 24px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.99));
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(18px);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .section-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 6px auto 0;
+      padding: 0 12px 18px;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      opacity: 0.85;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), #020617);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 10px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      padding: 2px 6px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    .lang-btn.lang-active {
+      background: rgba(56, 189, 248, 0.16);
+      color: #e5e7eb;
+    }
+
+    .lang-btn:hover {
+      color: #e5e7eb;
+    }
+
+    /* ===== ULTRA LAYOUT (внутри панели) ===== */
     .ultra-layout {
       display: grid;
       grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
       gap: 16px;
       align-items: stretch;
+      margin-top: 8px;
     }
 
-    .card {
+    .card-inner {
       background: var(--bg-card);
-      border-radius: var(--radius-lg);
+      border-radius: 18px;
       border: 1px solid var(--border);
       box-shadow: 0 18px 40px rgba(0,0,0,0.55);
       padding: 14px 14px 16px;
     }
 
-    /* GRAPH */
     .chart-header {
       display: flex;
       justify-content: space-between;
@@ -90,7 +469,6 @@
       border: none;
     }
 
-    /* SWAP */
     .swap-header {
       text-align: left;
       margin-bottom: 6px;
@@ -106,7 +484,6 @@
       color: var(--text-muted);
     }
 
-    /* TABS */
     .tabs {
       display: inline-flex;
       border-radius: 999px;
@@ -149,7 +526,7 @@
       cursor: default;
     }
 
-    .connect-btn {
+    .connect-btn-inner {
       width: 100%;
       padding: 11px;
       border-radius: var(--radius-full);
@@ -243,7 +620,6 @@
       overflow-y: auto;
     }
 
-    
     .quote-info {
       margin-top: 8px;
       padding: 8px 10px;
@@ -253,6 +629,7 @@
       font-size: 11px;
       color: #e5e7eb;
     }
+
     .quote-row {
       display: flex;
       justify-content: space-between;
@@ -260,6 +637,7 @@
       gap: 8px;
       padding: 2px 0;
     }
+
     .quote-row span:first-child {
       color: #9ca3af;
     }
@@ -311,6 +689,9 @@
     }
 
     @media (max-width: 900px) {
+      .nav { display: none; }
+      .search { max-width: 180px; }
+      .panel { padding: 14px 12px 16px; }
       .ultra-layout {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -318,130 +699,318 @@
         height: 260px;
       }
     }
+
+    @media (max-width: 600px) {
+      .logo-text-sub { display: none; }
+      .section-text { max-width: none; }
+      .history-list { max-height: 220px; }
+    }
+
+    @media (max-width: 900px) {
+      .lang-switch { display: none; }
+    }
   </style>
 </head>
-
 <body>
-<div class="ultra-shell">
-  <div class="ultra-layout">
 
-    <!-- LEFT: Chart -->
-    <section class="card">
-      <div class="chart-header">
-        <div>
-          <div class="pair-title">SOL / USDC</div>
-          <div class="pair-sub">Ultra route · Jupiter</div>
-        </div>
-        <div class="pill">Chart preview</div>
-      </div>
-      <div class="chart-frame">
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=0&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en"
-          loading="lazy">
-        </iframe>
-      </div>
-    </section>
-
-    <!-- RIGHT: Swap -->
-    <section class="card">
-      <div class="swap-header">
-        <div class="swap-title">Ultra Swap (JupLite Pro)</div>
-        <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tabs" role="tablist">
-        <button class="tab tab-active" data-tab="market">Market</button>
-        <button class="tab tab-disabled" data-tab="limit">
-          Limit <span class="tab-badge">soon</span>
-        </button>
-        <button class="tab tab-disabled" data-tab="dca">
-          DCA <span class="tab-badge">soon</span>
-        </button>
-        <button class="tab tab-disabled" data-tab="twap">
-          TWAP <span class="tab-badge">soon</span>
-        </button>
-      </div>
-
-      <!-- Market Panel -->
-      <div id="market-panel">
-        <button id="connectBtn" class="connect-btn">Connect Wallet</button>
-
-        <label>From:</label>
-        <select id="fromToken"></select>
-
-        <label>To:</label>
-        <select id="toToken"></select>
-
-        <label>Amount:</label>
-        <input id="amount" placeholder="0.0" />
-
-        <div class="btn-row">
-          <button id="quoteBtn" class="primary-btn">Get Quote</button>
-          <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
-        </div>
-
-        <div class="quote-info" id="quote-info">
-          <div class="quote-row">
-            <span>Min received</span>
-            <span id="quote-min">—</span>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <div class="logo-wrap logo-home"
+             role="button"
+             tabindex="0"
+             onclick="window.location.href='/index.html'"
+             onkeydown="if(event.key==='Enter'||event.key===' ') window.location.href='/index.html';">
+          <div class="logo-circle">
+            <div class="logo-glow"></div>
+            <img src="/icon-192.png" alt="JupLite logo" class="logo-img">
           </div>
-          <div class="quote-row">
-            <span>Price impact</span>
-            <span id="quote-impact">—</span>
-          </div>
-          <div class="quote-row">
-            <span>Fees</span>
-            <span id="quote-fees">0.50% referral + 0.50% service</span>
+          <div>
+            <div class="logo-text-main">JupLite</div>
+            <div class="logo-text-sub">Swap · Router · Solana</div>
           </div>
         </div>
 
-        <div class="fee-note">
-  10x better trading
-</div>
+        <nav class="nav">
+          <a href="/index.html" data-view="swap">Swap</a>
+          <a href="/ultra.html" class="nav-active" data-nav="ultra">Ultra</a>
+          <a href="#" data-view="perps">Perps</a>
+          <a href="#" data-view="lend">Lend</a>
+          <a href="#" data-view="portfolio">Portfolio</a>
+          <a href="/refer.html" data-nav="refer">
+            Refer &amp; Earn <span class="nav-badge-new">new</span>
+          </a>
+        </nav>
       </div>
 
-      <!-- Coming Soon Tabs -->
-      <div id="coming-soon-panel" style="display:none;">
-        <div class="soon-box" id="soon-text">
-          Coming soon…
+      <div class="topbar-right">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search token, wallet or feature" />
+          <span class="search-hotkey">/</span>
         </div>
-      </div>
-
-      <div class="log" id="log"></div>
-
-      <div class="card" style="margin-top: 16px;">
-        <div class="card-header">
-          <div class="card-title">Recent swaps (JupLite Ultra)</div>
-          <div class="card-subtitle">Local history — only swaps made via this page on this device</div>
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn lang-active" type="button" data-lang="en">EN</button>
+          <button class="lang-btn" type="button" data-lang="ru">RU</button>
+          <button class="lang-btn" type="button" data-lang="es">ES</button>
+          <button class="lang-btn" type="button" data-lang="hi">HI</button>
+          <button class="lang-btn" type="button" data-lang="ar">AR</button>
         </div>
-        <div class="history-list" id="swap-history"></div>
+        <button class="icon-btn" type="button" aria-label="Settings">⚙️</button>
+        <button class="connect-btn" type="button">Connect</button>
       </div>
-    </section>
-
+    </div>
   </div>
-</div>
+
+  <!-- TICKER -->
+  <div class="ticker-shell">
+    <div class="ticker">
+      <div class="ticker-item">
+        <div class="ticker-token-icon">K</div>
+        <span class="ticker-symbol">KMNO</span>
+        <span class="ticker-price">$0.0515</span>
+        <span class="ticker-change-down">-2.9%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">M</div>
+        <span class="ticker-symbol">MET</span>
+        <span class="ticker-price">$0.3408</span>
+        <span class="ticker-change-down">-3.0%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">J</div>
+        <span class="ticker-symbol">JUP</span>
+        <span class="ticker-price">$0.2544</span>
+        <span class="ticker-change-up">+1.1%</span>
+      </div>
+      <div class="ticker-item">
+        <div class="ticker-token-icon">S</div>
+        <span class="ticker-symbol">SOL</span>
+        <span class="ticker-price">$132.41</span>
+        <span class="ticker-change-down">-0.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="page-main">
+    <section class="panel">
+      <div class="section-title">JupLite Ultra</div>
+      <div class="section-tag">
+        Ultra terminal · Advanced routing · Referral + service fee
+      </div>
+      <p class="section-text">
+        Ultra mode uses advanced Jupiter routing and your JupLite referral logic on top.
+        This page is a dedicated Ultra terminal: all swaps here go through the Ultra engine
+        with referral and extra service fees.
+      </p>
+
+      <!-- ===== ВНУТРЕННИЙ ULTRA-ПРО СВOП ===== -->
+      <div class="ultra-layout">
+
+        <!-- LEFT: Chart -->
+        <section class="card-inner">
+          <div class="chart-header">
+            <div>
+              <div class="pair-title">SOL / USDC</div>
+              <div class="pair-sub">Ultra route · Jupiter</div>
+            </div>
+            <div class="pill">Chart preview</div>
+          </div>
+          <div class="chart-frame">
+            <iframe
+              src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=0&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en"
+              loading="lazy">
+            </iframe>
+          </div>
+        </section>
+
+        <!-- RIGHT: Swap -->
+        <section class="card-inner">
+          <div class="swap-header">
+            <div class="swap-title">Ultra Swap (JupLite Pro)</div>
+            <div class="swap-sub">Jupiter Ultra engine with JupLite fees.</div>
+          </div>
+
+          <div class="tabs" role="tablist">
+            <button class="tab tab-active" data-tab="market">Market</button>
+            <button class="tab tab-disabled" data-tab="limit">
+              Limit <span class="tab-badge">soon</span>
+            </button>
+            <button class="tab tab-disabled" data-tab="dca">
+              DCA <span class="tab-badge">soon</span>
+            </button>
+            <button class="tab tab-disabled" data-tab="twap">
+              TWAP <span class="tab-badge">soon</span>
+            </button>
+          </div>
+
+          <div id="market-panel">
+            <button id="connectBtn" class="connect-btn-inner">Connect Wallet</button>
+
+            <label>From:</label>
+            <select id="fromToken"></select>
+
+            <label>To:</label>
+            <select id="toToken"></select>
+
+            <label>Amount:</label>
+            <input id="amount" placeholder="0.0" />
+
+            <div class="btn-row">
+              <button id="quoteBtn" class="primary-btn">Get Quote</button>
+              <button id="swapBtn" class="secondary-btn" disabled>Swap</button>
+            </div>
+
+            <div class="quote-info" id="quote-info">
+              <div class="quote-row">
+                <span>Min received</span>
+                <span id="quote-min">—</span>
+              </div>
+              <div class="quote-row">
+                <span>Price impact</span>
+                <span id="quote-impact">—</span>
+              </div>
+              <div class="quote-row">
+                <span>Fees</span>
+                <span id="quote-fees">10x better trading</span>
+              </div>
+            </div>
+
+            <div class="fee-note">
+              10x better trading
+            </div>
+          </div>
+
+          <div id="coming-soon-panel" style="display:none;">
+            <div class="soon-box" id="soon-text">
+              Coming soon…
+            </div>
+          </div>
+
+          <div class="log" id="log"></div>
+
+          <div class="card-inner" style="margin-top: 16px;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:2px;">
+              Recent swaps (JupLite Ultra)
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">
+              Local history — only swaps made via this page on this device
+            </div>
+            <div class="history-list" id="swap-history"></div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div>JupLite is an independent interface built on top of Jupiter.</div>
+    <div>
+      Powered by <a href="https://jup.ag" target="_blank" rel="noreferrer">Jupiter</a>.
+    </div>
+  </footer>
 
 <script>
-/* Ultra endpoints */
+/* ===== I18N (коротко, как в pro) ===== */
+const JUPLITE_I18N_ULTRA = {
+  en: {
+    logoSub: "Swap · Router · Solana",
+    nav: { swap: "Swap", perps: "Perps", lend: "Lend", portfolio: "Portfolio", refer: "Refer & Earn", ultra: "Ultra" },
+  },
+  ru: {
+    logoSub: "Своп · Маршрутизатор · Solana",
+    nav: { swap: "Своп", perps: "Перпетуалы", lend: "Лендинг", portfolio: "Портфель", refer: "Рефералы", ultra: "Ультра" },
+  },
+  es: {
+    logoSub: "Swap · Enrutador · Solana",
+    nav: { swap: "Swap", perps: "Perps", lend: "Préstamos", portfolio: "Portafolio", refer: "Referidos", ultra: "Ultra" },
+  },
+  hi: {
+    logoSub: "स्वैप · राउटर · Solana",
+    nav: { swap: "स्वैप", perps: "परपेचुअल", lend: "लेंड", portfolio: "पोर्टफोलियो", refer: "रेफरल", ultra: "Ultra" },
+  },
+  ar: {
+    logoSub: "سواب · موجه · Solana",
+    nav: { swap: "سواب", perps: "عقود دائمة", lend: "إقراض", portfolio: "محفظة", refer: "الإحالات", ultra: "ألترا" },
+  }
+};
+
+function detectLang() {
+  const saved = localStorage.getItem("jupLiteLang");
+  if (saved && JUPLITE_I18N_ULTRA[saved]) return saved;
+  const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+  if (nav.startsWith("ru")) return "ru";
+  if (nav.startsWith("es")) return "es";
+  if (nav.startsWith("hi")) return "hi";
+  if (nav.startsWith("ar")) return "ar";
+  return "en";
+}
+
+function setLangButtons(lang) {
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    const c = btn.getAttribute("data-lang");
+    btn.classList.toggle("lang-active", c === lang);
+  });
+}
+
+function applyLang(lang) {
+  if (!JUPLITE_I18N_ULTRA[lang]) lang = "en";
+  const d = JUPLITE_I18N_ULTRA[lang];
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
+
+  const logoSub = document.querySelector(".logo-text-sub");
+  if (logoSub && d.logoSub) logoSub.textContent = d.logoSub;
+
+  if (d.nav) {
+    document.querySelectorAll(".nav a").forEach((a) => {
+      if (a.dataset.view === "swap" && d.nav.swap) a.textContent = d.nav.swap;
+      if (a.dataset.view === "perps" && d.nav.perps) a.textContent = d.nav.perps;
+      if (a.dataset.view === "lend" && d.nav.lend) a.textContent = d.nav.lend;
+      if (a.dataset.view === "portfolio" && d.nav.portfolio) a.textContent = d.nav.portfolio;
+      if (a.getAttribute("data-nav") === "refer" && d.nav.refer) {
+        a.innerHTML = d.nav.refer + ' <span class="nav-badge-new">new</span>';
+      }
+      if (a.getAttribute("data-nav") === "ultra" && d.nav.ultra) {
+        a.textContent = d.nav.ultra;
+        a.classList.add("nav-active");
+      }
+    });
+  }
+
+  setLangButtons(lang);
+  try { localStorage.setItem("jupLiteLang", lang); } catch (e) {}
+}
+
+function initLangSwitcher() {
+  const lang = detectLang();
+  applyLang(lang);
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const l = btn.getAttribute("data-lang");
+      applyLang(l);
+    });
+  });
+}
+
+/* ===== Ultra swap логика (как раньше) ===== */
 const ultraQuoteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/quote";
 const ultraOrderURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/order";
 const ultraExecuteURL = "https://juplite-worker.videomessagetofuture.workers.dev/ultra/v1/execute";
 
-/* Referral 0.50% */
 const REFERRAL = "DM3A9tHieGPQYLHV9ru13oPkrnLhhgLSm4mr9VkJHm5b";
 const REFERRAL_BPS = 50;
-
-/* Extra Fee 0.50% */
 const EXTRA_FEE_BPS = 50;
 const EXTRA_FEE_WALLET = REFERRAL;
 
-/* Blockchain */
 let wallet = null;
 let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
 let tokenList = [];
 
-/* Tabs */
 const tabs = document.querySelectorAll(".tab");
 const marketPanel = document.getElementById("market-panel");
 const comingPanel = document.getElementById("coming-soon-panel");
@@ -539,7 +1108,6 @@ document.getElementById("quoteBtn").onclick = async () => {
       return;
     }
 
-    // Обновляем UI котировки: min received, impact, fees
     try {
       const outMint = document.getElementById("toToken").value;
       const outToken = tokenList.find(t => t.address === outMint);
@@ -559,8 +1127,7 @@ document.getElementById("quoteBtn").onclick = async () => {
         if (impactEl) impactEl.textContent = impact !== null ? impact.toFixed(2) + "%" : "—";
 
         const feesEl = document.getElementById("quote-fees");
-        const totalFeePct = (REFERRAL_BPS + EXTRA_FEE_BPS) / 100;
-        if (feesEl) feesEl.textContent = totalFeePct.toFixed(2) + "% total (0.50% referral + 0.50% service)";
+        if (feesEl) feesEl.textContent = "10x better trading";
       }
     } catch (_) {}
 
@@ -662,7 +1229,7 @@ document.getElementById("swapBtn").onclick = async () => {
   }
 };
 
-
+/* History */
 const HISTORY_KEY = "juplite-ultra-swap-history-v1";
 
 function loadHistory() {
@@ -725,13 +1292,14 @@ function renderHistory(list) {
   box.innerHTML = rows;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderHistory(loadHistory());
-});
-
 function log(t) {
   document.getElementById("log").textContent = t;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  initLangSwitcher();
+  renderHistory(loadHistory());
+});
 </script>
 
 </body>
